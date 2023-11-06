@@ -1,0 +1,2825 @@
+openapi: 3.1.0
+info:
+  title: Workspace Management API
+  version: 1.0.0
+servers:
+  - url: https://app.getcensus.com/api/v1
+security:
+  - BearerAuth: []
+paths:
+  /syncs:
+    post:
+      summary: Create a new sync
+      operationId: createSync
+      tags:
+        - Syncs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncAttributes'
+      responses:
+        '201':
+          description: Sync created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: created
+                  data:
+                    type: object
+                    properties:
+                      sync_id:
+                        type: integer
+                        example: 4545
+    get:
+      summary: List Syncs
+      operationId: getSyncs
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+      tags:
+        - Syncs
+      responses:
+        '200':
+          description: Successfully retrieved the list of syncs.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulPaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        items:
+                          $ref: '#/components/schemas/Sync'
+  /syncs/{sync_id}:
+    get:
+      summary: Fetch sync
+      operationId: fetchSync
+      description: Retrieve the details of a specific sync
+      tags:
+        - Syncs
+      parameters:
+        - $ref: '#/components/parameters/SyncId'
+      responses:
+        '200':
+          description: Successfully retrieved sync details.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulFetchResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Sync'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      summary: Update a sync
+      operationId: updateSync
+      description: Update certain configurable attributes of a sync
+      tags:
+        - Syncs
+      parameters:
+        - $ref: '#/components/parameters/SyncId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncAttributes'
+      responses:
+        '200':
+          description: Successfully updated the sync
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulUpdateResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Invitation'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Delete a sync
+      description: Deletes the sync with the specified ID.
+      operationId: deleteSync
+      tags:
+        - Syncs
+      parameters:
+        - $ref: '#/components/parameters/SyncId'
+      responses:
+        '200':
+          description: Successfully deleted the sync.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessfulDeleteResult'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /syncs/{sync_id}/trigger:
+    post:
+      summary: Trigger a sync run
+      operationId: triggerSync
+      description: Triggers the sync with the specified ID to start a new sync run.
+      tags:
+        - Syncs
+      parameters:
+        - $ref: '#/components/parameters/SyncId'
+        - name: force_full_sync
+          in: query
+          description: Determines if the sync should be run as a Full Sync. Note that some sync configurations such as Append do not support full syncs.
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Sync triggered successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulFetchResult'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          sync_run_id:
+                            type: integer
+                            example: 1234567890
+  /syncs/{sync_id}/sync_runs:
+    get:
+      summary: List sync runs
+      tags:
+        - Sync Runs
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: sync_id
+          in: path
+          description: The ID of the sync for which to list runs.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved the list of sync runs.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulPaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        items:
+                          $ref: '#/components/schemas/SyncRun'
+  /sync_runs/{sync_run_id}:
+    get:
+      summary: Fetch sync run
+      operationId: fetchSyncRun
+      description: Retrieve the details of a particular sync run
+      tags:
+        - Sync Runs
+      parameters:
+        - $ref: '#/components/parameters/SyncRunId'
+      responses:
+        '200':
+          description: Successfully retrieved sync run details.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulFetchResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SyncRun'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /sync_runs/{sync_run_id}/cancel:
+    post:
+      summary: Cancel a running sync
+      operationId: cancelSyncRun
+      description: Use this endpoint to cancel a sync that is actively running.
+      tags:
+        - Sync Runs
+      parameters:
+        - $ref: '#/components/parameters/SyncRunId'
+      responses:
+        '200':
+          description: Successfully cancelled the sync
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: cancelled
+                  data:
+                    type: object
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /destinations:
+    get:
+      summary: List destinations
+      operationId: listDestinations
+      tags:
+        - Destinations
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+      responses:
+        '200':
+          description: Successfully retrieved the list of destinations.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulPaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        items:
+                          $ref: '#/components/schemas/Destination'
+    post:
+      summary: Create a new destination
+      operationId: createDestination
+      tags:
+        - Destinations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurableDestinationAttributes'
+      responses:
+        '201':
+          description: Destination created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: created
+                  data:
+                    $ref: '#/components/schemas/Destination'
+  /destinations/{destination_id}:
+    get:
+      summary: Fetch destination
+      tags:
+        - Destinations
+      parameters:
+        - name: destination_id
+          in: path
+          required: true
+          description: ID of the destination to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved the destination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: created
+                  data:
+                    $ref: '#/components/schemas/Destination'
+    patch:
+      summary: Update destination
+      description: Update certain values of a destination
+      tags:
+        - Destinations
+      parameters:
+        - name: destination_id
+          in: path
+          required: true
+          description: ID of the destination to update
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurableDestinationAttributes'
+      responses:
+        '200':
+          description: Successfully updated the destination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: updated
+                  data:
+                    $ref: '#/components/schemas/Destination'
+    delete:
+      summary: Delete destination
+      description: Deletes the destination specified
+      operationId: deleteDestination
+      tags:
+        - Destinations
+      parameters:
+        - name: destination_id
+          in: path
+          description: The ID of the destination to be deleted.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Destination successfully deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: deleted
+  /destinations/{destination_id}/refresh_objects:
+    post:
+      summary: Start object refresh
+      description: This endpoint queues a job to refresh the list of objects for a destination.
+      tags:
+        - Destinations
+      parameters:
+        - name: destination_id
+          in: path
+          required: true
+          description: ID of the destination to update
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully enqueued the object refresh job.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  refresh_key:
+                    description: They key that can be used to check the status of the refresh job.
+                    type: integer
+                    example: 1647978948
+  /destinations/{destination_id}/refresh_objects_status:
+    get:
+      summary: Check object refresh
+      description: This endpoint checks whether the job refreshing objects for a destination has completed.
+      tags:
+        - Destinations
+      parameters:
+        - name: destination_id
+          in: path
+          required: true
+          description: ID of the destination with an active refresh job
+          schema:
+            type: integer
+        - name: refresh_key
+          in: query
+          description: An `id` provided by the `refresh_objects` endpoint, used to check whether the refresh objects job has finished.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully checked the status of the job.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Status of the job.
+                    type: string
+                    enum:
+                      - completed
+                      - processing
+                    example: processing
+  /destinations/{destination_id}/objects:
+    get:
+      summary: List destination objects
+      operationId: listDestinationObjects
+      tags:
+        - Destinations
+        - Objects
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: destination_id
+          in: path
+          required: true
+          description: ID of the destination
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved the list of destination objects.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulPaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        items:
+                          $ref: '#/components/schemas/DestinationObject'
+  /destinations/{destination_id}/objects/{object_full_name}:
+    get:
+      summary: Fetch destination object
+      description: This endpoint lists information for a given object, including information on what fields it includes.
+      operationId: fetchDestinationObject
+      tags:
+        - Destinations
+      parameters:
+        - name: destination_id
+          in: path
+          required: true
+          description: ID of the destination that owns the object
+          schema:
+            type: integer
+        - name: object_full_name
+          in: path
+          required: true
+          description: '`full_name` of the destination object'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved the destination object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: success
+                  data:
+                    $ref: '#/components/schemas/DestinationObject'
+  /destinations/{destination_id}/objects/{object_full_name}/refresh_fields:
+    post:
+      summary: Start fields refresh
+      description: This endpoint queues a job to refresh the list of fields for a given destination object.
+      tags:
+        - Destinations
+      parameters:
+        - name: destination_id
+          in: path
+          required: true
+          description: ID of the destination to update
+          schema:
+            type: integer
+        - name: object_full_name
+          in: path
+          required: true
+          description: '`full_name` of the destination object'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully enqueued the fields refresh job.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  refresh_key:
+                    description: They key that can be used to check the status of the refresh job.
+                    type: integer
+                    example: 1647978948
+  /destinations/{destination_id}/objects/{object_full_name}/refresh_fields_status:
+    get:
+      summary: Check fields refresh
+      description: This endpoint checks whether the job refreshing fields for a destination object has completed.
+      tags:
+        - Destinations
+      parameters:
+        - name: destination_id
+          in: path
+          required: true
+          description: ID of the destination
+          schema:
+            type: integer
+        - name: object_full_name
+          in: path
+          required: true
+          description: '`full_name` of the destination object with an active refresh job'
+          schema:
+            type: integer
+        - name: refresh_key
+          in: query
+          description: An `id` provided by the `refresh_fields` endpoint, used to check whether the refresh fields job has finished.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully checked the status of the job.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Status of the job.
+                    type: string
+                    enum:
+                      - completed
+                      - processing
+                    example: processing
+  /destination_connect_links:
+    get:
+      summary: List destination connect links
+      operationId: listDestinationConnectLinks
+      description: This endpoint returns details for all active and expired connect links in the current workspace.
+      tags:
+        - Destination Connect Links
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+      responses:
+        '200':
+          description: Successfully retrieved the list of destination connect links.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulPaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        items:
+                          $ref: '#/components/schemas/DestinationConnectLink'
+    post:
+      summary: Create a new destination connect link
+      operationId: createDestinationConnectLink
+      tags:
+        - Destination Connect Links
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitialDestinationConnectLinkAttributes'
+      responses:
+        '201':
+          description: Destination connect link created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: created
+                  data:
+                    $ref: '#/components/schemas/DestinationConnectLink'
+  /destination_connect_links/types:
+    get:
+      summary: List destination connect link types
+      operationId: listDestinationConnectLinkTypes
+      description: This endpoint returns a list of all the types of supported destination connect links. Note that there may be a few missing that are available via the connectors metadata API. If you wish to use one of these, please reach out to us.
+      tags:
+        - Destination Connect Links
+      responses:
+        '200':
+          description: Successfully retrieved the list of destination connect link types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  description: A supported type of destination connect link
+                  examples:
+                    - aha
+                    - salesforce
+                    - hubspot
+                    - active_campaign
+  /destination_connect_links/{connect_link_id}:
+    get:
+      summary: Fetch destination connect link
+      operationId: fetchDestinationConnectLink
+      description: Retrieve the details of a specific destination connect link
+      tags:
+        - Destination Connect Links
+      parameters:
+        - $ref: '#/components/parameters/ConnectLinkId'
+      responses:
+        '200':
+          description: Successfully retrieved destination connect link details.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulFetchResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/DestinationConnectLink'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /destination_connect_links/{connect_link_id}/revoke:
+    post:
+      summary: Revoke a destination connect link
+      operationId: revokeDestinationConnectLink
+      description: Revokes a destination connect link so that it can no longer be used.
+      tags:
+        - Destination Connect Links
+      parameters:
+        - $ref: '#/components/parameters/ConnectLinkId'
+      responses:
+        '200':
+          description: Successfully revoke the connect link.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulFetchResult'
+                  - type: object
+                    properties:
+                      status:
+                        description: The outcome of the revoke request
+                      data:
+                        $ref: '#/components/schemas/DestinationConnectLink'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /sources:
+    get:
+      summary: List sources
+      operationId: listSources
+      tags:
+        - Sources
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+      responses:
+        '200':
+          description: Successfully retrieved the list of sources.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulPaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        items:
+                          $ref: '#/components/schemas/Source'
+    post:
+      summary: Create a new source
+      operationId: createSource
+      tags:
+        - Sources
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/InitialSourceAttributes'
+      responses:
+        '201':
+          description: Source created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: created
+                  data:
+                    $ref: '#/components/schemas/Source'
+  /sources/{source_id}:
+    get:
+      summary: Fetch source
+      tags:
+        - Sources
+      parameters:
+        - name: source_id
+          in: path
+          required: true
+          description: ID of the source to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved the source
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: created
+                  data:
+                    $ref: '#/components/schemas/Source'
+    patch:
+      summary: Update source
+      description: Update certain values of a source
+      tags:
+        - Sources
+      parameters:
+        - name: source_id
+          in: path
+          required: true
+          description: ID of the source to update
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurableSourceAttributes'
+      responses:
+        '200':
+          description: Successfully updated the source
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: updated
+                  data:
+                    $ref: '#/components/schemas/Source'
+    delete:
+      summary: Delete source
+      description: Deletes the source specified
+      operationId: deleteSource
+      tags:
+        - Sources
+      parameters:
+        - name: source_id
+          in: path
+          description: The ID of the source to be deleted.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Source successfully deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: deleted
+  /sources/{source_id}/refresh_tables:
+    post:
+      summary: Start table refresh
+      description: This endpoint queues a job to refresh the list of tables for a source.
+      tags:
+        - Sources
+      parameters:
+        - name: source_id
+          in: path
+          required: true
+          description: ID of the source to update
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully enqueued the table refresh job.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  refresh_key:
+                    description: They key that can be used to check the status of the refresh job.
+                    type: integer
+                    example: 1647978948
+  /sources/{source_id}/refresh_tables_status:
+    get:
+      summary: Check table refresh
+      description: This endpoint checks whether the job refreshing tables for a source has completed.
+      tags:
+        - Sources
+      parameters:
+        - name: source_id
+          in: path
+          required: true
+          description: ID of the source with an active refresh job
+          schema:
+            type: integer
+        - name: refresh_key
+          in: query
+          description: An `id` provided by the `refresh_tables` endpoint, used to check whether the refresh tables job has finished.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully checked the status of the job.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Status of the job
+                    type: string
+                    enum:
+                      - completed
+                      - processing
+                    example: processing
+  /sources/{source_id}/objects:
+    get:
+      summary: List source objects
+      operationId: listSourceObjects
+      description: This endpoint returns a list of all the source objects (models, segments, and tables) that this source connection contains.
+      tags:
+        - Objects
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/SourceId'
+      responses:
+        '200':
+          description: Successfully retrieved the list of source objects.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulPaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        description: A list of source objects that this connection contains. May be either a `Model`, `Segment`, or `Table`.
+                        items:
+                          oneOf:
+                            - $ref: '#/components/schemas/Model'
+                            - $ref: '#/components/schemas/Segment'
+                            - $ref: '#/components/schemas/Table'
+  /sources/{source_id}/models:
+    get:
+      summary: List models
+      operationId: listModels
+      tags:
+        - Models
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: source_id
+          in: path
+          required: true
+          description: ID of the source
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved the list of models.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulPaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        items:
+                          $ref: '#/components/schemas/Model'
+    post:
+      summary: Create a new model
+      operationId: createModel
+      tags:
+        - Models
+      parameters:
+        - name: source_id
+          in: path
+          required: true
+          description: ID of the source
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/InitialModelAttributes'
+      responses:
+        '201':
+          description: Model created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: created
+                  data:
+                    $ref: '#/components/schemas/Model'
+  /sources/{source_id}/models/{model_id}:
+    get:
+      summary: Fetch model
+      description: This endpoint lists information for a given model, including information on what columns it includes.
+      tags:
+        - Models
+      parameters:
+        - $ref: '#/components/parameters/SourceId'
+        - $ref: '#/components/parameters/ModelId'
+      responses:
+        '200':
+          description: Successfully retrieved the model
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: created
+                  data:
+                    $ref: '#/components/schemas/Model'
+    patch:
+      summary: Update model
+      description: Update certain values of a specified model
+      tags:
+        - Models
+      parameters:
+        - $ref: '#/components/parameters/SourceId'
+        - $ref: '#/components/parameters/ModelId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurableModelAttributes'
+      responses:
+        '200':
+          description: Successfully updated the model
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: updated
+                  data:
+                    $ref: '#/components/schemas/Model'
+    delete:
+      summary: Delete model
+      description: Deletes the model specified
+      operationId: deleteModel
+      tags:
+        - Models
+      parameters:
+        - $ref: '#/components/parameters/SourceId'
+        - $ref: '#/components/parameters/ModelId'
+      responses:
+        '200':
+          description: Model successfully deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: deleted
+  /sources/{source_id}/models/{model_id}/refresh_columns:
+    post:
+      summary: Start column refresh
+      description: This endpoint queues a job to refresh the list of columns for a model.
+      tags:
+        - Models
+      parameters:
+        - $ref: '#/components/parameters/SourceId'
+        - $ref: '#/components/parameters/ModelId'
+      responses:
+        '200':
+          description: Successfully enqueued the column refresh job.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  refresh_key:
+                    description: They key that can be used to check the status of the refresh job.
+                    type: integer
+                    example: 1647978948
+  /sources/{source_id}/models/{model_id}/refresh_columns_status:
+    get:
+      summary: Check column refresh
+      description: This endpoint checks whether the job refreshing columns for a model has completed.
+      tags:
+        - Models
+      parameters:
+        - $ref: '#/components/parameters/SourceId'
+        - $ref: '#/components/parameters/ModelId'
+        - name: refresh_key
+          in: query
+          description: An `id` provided by the `refresh_columns` endpoint, used to check whether the refresh columns job has finished.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully checked the status of the job.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Status of the job
+                    type: string
+                    enum:
+                      - completed
+                      - processing
+                    example: processing
+  /sources/{source_id}/tables/{table_id}:
+    get:
+      summary: Fetch table
+      description: This endpoint lists information for a given table, including information on what columns it includes.
+      tags:
+        - Tables
+      parameters:
+        - $ref: '#/components/parameters/SourceId'
+        - $ref: '#/components/parameters/TableId'
+      responses:
+        '200':
+          description: Successfully retrieved the table
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: created
+                  data:
+                    $ref: '#/components/schemas/Table'
+  /sources/{source_id}/tables/{table_id}/refresh_columns:
+    post:
+      summary: Start column refresh
+      description: This endpoint queues a job to refresh the list of columns for a table.
+      tags:
+        - Tables
+      parameters:
+        - $ref: '#/components/parameters/SourceId'
+        - $ref: '#/components/parameters/TableId'
+      responses:
+        '200':
+          description: Successfully enqueued the column refresh job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshKey'
+  /sources/{source_id}/tables/{table_id}/refresh_columns_status:
+    get:
+      summary: Check column refresh
+      description: This endpoint checks whether the job refreshing columns for a table has completed.
+      tags:
+        - Tables
+      parameters:
+        - $ref: '#/components/parameters/SourceId'
+        - $ref: '#/components/parameters/TableId'
+        - $ref: '#/components/parameters/RefreshKey'
+      responses:
+        '200':
+          $ref: '#/components/responses/StatusSuccess'
+  /sources/{source_id}/filter_segments:
+    get:
+      summary: List segments
+      operationId: listSegments
+      tags:
+        - Segments
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/SourceId'
+      responses:
+        '200':
+          description: Successfully retrieved the list of segments.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulPaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        items:
+                          $ref: '#/components/schemas/Segment'
+    post:
+      summary: Create a new segment
+      operationId: createSegment
+      tags:
+        - Segments
+      parameters:
+        - name: source_id
+          in: path
+          required: true
+          description: ID of the source
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/InitialSegmentAttributes'
+      responses:
+        '201':
+          description: Segment created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: created
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The `id` of the newly created segment.
+                        example: 9
+                  filter_segment_source_url:
+                    type: string
+                    description: |
+                      Some subproperties of the filter_segment are created asynchronously. You can query this url to fetch the status of the creation (true or false).
+                      When status is true, it will return all properties returned in `GET /sources/{source_id}/filter_segments/{segment_id}`.
+                    example: https://app.getcensus.com/api/v1/sources/12/filter_segments/9/source_status
+  /sources/{source_id}/filter_segments/{segment_id}:
+    get:
+      summary: Fetch segment
+      description: This endpoint lists information for a given segment, including information on its molecules (our data structure for recursive constraints).
+      tags:
+        - Segments
+      parameters:
+        - $ref: '#/components/parameters/SourceId'
+        - $ref: '#/components/parameters/SegmentId'
+      responses:
+        '200':
+          description: Successfully retrieved the segment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: success
+                  data:
+                    $ref: '#/components/schemas/Segment'
+    patch:
+      summary: Update segment
+      description: Update certain values of a specified segment
+      tags:
+        - Segments
+      parameters:
+        - $ref: '#/components/parameters/SourceId'
+        - $ref: '#/components/parameters/SegmentId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurableSegmentAttributes'
+      responses:
+        '200':
+          description: Successfully updated the Segment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    description: Outcome of the operation.
+                    type: string
+                    enum:
+                      - success
+                      - updated
+                      - created
+                      - not_found
+                      - error
+                    example: updated
+                  data:
+                    $ref: '#/components/schemas/Segment'
+    delete:
+      summary: Delete Segment
+      description: Deletes the segment specified
+      operationId: deleteSegment
+      tags:
+        - Segments
+      parameters:
+        - $ref: '#/components/parameters/SourceId'
+        - $ref: '#/components/parameters/SegmentId'
+      responses:
+        '200':
+          description: Segment successfully deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: deleted
+  /connectors:
+    get:
+      summary: List connectors
+      operationId: listConnectors
+      description: Use this endpoint to list out the types of destination connections that can be created in the current workspace. This is particularly useful for Census Embedded solutions when determining the required values to authorize a new destination connection.
+      tags:
+        - Connectors
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+      responses:
+        '200':
+          description: Successfully retrieved the list of connectors.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulPaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        items:
+                          $ref: '#/components/schemas/Connector'
+  /connectors/{service_name}:
+    get:
+      summary: Fetch connector
+      operationId: fetchConnector
+      description: Use this endpoint to fetch the details for a specific types of destination connection that can be created in the current workspace. This is particularly useful for Census Embedded solutions when determining the required values to authorize a new destination connection.
+      tags:
+        - Connectors
+      parameters:
+        - name: service_name
+          in: path
+          required: true
+          description: Name of the connector to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved the connector
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulFetchResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Connector'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Sync:
+      allOf:
+        - type: object
+          properties:
+            status:
+              description: The sync's current status. Ready means that the sync has not yet run, up to date implies the last sync completed successfully and failing means that the sync failed.
+              type: string
+              enum:
+                - ready
+                - up to date
+                - failing
+            id:
+              description: The identifier for the sync.
+              example: 15135
+              type: integer
+            created_at:
+              description: The time the sync was created.
+              type: string
+              format: date-time
+              example: '2023-09-05T19:42:42.672Z'
+            updated_at:
+              description: The time the sync was updated.
+              type: string
+              format: date-time
+              example: '2023-09-05T19:42:42.672Z'
+        - $ref: '#/components/schemas/SyncAttributes'
+    SyncAttributes:
+      type: object
+      required:
+        - operation
+        - source_attributes
+        - destination_attributes
+        - mappings
+      properties:
+        label:
+          type: string
+          description: A label to give to this sync.
+          example: New Signups to Leads
+        operation:
+          type: string
+          description: How records are synced to the destination.
+          example: mirror
+          enum:
+            - append
+            - insert
+            - mirror
+            - update
+            - upsert
+        source_attributes:
+          $ref: '#/components/schemas/SourceAttributes'
+          example:
+            connection_id: 12
+            object:
+              type: model
+              name: test_ads
+        destination_attributes:
+          $ref: '#/components/schemas/DestinationAttributes'
+          example:
+            connection_id: 15
+            object: user_data
+        mappings:
+          type: array
+          items:
+            $ref: '#/components/schemas/MappingAttributes'
+          example:
+            - from:
+                type: column
+                data: hashed_email
+              to: user_identifier.hashed_email_PREHASHED
+              is_primary_identifier: true
+            - from:
+                type: column
+                data: list_id
+              to: list_id
+              lookup_object: user_list
+              lookup_field: name
+            - from:
+                type: constant_value
+                data:
+                  value: cohort_1
+                  basic_type: text
+              to: cohort
+        schedule_frequency:
+          type: string
+          description: When this sync should be run.
+          example: daily
+          enum:
+            - never
+            - continuous
+            - quarter_hourly
+            - hourly
+            - daily
+            - weekly
+            - expression
+        schedule_day:
+          type: string
+          description: What day of the week this sync should run if `schedule_frequency` is set to `"weekly"`.
+          example: Monday
+          enum:
+            - Sunday
+            - Monday
+            - Tuesday
+            - Wednesday
+            - Thursday
+            - Friday
+            - Saturday
+        schedule_hour:
+          type: integer
+          description: What hour of the day this sync should run if `schedule_frequency` is set to `"weekly"` or `"daily"`.
+          minimum: 0
+          maximum: 24
+          example: 10
+        schedule_minute:
+          type: integer
+          description: What minute of the hour this sync should run if `scheule_frequency` is set to `"weekly"`, `"daily"` or `"hourly"`.
+          minimum: 0
+          maximum: 59
+          example: 30
+        cron_expression:
+          type: string
+          description: Specify what cron schedule this sync should run on if the `schedule_frequency` is set to `"experessions"`.
+          example: '* 1 * * *'
+        paused:
+          type: boolean
+          description: Whether or not this sync should be paused.
+          example: false
+        triggers:
+          type: object
+          description: Specify triggers for the sync. More than one type trigger can be configured.
+          properties:
+            dbt_cloud:
+              type: object
+              description: Contains the dbt Cloud job details that should trigger the sync upon success. dbt Cloud project and job IDs can be found in the URL when navigating to a job in the dbt Cloud application or via API.
+              properties:
+                project_id:
+                  type: string
+                  description: The dbt Cloud project id.
+                  example: '12345'
+                job_id:
+                  type: string
+                  description: The dbt Cloud job id.
+                  example: '123456'
+            fivetran:
+              type: object
+              description: The Fivetran job details that should trigger the sync upon success. Fivetran job name can be found in the table of Connectors or Transformations via the Fivetran application and the job id can be found in the URL when navigated to the specific connector/transform details page. These information can also be retrieved via API.
+              properties:
+                job_id:
+                  type: string
+                  description: The Fivetran job id.
+                  example: test_job_id
+                job_name:
+                  type: string
+                  description: The Fivetran job name.
+                  example: test_job_name
+            sync_sequence:
+              type: object
+              description: The sync details that should trigger the sync upon success. The sync id can be found via the API or in the URL within the Census management UI.
+              properties:
+                sync_id:
+                  type: integer
+                  description: The dependent sync id.
+                  example: 123
+        field_behavior:
+          type: string
+          description: Specify `"sync_all_properties"` to automatically update mappings.
+          example: sync_all_properties
+        field_normalization:
+          type: string
+          description: If `field_behavior` is set to `"sync_all_properties"`, specify how automatic mappings should be named.
+          example: snake_case
+          enum:
+            - start_case
+            - lower_case
+            - upper_case
+            - camel_case
+            - snake_case
+            - match_source_names
+        high_water_mark_attributes:
+          description: The high water mark diffing strategy will allow append syncs to use a timestamp column when identifying new records instead of the default Census diff engine (using primary keys).
+          type: object
+          required:
+            - use_high_water_mark_diff_type
+            - column_name
+          properties:
+            use_high_water_mark_diff_type:
+              description: If true, the high water mark diff strategy will be used.
+              type: boolean
+              example: true
+            column_name:
+              description: The name of the column that should be used for identifying new records.
+              type: string
+              example: updated_at
+        validate_only:
+          description: When true, checks if the given payload is valid to configure a sync. Does not create the sync.
+          type: boolean
+          default: false
+          example: true
+        failed_run_notifications_enabled:
+          description: When true, will email all workspace users with email notifications enabled and all workspace additional emails when the sync fails and recovers.
+          type: boolean
+          default: true
+          example: false
+        failed_record_notifications_enabled:
+          description: When true, will email all workspace users with email notifications enabled and all workspace additional emails when the sync has more than failed_record_notifications_threshold_percent rejected or invalid records in the source or destination.
+          type: boolean
+          default: true
+          example: false
+        failed_record_notifications_threshold_percent:
+          description: The percentage of rejected and invalid records for which failed record emails will be triggered.
+          type: integer
+          default: 75
+          minimum: 0
+          maximum: 100
+          example: 10
+    Pagination:
+      type: object
+      description: An object to help you navigate the list of results.
+      properties:
+        total_records:
+          type: number
+          description: Total records in the collection.
+          example: 14
+        per_page:
+          type: number
+          description: Records on each page.
+          default: 25
+          example: 25
+        prev_page:
+          type:
+            - number
+            - 'null'
+          description: The previous page number, or `null` for the first page.
+          default: null
+          example: 1
+        page:
+          type: number
+          description: The current page number.
+          default: 1
+          example: 2
+        next_page:
+          description: The next page number, or `null` if it's the last page.
+          type:
+            - number
+            - 'null'
+          default: null
+          example: 3
+        last_page:
+          type: number
+          description: The number of the last page with records.
+          example: 10
+    SuccessfulPaginatedResponse:
+      type: object
+      description: A successfully fetched list of results.
+      properties:
+        status:
+          type: string
+          description: The outcome of the request
+          enum:
+            - success
+          example: success
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        data:
+          description: The list of results.
+          type: array
+      required:
+        - status
+        - data
+        - pagination
+    SourceAttributes:
+      description: Attributes used to identify the data source for this sync.
+      type: object
+      required:
+        - connection_id
+        - object
+      properties:
+        connection_id:
+          type: integer
+          description: The id used to identify the source connection.
+        filter_segment_id:
+          type: integer
+          description: The id used to identify the segment data source.
+        object:
+          type: object
+          description: Attributes of the data source.
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              description: The type of your data source.
+              enum:
+                - table
+                - model
+            id:
+              type: integer
+              description: The id of the data source.
+              example: 1543
+            name:
+              type: string
+              description: The name of the data source. Required when the `type` is model and `id` is not specified.
+              example: New Signups
+            table_name:
+              type: string
+              description: The name of the table. Required when the `type` is table and `id` is not specified.
+              example: events
+            table_schema:
+              type: string
+              description: The schema of the table. Required when the `type` is table and `id` is not specified.
+              example: publish
+            table_catalog:
+              type: string
+              description: The catalog of the table. Required when the `type` is table and `id` is not specified.
+              example: data_mart
+    DestinationAttributes:
+      type: object
+      properties:
+        connection_id:
+          type: integer
+          description: The id used to identify the destination connection.
+        object:
+          type: string
+          description: The full name of the destination object.
+        lead_union_insert_to:
+          type: string
+          description: Where to insert a union object (for Salesforce connections).
+    MappingAttributes:
+      type: object
+      required:
+        - from
+        - to
+        - is_primary_identifier
+      properties:
+        from:
+          description: An object representing the source of the mapping. It will either be an object describing a column or a constant value.
+          type: object
+          oneOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - constant_value
+                data:
+                  type: object
+                  properties:
+                    basic_type:
+                      description: The type of the constant value.
+                      type: string
+                      enum:
+                        - boolean
+                        - datetime
+                        - number
+                        - text
+                    value:
+                      description: A representation of the constant value.
+                      type: string
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - column
+                data:
+                  description: The name of the column
+                  type: string
+        to:
+          type: string
+        is_primary_identifier:
+          type: boolean
+        generate_field:
+          type: boolean
+        preserve_values:
+          type: boolean
+        operation:
+          type: string
+        lookup_object:
+          type: string
+        lookup_field:
+          type: string
+    SuccessfulFetchResult:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The outcome of the fetch request
+          enum:
+            - success
+          example: success
+        data:
+          type: object
+      required:
+        - status
+        - data
+    SuccessfulDeleteResult:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The outcome of the deletion request
+          enum:
+            - deleted
+          example: deleted
+      required:
+        - status
+    SuccessfulUpdateResult:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The outcome of the update request
+          enum:
+            - updated
+          example: updated
+        data:
+          type: object
+      required:
+        - status
+        - data
+    Invitation:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the invitation.
+          example: 90967
+        email:
+          type: string
+          description: Email address of the invitee.
+          example: newuser@example.com
+        created_at:
+          type: string
+          description: Timestamp when the invitation was created.
+          format: date-time
+          example: '2023-09-22T20:25:45.185Z'
+        created_by_id:
+          type: integer
+          description: ID of the user who created the invitation.
+          example: 13
+        claimed_at:
+          type: string
+          description: Timestamp when the invitation was claimed.
+          format: date-time
+          example: '2023-09-22T20:25:45.185Z'
+        claimed_by_id:
+          type: integer
+          description: ID of the user who claimed the invitation.
+          example: 11
+        role:
+          type: string
+          description: Role assigned to the invitee.
+          enum:
+            - admin
+            - member
+          example: admin
+    SyncTriggerReason:
+      type: object
+      properties:
+        ui_tag:
+          type: string
+          description: A short human-readable description of the trigger for this sync run
+          example: Manual
+        ui_detail:
+          type: string
+          description: A longer human-readable description of the trigger for this sync run. For example, including the email of the user that triggered it
+          example: Manually triggered by test@getcensus.com
+    SyncRun:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 94
+          description: ID of this sync run.
+        sync_id:
+          type: integer
+          example: 52
+          description: ID of the sync.
+        source_record_count:
+          type: integer
+          example: 1
+          description: The number of records in the source object at the time of the sync run.
+        records_processed:
+          type:
+            - integer
+            - 'null'
+          example: 1
+          description: Number of new or updated records retrieved from the source.
+        records_updated:
+          type:
+            - integer
+            - 'null'
+          example: 1
+          description: Number of records successfully sent to the destination.
+        records_failed:
+          type:
+            - integer
+            - 'null'
+          example: 0
+          description: Number of records rejected by the destination.
+        records_invalid:
+          type:
+            - integer
+            - 'null'
+          example: 0
+          description: Number of records skipped by Census because of data quality issues.
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-10-20T02:51:07.546Z'
+          description: When this sync run was created.
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-10-20T02:52:29.236Z'
+          description: When this sync run was updated.
+        completed_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          example: '2021-10-20T02:52:29.234Z'
+          description: When this sync run was completed.
+        scheduled_execution_time:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          example: '2021-10-20T02:52:29.234Z'
+          description: When the sync run was scheduled to run.
+        error_code:
+          type:
+            - string
+            - 'null'
+          example: JSON_ARRAY_ERROR
+          description: The error code, if any.
+        error_message:
+          type:
+            - string
+            - 'null'
+          example: The array field being used does not appear to be valid JSON...
+          description: The error message, if any.
+        error_detail:
+          type:
+            - string
+            - 'null'
+          example: Please make sure the field "custom_field:Users" with value "jim" is formatted as a JSON Array...
+          description: Details about the error, if any.
+        status:
+          type: string
+          example: completed
+          enum:
+            - working
+            - completed
+            - failed
+            - skipped
+            - queued
+          description: |
+            Status of the sync run. Possible values are:
+            - `working`: The sync is currently executing.
+            - `completed`: The sync finished successfully.
+            - `failed`: The sync failed during execution.
+            - `skipped`: An earlier instance of the sync is still running, so this run was skipped.
+            - `queued`: The sync run is queued for execution.
+        canceled:
+          type: boolean
+          description: Whether or not this sync run was canceled.
+          example: false
+        full_sync:
+          type: boolean
+          description: Whether or not this was a full sync.
+          example: true
+          $ref: '#/components/schemas/SyncTriggerReason'
+        current_step:
+          type: string
+          description: The current step of the sync run. Available if the sync is running.
+          enum:
+            - Checking for columns to remove from the sync
+            - Checking for fields to create in destination
+            - Checking source and destination configuration
+            - Unloading data from warehouse
+            - Loading data into destination service
+            - Committing data to destination service
+            - Committing sync to warehouse
+            - Running sync
+          example: Running Sync
+    FieldProperties:
+      type: object
+      description: A field available on a destination object that can be mapped to.
+      properties:
+        label:
+          type: string
+          description: The label for this field.
+          example: External User ID
+        full_name:
+          type: string
+          description: The full name for this field. This is used to identify the field in the API.
+          example: external_id
+        createable:
+          type: boolean
+          description: Whether or not this field can be created in the destination if it doesn't exist.
+          example: true
+        updateable:
+          type: boolean
+          description: Whether or not this field can be updated in the destination.
+          example: true
+        operations:
+          type: array
+          description: |
+            For an array type, what operations are supported on this field. One of the following types:
+            - `overwrite`: Overwrite existing values with inputted values
+            - `merge`: Merge inputted values with existing values
+          items:
+            type: string
+            enum:
+              - overwrite
+              - merge
+        array:
+          type: boolean
+          description: Whether or not this field is an array type.
+        preserve_values_supported:
+          type: boolean
+          description: If a value exists in the destination for this field, whether or not it can be overwritten by Census.
+          example: true
+        required_for_mapping:
+          type: boolean
+          description: Whether or not this field is required.
+          example: true
+        can_be_upsert_key:
+          type: boolean
+          description: Whether or not this field can be the primary identifier for an upsert sync.
+          example: true
+        can_be_update_key:
+          type: boolean
+          description: Whether or not this field can be the primary identifier for an update only sync.
+          example: true
+        can_be_insert_key:
+          type: boolean
+          description: Whether or not this field can be the primary identifier for a create only sync.
+          example: true
+        can_be_reference_key:
+          type: boolean
+          description: Whether or not this field can be the identifier for a lookup on its containing object.
+          example: true
+        lookup_object:
+          type: string
+          description: What object, if any, that this field references.
+          example: company
+        type:
+          type: string
+          description: The type of this field.
+          example: string
+    DestinationObject:
+      type: object
+      properties:
+        label:
+          type: string
+          description: The label for this object.
+          example: User
+        full_name:
+          type: string
+          description: The full name for this object. This is used to identify the object in the API.
+          example: user
+        supported_operations:
+          type: array
+          description: A list of the operations this object supports when being synced to.
+          example:
+            - insert
+            - update
+            - upsert
+          items:
+            type: string
+            enum:
+              - append
+              - insert
+              - mirror
+              - update
+              - upsert
+        allow_custom_fields:
+          type: boolean
+          description: Whether or not you can define custom fields on this object.
+          example: true
+        allow_case_sensitive_fields:
+          type: boolean
+          description: Whether or not field names and labels are case sensitive on this object.
+          example: true
+        fields:
+          type: array
+          description: A list of fields associated with this destination.
+          items:
+            $ref: '#/components/schemas/FieldProperties'
+    Destination:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The id of this destination.
+          example: 12
+        name:
+          type: string
+          description: The name of this destination.
+          example: Google Sheets
+        connection_details:
+          type: object
+          description: Connection details associated with this destination.
+          additionalProperties: true
+          example:
+            account_id: 7515011393,
+            account_name: Manager Account Test
+        objects:
+          type: array
+          description: A list of objects associated with this destination.
+          items:
+            $ref: '#/components/schemas/DestinationObject'
+    name:
+      type: string
+      description: The name of this destination.
+      example: Google Sheets
+    ConfigurableDestinationAttributes:
+      type: object
+      properties:
+        service_connection:
+          type: object
+          description: Contains the information for the connection.
+          properties:
+            name:
+              $ref: '#/components/schemas/name'
+            credentials:
+              type: object
+              description: The credentials to be used for this service connection. Refer to the connector API for details for your connection type.
+    DestinationConnectLink:
+      type: object
+      required:
+        - id
+        - expiration
+        - revoked
+        - uri
+      properties:
+        id:
+          type: integer
+          description: The unique ID associated with the Connect Link.
+          example: 469
+        type:
+          type: string
+          description: The type of destination connection to be managed by this link. The list of valid types can be fetched from `/destination_connect_links/types`.
+          example: hubspot
+        expiration:
+          type: string
+          format: date-time
+          description: The date and time when the Connect Link will expire.
+          example: '2023-07-22T23:42:47.239Z'
+        revoked:
+          type: boolean
+          description: A boolean value indicating whether the Connect Link has been revoked or not.
+          example: false
+        uri:
+          type: string
+          format: uri
+          description: The authorization url that you will provide to end-users that begins the Census-hosted flow to authorize a destination into your workspace.
+          example: https://app.getcensus.com/pbc?auth=expiring_auth_key
+        redirect_uri:
+          type: string
+          format: uri
+          nullable: true
+          description: The redirect URI, if any, associated with the Connect Link. The URL that you'd like the end-user to be redirected to after authorizing the destination. We do not forward the OAuth code or token to this url. The redirect URI can be configured globally under your organization settings in the Census UI or on dynamically via the API when creating a Connect Link.
+        destination_id:
+          type: integer
+          nullable: true
+          description: The ID of the destination, if any, associated with the data.
+    type:
+      type: string
+      description: The type of destination connection to be managed by this link. The list of valid types can be fetched from `/destination_connect_links/types`.
+      example: hubspot
+    redirect_uri:
+      type: string
+      format: uri
+      nullable: true
+      description: The redirect URI, if any, associated with the Connect Link. The URL that you'd like the end-user to be redirected to after authorizing the destination. We do not forward the OAuth code or token to this url. The redirect URI can be configured globally under your organization settings in the Census UI or on dynamically via the API when creating a Connect Link.
+    InitialDestinationConnectLinkAttributes:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/type'
+        redirect_uri:
+          $ref: '#/components/schemas/redirect_uri'
+    Source:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the source.
+          example: 4
+        name:
+          type: string
+          description: The name assigned to this source, typically a combination of type and location.
+          example: Snowflake - xxxxxxx.us-east-1
+        label:
+          type:
+            - string
+            - 'null'
+          description: An optional label that can be assigned to the source for better categorization or identification.
+          example: Acme Inc. Snowflake
+        type:
+          type: string
+          description: The type of the data source .
+          example:
+            - snowflake
+            - redshift
+            - big_query
+        last_test_succeeded:
+          type:
+            - boolean
+            - 'null'
+          description: Indicates if the last connection test to this source was successful.
+          example: true
+        last_tested_at:
+          type:
+            - string
+            - 'null'
+          description: Timestamp of when the last connection test was conducted on this source.
+          format: date-time
+        connection_details:
+          description: Detailed configuration and information for connecting to this source.
+          additionalProperties: true
+          example:
+            account: xxxxxxx.us-east-1,
+            user: DEV,
+            warehouse: TEST,
+            use_keypair: false
+    label:
+      type:
+        - string
+        - 'null'
+      description: An optional label that can be assigned to the source for better categorization or identification.
+      example: Acme Inc. Snowflake
+    ConfigurableSourceAttributes:
+      type: object
+      properties:
+        connection:
+          type: object
+          description: Contains the information for the connection.
+          properties:
+            label:
+              $ref: '#/components/schemas/label'
+            credentials:
+              type: object
+              description: Credentials that should be associated with this source (e.g. hostname, port)
+              additionalProperties: true
+              example:
+                hostname: <instance>.<region>.redshift.amazonaws.com,
+                port: 5439,
+                user: redshift_user,
+                password: redshift_password,
+                database: demo
+    properties-type:
+      type: string
+      description: The type of the data source .
+      example:
+        - snowflake
+        - redshift
+        - big_query
+    InitialSourceAttributes:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ConfigurableSourceAttributes'
+        - type: object
+          properties:
+            connection:
+              type: object
+              properties:
+                type:
+                  $ref: '#/components/schemas/properties-type'
+    Column:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the column.
+          example: email
+        type:
+          type: string
+          description: The data type of the column.
+          example: character varying (256)
+    Model:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of this source object, will always be `model`.
+          enum:
+            - model
+          example: model
+        id:
+          type: integer
+          description: The id of this model.
+          example: 18
+        source_object_id:
+          type: integer
+          description: The source object id for this model.
+          example: 20
+        name:
+          type: string
+          description: The name of this model.
+          example: New App Users
+        description:
+          type: string
+          description: The description for this model.
+          example: Users that have signed up for our product in the last week.
+        query:
+          type: string
+          description: The SQL query associated with this model.
+          example: SELECT * FROM "users"
+        created_at:
+          type: string
+          format: date-time
+          description: When this model was created.
+          example: '2021-10-20T02:43:07.120Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: When this model was last updated.
+          example: '2021-10-20T02:50:35.477Z'
+        compiled_query:
+          type:
+            - string
+            - 'null'
+          description: The compiled query associated with this model if it is built atop a DBT instance.
+          example: null
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/Column'
+          description: A list of columns from this model.
+          example:
+            - name: user_id
+              type: character varying (256)
+            - name: full_name
+              type: character varying (256)
+    AtomicMolecule:
+      type: object
+      description: A condition on an property of an entity. The property or column will belong to the entity described in the parent relationship molecule. If the basic molecule is top level, the condition is on the entity on which the segment is based on.
+      properties:
+        attribute:
+          type: string
+          description: Represents the property name when `attribute_type` is property and the column name when `attribute_type` is column.
+          example: last_seen_at
+        attribute_type:
+          type: string
+          description: |
+            The type of the attribute for this condition. Options are:
+            - `property` for entity properties
+            - `sql` for sql conditions
+            - `column` for legacy segments
+          enum:
+            - property
+            - sql
+            - column
+          example: property
+        operator:
+          type: string
+          description: The operator for this molecule. Only certain operators will be valid for a given property type. For example, the `greaterthan` operator can only be applied to numeric values.
+          example: isnotnull
+          enum:
+            - isnull
+            - isnotnull
+            - between
+            - in
+            - exactly
+            - isnot
+            - starts
+            - ends
+            - contains
+            - nocontains
+            - isblank
+            - isnotblank
+            - equals
+            - notexactly
+            - lessthan
+            - greaterthan
+            - intop
+            - inbottom
+            - 'true'
+            - 'false'
+            - morethandays
+            - lessthandays
+            - exactlydays
+            - after
+            - 'on'
+            - before
+        value:
+          type: string
+          example: id
+          description: |
+            If the `attribute_type` is `sql`, then this is a SQL string. Otherwise the value being filtered on.
+              - a number for numerical operators
+              - a string for string operators
+              - a boolean for boolean operators
+              - an array for array operators
+              - for datetime operators, this could either be a datetime value, a number (for “morethandays” type operators), or a “between” value which is represented as a hash with the following structure `{ bound_one: X, bound_two: Y }`. X and Y are either datetime values, blank (in which case they become the current datetime on the backend), or a string with the following structure "days_ago: Z" where Z is a number (can be decimal).
+    RelatedSegmentMolecule:
+      type: object
+      description: A condition based on including or excluding a related segment based off of the same entity.
+      properties:
+        filter_segment_id:
+          type: integer
+          description: The `id` of the related Segment
+          example: 5
+        is_member:
+          type: boolean
+          description: Condition to include or exclude members of the related filter segment
+          example: true
+    RelationshipMolecule:
+      type: object
+      description: A condition or set of conditions on a related entity.
+      properties:
+        relationship_id:
+          type: integer
+          description: ID for the relationship object that connects both entities
+          example: 455
+        constraint:
+          type: object
+          description: Used only for creating conditions on event entities.
+          properties:
+            type:
+              type: string
+              description: The type of constraint, will always be `occurrences`.
+              enum:
+                - occurrences
+              example: occurrences
+            operator:
+              type: string
+              description: The operator to apply to the event constraint
+              enum:
+                - atleast
+                - equals
+                - atmost
+                - anynumber
+            value:
+              type: integer
+              description: The value to apply to the operator
+              example: 10
+            negate:
+              type: boolean
+              description: Whether the constraint should be negated
+              example: true
+        molecules:
+          type: array
+          description: A list of Atomic Molecules, Related Segment Molecules, Relationship Molecules, Molecule Groups and at most one Operation Molecule.
+    Segment:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of this source object, will always be `segment`.
+          enum:
+            - segment
+          example: segment
+        id:
+          type: integer
+          description: The id of this segment.
+          example: 18
+        name:
+          type: string
+          description: The name of this segment.
+          example: priority accounts
+        filter_segment_source_object_id:
+          type: integer
+          description: The source object id for this model.
+          example: 32
+        model_id:
+          type: integer
+          description: The id of the model that this filter segment is related to (either directly from legacy segments or indirectly via the entity)
+          example: 9
+        query:
+          type: string
+          description: The SQL query associated with this segment.
+          example: |
+            SELECT * FROM (
+              SELECT 1 AS id, 'Planet Express'::text AS company_name
+            ) AS census_1d19740e93f711b22efaea201fcf3f8f
+            WHERE ("id" IS NOT NULL )
+        record_count:
+          type: integer
+          description: The cached size of the segment at that particular moment in time.
+          example: 12540
+        created_at:
+          type: string
+          format: date-time
+          description: When this segment was created.
+          example: '2021-10-20T02:43:07.120Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: When this segment was last updated.
+          example: '2021-10-20T02:50:35.477Z'
+        resource_identifier:
+          type: string
+          description: The unique identifier for this filter segment.
+          example: segment:priority-accounts
+        molecules:
+          type: array
+          description: A list of Atomic Molecules, Related Segment Molecules, Relationship Molecules, Molecule Groups and at most one Operation Molecule.
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/AtomicMolecule'
+              - $ref: '#/components/schemas/RelatedSegmentMolecule'
+              - $ref: '#/components/schemas/RelationshipMolecule'
+    Table:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of this source object, will always be `table`.
+          enum:
+            - table
+          example: table
+        id:
+          type: integer
+          description: The id of this table.
+          example: 18
+        table_catalog:
+          type: string
+          description: The catalog associated with this table.
+          example: public
+        table_schema:
+          type: string
+          description: The schema associated with this table.
+          example: production
+        table_name:
+          type: string
+          description: The name of this table.
+          example: users
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/Column'
+          description: A list of columns from this table.
+          example:
+            - name: user_id
+              type: character varying (256)
+            - name: full_name
+              type: character varying (256)
+    properties-name:
+      type: string
+      description: The name of this model.
+      example: New App Users
+    query:
+      type: string
+      description: The SQL query associated with this model.
+      example: SELECT * FROM "users"
+    description:
+      type: string
+      description: The description for this model.
+      example: Users that have signed up for our product in the last week.
+    ConfigurableModelAttributes:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/properties-name'
+        query:
+          $ref: '#/components/schemas/query'
+        description:
+          $ref: '#/components/schemas/description'
+    InitialModelAttributes:
+      allOf:
+        - $ref: '#/components/schemas/ConfigurableModelAttributes'
+        - type: object
+          required:
+            - name
+            - query
+    RefreshKey:
+      type: object
+      properties:
+        refresh_key:
+          description: They key that can be used to check the status of the refresh job.
+          type: integer
+          example: 1647978948
+    Segment-properties-name:
+      type: string
+      description: The name of this segment.
+      example: priority accounts
+    molecules:
+      type: array
+      description: A list of Atomic Molecules, Related Segment Molecules, Relationship Molecules, Molecule Groups and at most one Operation Molecule.
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/AtomicMolecule'
+          - $ref: '#/components/schemas/RelatedSegmentMolecule'
+          - $ref: '#/components/schemas/RelationshipMolecule'
+    ConfigurableSegmentAttributes:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/Segment-properties-name'
+        molecules:
+          $ref: '#/components/schemas/molecules'
+    InitialSegmentAttributes:
+      allOf:
+        - $ref: '#/components/schemas/ConfigurableSegmentAttributes'
+        - type: object
+          properties:
+            business_object_id:
+              type: integer
+              description: The `id` of the entity on which this segment is based.
+          required:
+            - name
+            - molecules
+            - business_object_id
+    Connector:
+      type: object
+      properties:
+        documentation_slug:
+          type: string
+          description: The path to this connector's Census documentation, ie https://docs.getcensus.com/destinations/{documentation_slug}.
+          example: braze
+        label:
+          type: string
+          description: The name of this connector.
+          example: Braze
+        service_name:
+          type: string
+          description: The full name for this connector. This is used to identify the connector in the API
+          example: braze
+        auth_method:
+          type: string
+          description: How to authorize a destination of this type of connector
+          enum:
+            - credentials
+            - oauth
+            - other
+        configuration_fields:
+          type: object
+          description: Top level object containing a list of fields needed to create a destination for this type of connector
+          properties:
+            fields:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The name of this configuration field. This is used to identify the credential in the API to create a destination of this type of connector.
+                    example: instance_url
+                  rules:
+                    type: string
+                    description: Validations around this field, ie 'required'
+                    example: required
+                  label:
+                    type: string
+                    description: A user facing name for this field
+                    example: Endpoint URL
+                  type:
+                    type: string
+                    description: The type of this field
+                    example: string
+                    enum:
+                      - string
+                      - integer
+                      - boolean
+                  placholder:
+                    type: string
+                    description: A placeholder for this field, usually an example of its value
+                    example: https://rest.iad-01.braze.com
+                  matches:
+                    type: string
+                    description: A regex string the value must match
+                    example: ^(?:(?=.*rest)https:\\/\\/rest|(?!.*rest)(https:\\/\\/)?sdk)\\.(iad|fra)-\\d\\d\\.braze\\.(com|eu)
+                  is_password_type_field:
+                    type: boolean
+                    description: If this is a credential field that contains sensitive data
+                    example: false
+                  possible_values:
+                    type: array
+                    items:
+                      type: string
+                    description: If this credential accepts a finite list of values, what those values are
+                  read_more:
+                    type: string
+                    description: A link to read more about this destination, usually linking to the Census docs.
+                    example: https://docs.getcensus.com/destinations/hubspot#managing-object-associations
+                  input_type:
+                    type: object
+                    description: The type of input for this credential field
+                    example: textbox
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                          - textbox
+                          - textarea
+                          - toggle
+                          - select
+                          - keyvaluepairs
+                      allow_manual_inputs:
+                        type: boolean
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1.
+      schema:
+        type: number
+        default: 1
+    PerPage:
+      name: per_page
+      in: query
+      description: Determines the number of results on each page. It can't exceed 100.
+      schema:
+        type: number
+        default: 25
+        maximum: 100
+    Order:
+      name: order
+      in: query
+      description: Organizes the results based on their creation time, either ascending or descending.
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: desc
+    SyncId:
+      name: sync_id
+      in: path
+      required: true
+      description: ID of the sync
+      schema:
+        type: integer
+    SyncRunId:
+      name: sync_run_id
+      in: path
+      required: true
+      description: ID of the sync run
+      schema:
+        type: integer
+    ConnectLinkId:
+      name: connect_link_id
+      in: path
+      required: true
+      description: ID of the connect link
+      schema:
+        type: integer
+    SourceId:
+      name: source_id
+      in: path
+      required: true
+      description: ID of the source
+      schema:
+        type: integer
+    ModelId:
+      name: model_id
+      in: path
+      required: true
+      description: ID of the model
+      schema:
+        type: integer
+    TableId:
+      name: table_id
+      in: path
+      required: true
+      description: ID of the table
+      schema:
+        type: integer
+    RefreshKey:
+      name: refresh_key
+      in: query
+      description: An `id` provided by the `refresh_columns` endpoint, used to check whether the refresh columns job has finished.
+      required: true
+      schema:
+        type: integer
+    SegmentId:
+      name: segment_id
+      in: path
+      required: true
+      description: ID of the segment
+      schema:
+        type: integer
+  responses:
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                description: HTTP status code.
+                enum:
+                  - 404
+                example: 404
+    StatusSuccess:
+      description: Successfully checked the status of the job.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                description: Status of the job
+                type: string
+                enum:
+                  - completed
+                  - processing
+                example: processing
