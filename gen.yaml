@@ -20,7 +20,6 @@ typescript:
   clientServerStatusCodesAsErrors: true
   flattenGlobalSecurity: true
   imports:
-  imports:
     option: openapi
     paths:
       callbacks: models
