@@ -20,13 +20,14 @@ typescript:
   clientServerStatusCodesAsErrors: true
   flattenGlobalSecurity: true
   imports:
+  imports:
     option: openapi
     paths:
-      callbacks: models/callbacks
-      errors: models/errors
-      operations: models/operations
-      shared: models/components
-      webhooks: models/webhooks
+      callbacks: models
+      errors: models
+      operations: models
+      shared: models
+      webhooks: models
   installationURL: https://github.com/speakeasy-sdks/Census-sample-sdk
   maxMethodParams: 4
   packageName: Workspace-Management-API
