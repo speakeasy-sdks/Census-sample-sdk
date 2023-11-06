@@ -1,0 +1,11 @@
+# CreateDestinationConnectLinkResponseBody
+
+Destination connect link created successfully
+
+
+## Fields
+
+| Field                                                                                                          | Type                                                                                                           | Required                                                                                                       | Description                                                                                                    | Example                                                                                                        |
+| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `data`                                                                                                         | [components.DestinationConnectLink](../../models/shared/destinationconnectlink.md)                             | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |                                                                                                                |
+| `status`                                                                                                       | [operations.CreateDestinationConnectLinkStatus](../../models/operations/createdestinationconnectlinkstatus.md) | :heavy_minus_sign:                                                                                             | Outcome of the operation.                                                                                      | created                                                                                                        |
