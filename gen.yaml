@@ -1,0 +1,17 @@
+configVersion: 1.0.0
+generation:
+  comments:
+    disableComments: false
+    omitDescriptionIfSummaryPresent: false
+  baseServerURL: ""
+  flattenGlobalSecurity: true
+  sdkClassName: Workspace-Management-API
+  singleTagPerOp: false
+  tagNamespacingDisabled: false
+typescript:
+  version: 0.0.1
+  author: Census
+  clientServerStatusCodesAsErrors: true
+  flattenGlobalSecurity: true
+  maxMethodParams: 4
+  packageName: Workspace-Management-API
