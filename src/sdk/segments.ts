@@ -3,9 +3,7 @@
  */
 
 import * as utils from "../internal/utils";
-import * as components from "../models/components";
-import * as errors from "../models/errors";
-import * as operations from "../models/operations";
+import * as models from "../models";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
 
@@ -20,11 +18,11 @@ export class Segments {
      * Create a new segment
      */
     async createSegment(
-        initialSegmentAttributes: components.InitialSegmentAttributes,
+        initialSegmentAttributes: models.InitialSegmentAttributes,
         sourceId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.CreateSegmentResponse> {
-        const req = new operations.CreateSegmentRequest({
+    ): Promise<models.CreateSegmentResponse> {
+        const req = new models.CreateSegmentRequest({
             initialSegmentAttributes: initialSegmentAttributes,
             sourceId: sourceId,
         });
@@ -53,7 +51,7 @@ export class Segments {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = {
@@ -82,7 +80,7 @@ export class Segments {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.CreateSegmentResponse = new operations.CreateSegmentResponse({
+        const res: models.CreateSegmentResponse = new models.CreateSegmentResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -93,10 +91,10 @@ export class Segments {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.object = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.CreateSegmentResponseBody
+                        models.CreateSegmentResponseBody
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -106,7 +104,7 @@ export class Segments {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -127,8 +125,8 @@ export class Segments {
         segmentId: number,
         sourceId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.DeleteSegmentResponse> {
-        const req = new operations.DeleteSegmentRequest({
+    ): Promise<models.DeleteSegmentResponse> {
+        const req = new models.DeleteSegmentRequest({
             segmentId: segmentId,
             sourceId: sourceId,
         });
@@ -147,7 +145,7 @@ export class Segments {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -170,7 +168,7 @@ export class Segments {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.DeleteSegmentResponse = new operations.DeleteSegmentResponse({
+        const res: models.DeleteSegmentResponse = new models.DeleteSegmentResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -181,10 +179,10 @@ export class Segments {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.object = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.DeleteSegmentResponseBody
+                        models.DeleteSegmentResponseBody
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -194,7 +192,7 @@ export class Segments {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -215,8 +213,8 @@ export class Segments {
         segmentId: number,
         sourceId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.GetSourcesSourceIdFilterSegmentsSegmentIdResponse> {
-        const req = new operations.GetSourcesSourceIdFilterSegmentsSegmentIdRequest({
+    ): Promise<models.GetSourcesSourceIdFilterSegmentsSegmentIdResponse> {
+        const req = new models.GetSourcesSourceIdFilterSegmentsSegmentIdRequest({
             segmentId: segmentId,
             sourceId: sourceId,
         });
@@ -235,7 +233,7 @@ export class Segments {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -258,8 +256,8 @@ export class Segments {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.GetSourcesSourceIdFilterSegmentsSegmentIdResponse =
-            new operations.GetSourcesSourceIdFilterSegmentsSegmentIdResponse({
+        const res: models.GetSourcesSourceIdFilterSegmentsSegmentIdResponse =
+            new models.GetSourcesSourceIdFilterSegmentsSegmentIdResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -270,10 +268,10 @@ export class Segments {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.object = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.GetSourcesSourceIdFilterSegmentsSegmentIdResponseBody
+                        models.GetSourcesSourceIdFilterSegmentsSegmentIdResponseBody
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -283,7 +281,7 @@ export class Segments {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -299,12 +297,12 @@ export class Segments {
      */
     async listSegments(
         sourceId: number,
-        order?: components.Order,
+        order?: models.Order,
         page?: number,
         perPage?: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.ListSegmentsResponse> {
-        const req = new operations.ListSegmentsRequest({
+    ): Promise<models.ListSegmentsResponse> {
+        const req = new models.ListSegmentsRequest({
             sourceId: sourceId,
             order: order,
             page: page,
@@ -321,7 +319,7 @@ export class Segments {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -345,7 +343,7 @@ export class Segments {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.ListSegmentsResponse = new operations.ListSegmentsResponse({
+        const res: models.ListSegmentsResponse = new models.ListSegmentsResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -356,10 +354,10 @@ export class Segments {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.object = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.ListSegmentsResponseBody
+                        models.ListSegmentsResponseBody
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -369,7 +367,7 @@ export class Segments {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -389,10 +387,10 @@ export class Segments {
     async patchSourcesSourceIdFilterSegmentsSegmentId(
         segmentId: number,
         sourceId: number,
-        configurableSegmentAttributes?: components.ConfigurableSegmentAttributes,
+        configurableSegmentAttributes?: models.ConfigurableSegmentAttributes,
         config?: AxiosRequestConfig
-    ): Promise<operations.PatchSourcesSourceIdFilterSegmentsSegmentIdResponse> {
-        const req = new operations.PatchSourcesSourceIdFilterSegmentsSegmentIdRequest({
+    ): Promise<models.PatchSourcesSourceIdFilterSegmentsSegmentIdResponse> {
+        const req = new models.PatchSourcesSourceIdFilterSegmentsSegmentIdRequest({
             segmentId: segmentId,
             sourceId: sourceId,
             configurableSegmentAttributes: configurableSegmentAttributes,
@@ -426,7 +424,7 @@ export class Segments {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = {
@@ -454,8 +452,8 @@ export class Segments {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PatchSourcesSourceIdFilterSegmentsSegmentIdResponse =
-            new operations.PatchSourcesSourceIdFilterSegmentsSegmentIdResponse({
+        const res: models.PatchSourcesSourceIdFilterSegmentsSegmentIdResponse =
+            new models.PatchSourcesSourceIdFilterSegmentsSegmentIdResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -466,10 +464,10 @@ export class Segments {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.object = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.PatchSourcesSourceIdFilterSegmentsSegmentIdResponseBody
+                        models.PatchSourcesSourceIdFilterSegmentsSegmentIdResponseBody
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -479,7 +477,7 @@ export class Segments {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,

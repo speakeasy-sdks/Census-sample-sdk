@@ -3,7 +3,7 @@
  */
 
 import * as utils from "../internal/utils";
-import * as components from "../models/components";
+import * as models from "../models";
 import { Connectors } from "./connectors";
 import { DestinationConnectLinks } from "./destinationconnectlinks";
 import { Destinations } from "./destinations";
@@ -50,14 +50,14 @@ export type SDKProps = {
 
 export class SDKConfiguration {
     defaultClient: AxiosInstance;
-    security?: components.Security | (() => Promise<components.Security>);
+    security?: models.Security | (() => Promise<models.Security>);
     serverURL: string;
     serverDefaults: any;
     language = "typescript";
     openapiDocVersion = "1.0.0";
-    sdkVersion = "0.1.0";
+    sdkVersion = "0.2.0";
     genVersion = "2.179.0";
-    userAgent = "speakeasy-sdk/typescript 0.1.0 2.179.0 1.0.0 Workspace-Management-API";
+    userAgent = "speakeasy-sdk/typescript 0.2.0 2.179.0 1.0.0 Workspace-Management-API";
     retryConfig?: utils.RetryConfig;
     public constructor(init?: Partial<SDKConfiguration>) {
         Object.assign(this, init);
@@ -89,7 +89,7 @@ export class WorkspaceManagementAPI {
         const defaultClient = props?.defaultClient ?? axios.create({ baseURL: serverURL });
         this.sdkConfiguration = new SDKConfiguration({
             defaultClient: defaultClient,
-            security: new components.Security({ bearerAuth: props?.bearerAuth }),
+            security: new models.Security({ bearerAuth: props?.bearerAuth }),
 
             serverURL: serverURL,
             retryConfig: props?.retryConfig,

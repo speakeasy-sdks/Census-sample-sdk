@@ -2,8 +2,7 @@
 
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchConnectorRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async () => {
     const sdk = new WorkspaceManagementAPI({

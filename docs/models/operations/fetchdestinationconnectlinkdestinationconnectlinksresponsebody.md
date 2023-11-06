@@ -1,0 +1,11 @@
+# FetchDestinationConnectLinkDestinationConnectLinksResponseBody
+
+Successfully retrieved destination connect link details.
+
+
+## Fields
+
+| Field                                                                                                    | Type                                                                                                     | Required                                                                                                 | Description                                                                                              | Example                                                                                                  |
+| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `data`                                                                                                   | [models.DestinationConnectLink](../../models/shared/destinationconnectlink.md)                           | :heavy_check_mark:                                                                                       | N/A                                                                                                      |                                                                                                          |
+| `status`                                                                                                 | [models.FetchDestinationConnectLinkStatus](../../models/operations/fetchdestinationconnectlinkstatus.md) | :heavy_check_mark:                                                                                       | The outcome of the fetch request                                                                         | success                                                                                                  |

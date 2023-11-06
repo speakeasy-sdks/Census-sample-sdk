@@ -14,8 +14,7 @@ Use this endpoint to cancel a sync that is actively running.
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { CancelSyncRunRequest } from "Workspace-Management-API/dist/models/operations";
+import { CancelSyncRunRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -42,7 +41,7 @@ const syncRunId: number = 609805;
 
 ### Response
 
-**Promise<[operations.CancelSyncRunResponse](../../models/operations/cancelsyncrunresponse.md)>**
+**Promise<[models.CancelSyncRunResponse](../../models/operations/cancelsyncrunresponse.md)>**
 
 
 ## fetchSyncRun
@@ -52,8 +51,7 @@ Retrieve the details of a particular sync run
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchSyncRunRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchSyncRunRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -80,7 +78,7 @@ const syncRunId: number = 612246;
 
 ### Response
 
-**Promise<[operations.FetchSyncRunResponse](../../models/operations/fetchsyncrunresponse.md)>**
+**Promise<[models.FetchSyncRunResponse](../../models/operations/fetchsyncrunresponse.md)>**
 
 
 ## getSyncsSyncIdSyncRuns
@@ -90,9 +88,7 @@ List sync runs
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { Order } from "Workspace-Management-API/dist/models/components";
-import { GetSyncsSyncIdSyncRunsRequest } from "Workspace-Management-API/dist/models/operations";
+import { GetSyncsSyncIdSyncRunsRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -117,7 +113,7 @@ const perPage: number = 2344.94;
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `syncId`                                                                                             | *number*                                                                                             | :heavy_check_mark:                                                                                   | The ID of the sync for which to list runs.                                                           |
-| `order`                                                                                              | [components.Order](../../models/shared/order.md)                                                     | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../../models/shared/order.md)                                                         | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -125,5 +121,5 @@ const perPage: number = 2344.94;
 
 ### Response
 
-**Promise<[operations.GetSyncsSyncIdSyncRunsResponse](../../models/operations/getsyncssyncidsyncrunsresponse.md)>**
+**Promise<[models.GetSyncsSyncIdSyncRunsResponse](../../models/operations/getsyncssyncidsyncrunsresponse.md)>**
 

@@ -14,8 +14,7 @@ This endpoint lists information for a given table, including information on what
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { GetSourcesSourceIdTablesTableIdRequest } from "Workspace-Management-API/dist/models/operations";
+import { GetSourcesSourceIdTablesTableIdRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -44,7 +43,7 @@ const tableId: number = 878261;
 
 ### Response
 
-**Promise<[operations.GetSourcesSourceIdTablesTableIdResponse](../../models/operations/getsourcessourceidtablestableidresponse.md)>**
+**Promise<[models.GetSourcesSourceIdTablesTableIdResponse](../../models/operations/getsourcessourceidtablestableidresponse.md)>**
 
 
 ## getSourcesSourceIdTablesTableIdRefreshColumnsStatus
@@ -54,8 +53,10 @@ This endpoint checks whether the job refreshing columns for a table has complete
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { GetSourcesSourceIdTablesTableIdRefreshColumnsStatusRequest } from "Workspace-Management-API/dist/models/operations";
+import {
+  GetSourcesSourceIdTablesTableIdRefreshColumnsStatusRequest,
+  WorkspaceManagementAPI,
+} from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -86,7 +87,7 @@ const tableId: number = 966838;
 
 ### Response
 
-**Promise<[operations.GetSourcesSourceIdTablesTableIdRefreshColumnsStatusResponse](../../models/operations/getsourcessourceidtablestableidrefreshcolumnsstatusresponse.md)>**
+**Promise<[models.GetSourcesSourceIdTablesTableIdRefreshColumnsStatusResponse](../../models/operations/getsourcessourceidtablestableidrefreshcolumnsstatusresponse.md)>**
 
 
 ## postSourcesSourceIdTablesTableIdRefreshColumns
@@ -96,8 +97,7 @@ This endpoint queues a job to refresh the list of columns for a table.
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { PostSourcesSourceIdTablesTableIdRefreshColumnsRequest } from "Workspace-Management-API/dist/models/operations";
+import { PostSourcesSourceIdTablesTableIdRefreshColumnsRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -126,5 +126,5 @@ const tableId: number = 698503;
 
 ### Response
 
-**Promise<[operations.PostSourcesSourceIdTablesTableIdRefreshColumnsResponse](../../models/operations/postsourcessourceidtablestableidrefreshcolumnsresponse.md)>**
+**Promise<[models.PostSourcesSourceIdTablesTableIdRefreshColumnsResponse](../../models/operations/postsourcessourceidtablestableidrefreshcolumnsresponse.md)>**
 

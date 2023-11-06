@@ -5,6 +5,6 @@ Top level object containing a list of fields needed to create a destination for 
 
 ## Fields
 
-| Field                                                | Type                                                 | Required                                             | Description                                          |
-| ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- |
-| `fields`                                             | [components.Fields](../../models/shared/fields.md)[] | :heavy_minus_sign:                                   | N/A                                                  |
+| Field                                            | Type                                             | Required                                         | Description                                      |
+| ------------------------------------------------ | ------------------------------------------------ | ------------------------------------------------ | ------------------------------------------------ |
+| `fields`                                         | [models.Fields](../../models/shared/fields.md)[] | :heavy_minus_sign:                               | N/A                                              |

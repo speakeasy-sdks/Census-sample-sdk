@@ -13,8 +13,7 @@ Use this endpoint to fetch the details for a specific types of destination conne
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchConnectorRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -41,7 +40,7 @@ const serviceName: string = "string";
 
 ### Response
 
-**Promise<[operations.FetchConnectorResponse](../../models/operations/fetchconnectorresponse.md)>**
+**Promise<[models.FetchConnectorResponse](../../models/operations/fetchconnectorresponse.md)>**
 
 
 ## listConnectors
@@ -51,9 +50,7 @@ Use this endpoint to list out the types of destination connections that can be c
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { Order } from "Workspace-Management-API/dist/models/components";
-import { ListConnectorsRequest } from "Workspace-Management-API/dist/models/operations";
+import { ListConnectorsRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -76,7 +73,7 @@ const perPage: number = 4323.88;
 
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `order`                                                                                              | [components.Order](../../models/shared/order.md)                                                     | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../../models/shared/order.md)                                                         | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -84,5 +81,5 @@ const perPage: number = 4323.88;
 
 ### Response
 
-**Promise<[operations.ListConnectorsResponse](../../models/operations/listconnectorsresponse.md)>**
+**Promise<[models.ListConnectorsResponse](../../models/operations/listconnectorsresponse.md)>**
 

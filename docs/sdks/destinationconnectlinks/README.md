@@ -36,15 +36,15 @@ import { WorkspaceManagementAPI } from "Workspace-Management-API";
 
 ### Parameters
 
-| Parameter                                                                                                            | Type                                                                                                                 | Required                                                                                                             | Description                                                                                                          |
-| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `request`                                                                                                            | [components.InitialDestinationConnectLinkAttributes](../../models/shared/initialdestinationconnectlinkattributes.md) | :heavy_check_mark:                                                                                                   | The request object to use for the request.                                                                           |
-| `config`                                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                                         | :heavy_minus_sign:                                                                                                   | Available config options for making requests.                                                                        |
+| Parameter                                                                                                        | Type                                                                                                             | Required                                                                                                         | Description                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `request`                                                                                                        | [models.InitialDestinationConnectLinkAttributes](../../models/shared/initialdestinationconnectlinkattributes.md) | :heavy_check_mark:                                                                                               | The request object to use for the request.                                                                       |
+| `config`                                                                                                         | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                                     | :heavy_minus_sign:                                                                                               | Available config options for making requests.                                                                    |
 
 
 ### Response
 
-**Promise<[operations.CreateDestinationConnectLinkResponse](../../models/operations/createdestinationconnectlinkresponse.md)>**
+**Promise<[models.CreateDestinationConnectLinkResponse](../../models/operations/createdestinationconnectlinkresponse.md)>**
 
 
 ## fetchDestinationConnectLink
@@ -54,8 +54,7 @@ Retrieve the details of a specific destination connect link
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchDestinationConnectLinkRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchDestinationConnectLinkRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -82,7 +81,7 @@ const connectLinkId: number = 717794;
 
 ### Response
 
-**Promise<[operations.FetchDestinationConnectLinkResponse](../../models/operations/fetchdestinationconnectlinkresponse.md)>**
+**Promise<[models.FetchDestinationConnectLinkResponse](../../models/operations/fetchdestinationconnectlinkresponse.md)>**
 
 
 ## listDestinationConnectLinkTypes
@@ -117,7 +116,7 @@ import { WorkspaceManagementAPI } from "Workspace-Management-API";
 
 ### Response
 
-**Promise<[operations.ListDestinationConnectLinkTypesResponse](../../models/operations/listdestinationconnectlinktypesresponse.md)>**
+**Promise<[models.ListDestinationConnectLinkTypesResponse](../../models/operations/listdestinationconnectlinktypesresponse.md)>**
 
 
 ## listDestinationConnectLinks
@@ -127,9 +126,7 @@ This endpoint returns details for all active and expired connect links in the cu
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { Order } from "Workspace-Management-API/dist/models/components";
-import { ListDestinationConnectLinksRequest } from "Workspace-Management-API/dist/models/operations";
+import { ListDestinationConnectLinksRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -152,7 +149,7 @@ const perPage: number = 9162.74;
 
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `order`                                                                                              | [components.Order](../../models/shared/order.md)                                                     | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../../models/shared/order.md)                                                         | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -160,7 +157,7 @@ const perPage: number = 9162.74;
 
 ### Response
 
-**Promise<[operations.ListDestinationConnectLinksResponse](../../models/operations/listdestinationconnectlinksresponse.md)>**
+**Promise<[models.ListDestinationConnectLinksResponse](../../models/operations/listdestinationconnectlinksresponse.md)>**
 
 
 ## revokeDestinationConnectLink
@@ -170,8 +167,7 @@ Revokes a destination connect link so that it can no longer be used.
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { RevokeDestinationConnectLinkRequest } from "Workspace-Management-API/dist/models/operations";
+import { RevokeDestinationConnectLinkRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -198,5 +194,5 @@ const connectLinkId: number = 428305;
 
 ### Response
 
-**Promise<[operations.RevokeDestinationConnectLinkResponse](../../models/operations/revokedestinationconnectlinkresponse.md)>**
+**Promise<[models.RevokeDestinationConnectLinkResponse](../../models/operations/revokedestinationconnectlinkresponse.md)>**
 

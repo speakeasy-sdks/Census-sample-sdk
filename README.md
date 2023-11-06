@@ -15,15 +15,15 @@ It has been generated successfully based on your OpenAPI spec. However, it is no
 - [ ] 🎁 Publish your SDK to package managers by [configuring automatic publishing](https://www.speakeasyapi.dev/docs/productionize-sdks/publish-sdks)
 - [ ] ✨ When ready to productionize, delete this section from the README
 <!-- Start SDK Installation -->
-# SDK Installation
+## SDK Installation
 
-## NPM
+### NPM
 
 ```bash
 npm add https://github.com/speakeasy-sdks/Census-sample-sdk
 ```
 
-## Yarn
+### Yarn
 
 ```bash
 yarn add https://github.com/speakeasy-sdks/Census-sample-sdk
@@ -32,11 +32,8 @@ yarn add https://github.com/speakeasy-sdks/Census-sample-sdk
 
 ## SDK Example Usage
 <!-- Start SDK Example Usage -->
-
-
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchConnectorRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async () => {
     const sdk = new WorkspaceManagementAPI({
@@ -55,15 +52,15 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 <!-- End SDK Example Usage -->
 
 <!-- Start SDK Available Operations -->
-# Available Resources and Operations
+## Available Resources and Operations
 
 
-## [.connectors](docs/sdks/connectors/README.md)
+### [.connectors](docs/sdks/connectors/README.md)
 
 * [fetchConnector](docs/sdks/connectors/README.md#fetchconnector) - Fetch connector
 * [listConnectors](docs/sdks/connectors/README.md#listconnectors) - List connectors
 
-## [.destinationConnectLinks](docs/sdks/destinationconnectlinks/README.md)
+### [.destinationConnectLinks](docs/sdks/destinationconnectlinks/README.md)
 
 * [createDestinationConnectLink](docs/sdks/destinationconnectlinks/README.md#createdestinationconnectlink) - Create a new destination connect link
 * [fetchDestinationConnectLink](docs/sdks/destinationconnectlinks/README.md#fetchdestinationconnectlink) - Fetch destination connect link
@@ -71,7 +68,7 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 * [listDestinationConnectLinks](docs/sdks/destinationconnectlinks/README.md#listdestinationconnectlinks) - List destination connect links
 * [revokeDestinationConnectLink](docs/sdks/destinationconnectlinks/README.md#revokedestinationconnectlink) - Revoke a destination connect link
 
-## [.destinations](docs/sdks/destinations/README.md)
+### [.destinations](docs/sdks/destinations/README.md)
 
 * [createDestination](docs/sdks/destinations/README.md#createdestination) - Create a new destination
 * [deleteDestination](docs/sdks/destinations/README.md#deletedestination) - Delete destination
@@ -85,12 +82,12 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 * [postDestinationsDestinationIdObjectsObjectFullNameRefreshFields](docs/sdks/destinations/README.md#postdestinationsdestinationidobjectsobjectfullnamerefreshfields) - Start fields refresh
 * [postDestinationsDestinationIdRefreshObjects](docs/sdks/destinations/README.md#postdestinationsdestinationidrefreshobjects) - Start object refresh
 
-## [.objects](docs/sdks/objects/README.md)
+### [.objects](docs/sdks/objects/README.md)
 
 * [listDestinationObjects](docs/sdks/objects/README.md#listdestinationobjects) - List destination objects
 * [listSourceObjects](docs/sdks/objects/README.md#listsourceobjects) - List source objects
 
-## [.sources](docs/sdks/sources/README.md)
+### [.sources](docs/sdks/sources/README.md)
 
 * [createSource](docs/sdks/sources/README.md#createsource) - Create a new source
 * [deleteSource](docs/sdks/sources/README.md#deletesource) - Delete source
@@ -100,7 +97,7 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 * [patchSourcesSourceId](docs/sdks/sources/README.md#patchsourcessourceid) - Update source
 * [postSourcesSourceIdRefreshTables](docs/sdks/sources/README.md#postsourcessourceidrefreshtables) - Start table refresh
 
-## [.segments](docs/sdks/segments/README.md)
+### [.segments](docs/sdks/segments/README.md)
 
 * [createSegment](docs/sdks/segments/README.md#createsegment) - Create a new segment
 * [deleteSegment](docs/sdks/segments/README.md#deletesegment) - Delete Segment
@@ -108,7 +105,7 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 * [listSegments](docs/sdks/segments/README.md#listsegments) - List segments
 * [patchSourcesSourceIdFilterSegmentsSegmentId](docs/sdks/segments/README.md#patchsourcessourceidfiltersegmentssegmentid) - Update segment
 
-## [.models](docs/sdks/models/README.md)
+### [.models](docs/sdks/models/README.md)
 
 * [createModel](docs/sdks/models/README.md#createmodel) - Create a new model
 * [deleteModel](docs/sdks/models/README.md#deletemodel) - Delete model
@@ -118,19 +115,19 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 * [patchSourcesSourceIdModelsModelId](docs/sdks/models/README.md#patchsourcessourceidmodelsmodelid) - Update model
 * [postSourcesSourceIdModelsModelIdRefreshColumns](docs/sdks/models/README.md#postsourcessourceidmodelsmodelidrefreshcolumns) - Start column refresh
 
-## [.tables](docs/sdks/tables/README.md)
+### [.tables](docs/sdks/tables/README.md)
 
 * [getSourcesSourceIdTablesTableId](docs/sdks/tables/README.md#getsourcessourceidtablestableid) - Fetch table
 * [getSourcesSourceIdTablesTableIdRefreshColumnsStatus](docs/sdks/tables/README.md#getsourcessourceidtablestableidrefreshcolumnsstatus) - Check column refresh
 * [postSourcesSourceIdTablesTableIdRefreshColumns](docs/sdks/tables/README.md#postsourcessourceidtablestableidrefreshcolumns) - Start column refresh
 
-## [.syncRuns](docs/sdks/syncruns/README.md)
+### [.syncRuns](docs/sdks/syncruns/README.md)
 
 * [cancelSyncRun](docs/sdks/syncruns/README.md#cancelsyncrun) - Cancel a running sync
 * [fetchSyncRun](docs/sdks/syncruns/README.md#fetchsyncrun) - Fetch sync run
 * [getSyncsSyncIdSyncRuns](docs/sdks/syncruns/README.md#getsyncssyncidsyncruns) - List sync runs
 
-## [.syncs](docs/sdks/syncs/README.md)
+### [.syncs](docs/sdks/syncs/README.md)
 
 * [createSync](docs/sdks/syncs/README.md#createsync) - Create a new sync
 * [deleteSync](docs/sdks/syncs/README.md#deletesync) - Delete a sync
@@ -141,8 +138,6 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 <!-- End SDK Available Operations -->
 
 <!-- Start Dev Containers -->
-
-
 
 <!-- End Dev Containers -->
 
@@ -155,8 +150,7 @@ Handling errors in your SDK should largely match your expectations.  All operati
 ## Example
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchDestinationConnectLinkRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchDestinationConnectLinkRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -197,8 +191,7 @@ For example:
 
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchConnectorRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async () => {
     const sdk = new WorkspaceManagementAPI({
@@ -223,8 +216,7 @@ The default server can also be overridden globally by passing a URL to the `serv
 
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchConnectorRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async () => {
     const sdk = new WorkspaceManagementAPI({
@@ -262,8 +254,6 @@ const httpClient = axios.create({
 
 const sdk = new WorkspaceManagementAPI({defaultClient: httpClient});
 ```
-
-
 <!-- End Custom HTTP Client -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
