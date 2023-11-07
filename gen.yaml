@@ -28,11 +28,11 @@ typescript:
   imports:
     option: openapi
     paths:
-      callbacks: models
-      errors: models
-      operations: models
-      shared: models
-      webhooks: models
+      callbacks: models/callbacks
+      errors: models/errors
+      operations: models/operations
+      shared: models/components
+      webhooks: models/webhooks
   installationURL: https://github.com/speakeasy-sdks/Census-sample-sdk
   maxMethodParams: 4
   packageName: Workspace-Management-API
