@@ -3,8 +3,8 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
+import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
 
 export class CancelSyncRunRequest extends SpeakeasyBase {
     /**
@@ -14,29 +14,7 @@ export class CancelSyncRunRequest extends SpeakeasyBase {
     syncRunId: number;
 }
 
-export class CancelSyncRunData extends SpeakeasyBase {}
-
-/**
- * Successfully cancelled the sync
- */
-export class CancelSyncRunResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "data" })
-    @Type(() => CancelSyncRunData)
-    data?: CancelSyncRunData;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status?: string;
-}
-
 export class CancelSyncRunResponse extends SpeakeasyBase {
-    /**
-     * Successfully cancelled the sync
-     */
-    @SpeakeasyMetadata()
-    twoHundredApplicationJsonObject?: CancelSyncRunResponseBody;
-
     /**
      * HTTP response content type for this operation
      */
@@ -54,4 +32,10 @@ export class CancelSyncRunResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
+
+    /**
+     * Successfully cancelled the sync
+     */
+    @SpeakeasyMetadata()
+    syncRunsCancel?: components.SyncRunsCancel;
 }

@@ -3,8 +3,8 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
+import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose } from "class-transformer";
 
 export class DeleteSegmentRequest extends SpeakeasyBase {
     /**
@@ -20,21 +20,18 @@ export class DeleteSegmentRequest extends SpeakeasyBase {
     sourceId: number;
 }
 
-/**
- * Segment successfully deleted.
- */
-export class DeleteSegmentResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status?: string;
-}
-
 export class DeleteSegmentResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation
      */
     @SpeakeasyMetadata()
     contentType: string;
+
+    /**
+     * Segment successfully deleted.
+     */
+    @SpeakeasyMetadata()
+    segmentsDelete?: components.SegmentsDelete;
 
     /**
      * HTTP response status code for this operation
@@ -47,10 +44,4 @@ export class DeleteSegmentResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
-
-    /**
-     * Segment successfully deleted.
-     */
-    @SpeakeasyMetadata()
-    object?: DeleteSegmentResponseBody;
 }

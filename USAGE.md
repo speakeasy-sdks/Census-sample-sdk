@@ -11,7 +11,7 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
     });
     const serviceName: string = "string";
 
-    const res = await sdk.connectors.fetchConnector(serviceName);
+    const res = await sdk.connectors.fetch(serviceName);
 
     if (res.statusCode == 200) {
         // handle response

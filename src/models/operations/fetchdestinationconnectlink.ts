@@ -5,7 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
 
 export class FetchDestinationConnectLinkRequest extends SpeakeasyBase {
     /**
@@ -15,42 +14,18 @@ export class FetchDestinationConnectLinkRequest extends SpeakeasyBase {
     connectLinkId: number;
 }
 
-/**
- * The outcome of the fetch request
- */
-export enum FetchDestinationConnectLinkStatus {
-    Success = "success",
-}
-
-/**
- * Successfully retrieved destination connect link details.
- */
-export class FetchDestinationConnectLinkResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "data" })
-    @Type(() => components.DestinationConnectLink)
-    data: components.DestinationConnectLink;
-
-    /**
-     * The outcome of the fetch request
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status: FetchDestinationConnectLinkStatus;
-}
-
 export class FetchDestinationConnectLinkResponse extends SpeakeasyBase {
-    /**
-     * Successfully retrieved destination connect link details.
-     */
-    @SpeakeasyMetadata()
-    twoHundredApplicationJsonObject?: FetchDestinationConnectLinkResponseBody;
-
     /**
      * HTTP response content type for this operation
      */
     @SpeakeasyMetadata()
     contentType: string;
+
+    /**
+     * Successfully retrieved destination connect link details.
+     */
+    @SpeakeasyMetadata()
+    destinationsConnectFetch?: components.DestinationsConnectFetch;
 
     /**
      * HTTP response status code for this operation

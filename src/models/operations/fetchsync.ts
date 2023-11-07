@@ -5,7 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
 
 export class FetchSyncRequest extends SpeakeasyBase {
     /**
@@ -15,37 +14,7 @@ export class FetchSyncRequest extends SpeakeasyBase {
     syncId: number;
 }
 
-/**
- * The outcome of the fetch request
- */
-export enum FetchSyncStatus {
-    Success = "success",
-}
-
-/**
- * Successfully retrieved sync details.
- */
-export class FetchSyncResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "data" })
-    @Type(() => components.Sync)
-    data: components.Sync;
-
-    /**
-     * The outcome of the fetch request
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status: FetchSyncStatus;
-}
-
 export class FetchSyncResponse extends SpeakeasyBase {
-    /**
-     * Successfully retrieved sync details.
-     */
-    @SpeakeasyMetadata()
-    twoHundredApplicationJsonObject?: FetchSyncResponseBody;
-
     /**
      * HTTP response content type for this operation
      */
@@ -63,4 +32,10 @@ export class FetchSyncResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
+
+    /**
+     * Successfully retrieved sync details.
+     */
+    @SpeakeasyMetadata()
+    syncFetch?: components.SyncFetch;
 }

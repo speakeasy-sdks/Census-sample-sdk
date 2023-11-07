@@ -9,6 +9,10 @@ import * as operations from "../models/operations";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
 
+/**
+ * Software components facilitating data connections and transfers between systems.
+ */
+
 export class Connectors {
     private sdkConfiguration: SDKConfiguration;
 
@@ -22,7 +26,7 @@ export class Connectors {
      * @remarks
      * Use this endpoint to fetch the details for a specific types of destination connection that can be created in the current workspace. This is particularly useful for Census Embedded solutions when determining the required values to authorize a new destination connection.
      */
-    async fetchConnector(
+    async fetch(
         serviceName: string,
         config?: AxiosRequestConfig
     ): Promise<operations.FetchConnectorResponse> {
@@ -72,9 +76,9 @@ export class Connectors {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.connectorsFetch = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.FetchConnectorResponseBody
+                        components.ConnectorsFetch
                     );
                 } else {
                     throw new errors.SDKError(
@@ -104,7 +108,7 @@ export class Connectors {
      * @remarks
      * Use this endpoint to list out the types of destination connections that can be created in the current workspace. This is particularly useful for Census Embedded solutions when determining the required values to authorize a new destination connection.
      */
-    async listConnectors(
+    async list(
         order?: components.Order,
         page?: number,
         perPage?: number,
@@ -159,9 +163,9 @@ export class Connectors {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.connectorsList = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.ListConnectorsResponseBody
+                        components.ConnectorsList
                     );
                 } else {
                     throw new errors.SDKError(

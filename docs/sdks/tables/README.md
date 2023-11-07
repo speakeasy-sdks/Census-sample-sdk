@@ -1,53 +1,17 @@
 # Tables
 (*.tables*)
 
+## Overview
+
+Containers for storing data within a destination, often part of data models.
+
 ### Available Operations
 
-* [getSourcesSourceIdTablesTableId](#getsourcessourceidtablestableid) - Fetch table
-* [getSourcesSourceIdTablesTableIdRefreshColumnsStatus](#getsourcessourceidtablestableidrefreshcolumnsstatus) - Check column refresh
-* [postSourcesSourceIdTablesTableIdRefreshColumns](#postsourcessourceidtablestableidrefreshcolumns) - Start column refresh
+* [checkColumnRefresh](#checkcolumnrefresh) - Check column refresh
+* [fetch](#fetch) - Fetch table
+* [startColumnRefresh](#startcolumnrefresh) - Start column refresh
 
-## getSourcesSourceIdTablesTableId
-
-This endpoint lists information for a given table, including information on what columns it includes.
-
-### Example Usage
-
-```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { GetSourcesSourceIdTablesTableIdRequest } from "Workspace-Management-API/dist/models/operations";
-
-(async() => {
-  const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
-  });
-const sourceId: number = 859056;
-const tableId: number = 878261;
-
-  const res = await sdk.tables.getSourcesSourceIdTablesTableId(sourceId, tableId);
-
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `sourceId`                                                   | *number*                                                     | :heavy_check_mark:                                           | ID of the source                                             |
-| `tableId`                                                    | *number*                                                     | :heavy_check_mark:                                           | ID of the table                                              |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.GetSourcesSourceIdTablesTableIdResponse](../../models/operations/getsourcessourceidtablestableidresponse.md)>**
-
-
-## getSourcesSourceIdTablesTableIdRefreshColumnsStatus
+## checkColumnRefresh
 
 This endpoint checks whether the job refreshing columns for a table has completed.
 
@@ -55,17 +19,17 @@ This endpoint checks whether the job refreshing columns for a table has complete
 
 ```typescript
 import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { GetSourcesSourceIdTablesTableIdRefreshColumnsStatusRequest } from "Workspace-Management-API/dist/models/operations";
+import { CheckTablesColumnRefreshRequest } from "Workspace-Management-API/dist/models/operations";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const refreshKey: number = 30811;
-const sourceId: number = 147866;
-const tableId: number = 966838;
+const refreshKey: number = 769319;
+const sourceId: number = 162362;
+const tableId: number = 613668;
 
-  const res = await sdk.tables.getSourcesSourceIdTablesTableIdRefreshColumnsStatus(refreshKey, sourceId, tableId);
+  const res = await sdk.tables.checkColumnRefresh(refreshKey, sourceId, tableId);
 
 
   if (res.statusCode == 200) {
@@ -86,27 +50,27 @@ const tableId: number = 966838;
 
 ### Response
 
-**Promise<[operations.GetSourcesSourceIdTablesTableIdRefreshColumnsStatusResponse](../../models/operations/getsourcessourceidtablestableidrefreshcolumnsstatusresponse.md)>**
+**Promise<[operations.CheckTablesColumnRefreshResponse](../../models/operations/checktablescolumnrefreshresponse.md)>**
 
 
-## postSourcesSourceIdTablesTableIdRefreshColumns
+## fetch
 
-This endpoint queues a job to refresh the list of columns for a table.
+This endpoint lists information for a given table, including information on what columns it includes.
 
 ### Example Usage
 
 ```typescript
 import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { PostSourcesSourceIdTablesTableIdRefreshColumnsRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchTableRequest } from "Workspace-Management-API/dist/models/operations";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const sourceId: number = 778925;
-const tableId: number = 698503;
+const sourceId: number = 874373;
+const tableId: number = 347223;
 
-  const res = await sdk.tables.postSourcesSourceIdTablesTableIdRefreshColumns(sourceId, tableId);
+  const res = await sdk.tables.fetch(sourceId, tableId);
 
 
   if (res.statusCode == 200) {
@@ -126,5 +90,45 @@ const tableId: number = 698503;
 
 ### Response
 
-**Promise<[operations.PostSourcesSourceIdTablesTableIdRefreshColumnsResponse](../../models/operations/postsourcessourceidtablestableidrefreshcolumnsresponse.md)>**
+**Promise<[operations.FetchTableResponse](../../models/operations/fetchtableresponse.md)>**
+
+
+## startColumnRefresh
+
+This endpoint queues a job to refresh the list of columns for a table.
+
+### Example Usage
+
+```typescript
+import { WorkspaceManagementAPI } from "Workspace-Management-API";
+import { StartTablesColumnRefreshRequest } from "Workspace-Management-API/dist/models/operations";
+
+(async() => {
+  const sdk = new WorkspaceManagementAPI({
+    bearerAuth: "",
+  });
+const sourceId: number = 934723;
+const tableId: number = 644632;
+
+  const res = await sdk.tables.startColumnRefresh(sourceId, tableId);
+
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `sourceId`                                                   | *number*                                                     | :heavy_check_mark:                                           | ID of the source                                             |
+| `tableId`                                                    | *number*                                                     | :heavy_check_mark:                                           | ID of the table                                              |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[operations.StartTablesColumnRefreshResponse](../../models/operations/starttablescolumnrefreshresponse.md)>**
 

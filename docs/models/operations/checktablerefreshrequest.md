@@ -1,0 +1,9 @@
+# CheckTableRefreshRequest
+
+
+## Fields
+
+| Field                                                                                                         | Type                                                                                                          | Required                                                                                                      | Description                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `refreshKey`                                                                                                  | *number*                                                                                                      | :heavy_check_mark:                                                                                            | An `id` provided by the `refresh_tables` endpoint, used to check whether the refresh tables job has finished. |
+| `sourceId`                                                                                                    | *number*                                                                                                      | :heavy_check_mark:                                                                                            | ID of the source with an active refresh job                                                                   |

@@ -5,7 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
 
 export class UpdateSyncRequest extends SpeakeasyBase {
     /**
@@ -18,37 +17,7 @@ export class UpdateSyncRequest extends SpeakeasyBase {
     syncAttributes?: components.SyncAttributes;
 }
 
-/**
- * The outcome of the update request
- */
-export enum UpdateSyncStatus {
-    Updated = "updated",
-}
-
-/**
- * Successfully updated the sync
- */
-export class UpdateSyncResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "data" })
-    @Type(() => components.Invitation)
-    data: components.Invitation;
-
-    /**
-     * The outcome of the update request
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status: UpdateSyncStatus;
-}
-
 export class UpdateSyncResponse extends SpeakeasyBase {
-    /**
-     * Successfully updated the sync
-     */
-    @SpeakeasyMetadata()
-    twoHundredApplicationJsonObject?: UpdateSyncResponseBody;
-
     /**
      * HTTP response content type for this operation
      */
@@ -66,4 +35,10 @@ export class UpdateSyncResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
+
+    /**
+     * Successfully updated the sync
+     */
+    @SpeakeasyMetadata()
+    syncUpdate?: components.SyncUpdate;
 }

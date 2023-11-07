@@ -9,6 +9,10 @@ import * as operations from "../models/operations";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
 
+/**
+ * Target data storage or databases for data synchronization.
+ */
+
 export class Destinations {
     private sdkConfiguration: SDKConfiguration;
 
@@ -17,9 +21,190 @@ export class Destinations {
     }
 
     /**
+     * Check fields refresh
+     *
+     * @remarks
+     * This endpoint checks whether the job refreshing fields for a destination object has completed.
+     */
+    async checkFieldRefresh(
+        destinationId: number,
+        objectFullName: number,
+        refreshKey: number,
+        config?: AxiosRequestConfig
+    ): Promise<operations.CheckFieldRefreshResponse> {
+        const req = new operations.CheckFieldRefreshRequest({
+            destinationId: destinationId,
+            objectFullName: objectFullName,
+            refreshKey: refreshKey,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const url: string = utils.generateURL(
+            baseURL,
+            "/destinations/{destination_id}/objects/{object_full_name}/refresh_fields_status",
+            req
+        );
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new components.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        const queryParams: string = utils.serializeQueryParams(req);
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: url + queryParams,
+            method: "get",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: operations.CheckFieldRefreshResponse = new operations.CheckFieldRefreshResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(contentType, `application/json`)) {
+                    res.destinationsCheckField = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        components.DestinationsCheckField
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + contentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new errors.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
+     * Check object refresh
+     *
+     * @remarks
+     * This endpoint checks whether the job refreshing objects for a destination has completed.
+     */
+    async checkObjectRefresh(
+        destinationId: number,
+        refreshKey: number,
+        config?: AxiosRequestConfig
+    ): Promise<operations.CheckObjectRefreshResponse> {
+        const req = new operations.CheckObjectRefreshRequest({
+            destinationId: destinationId,
+            refreshKey: refreshKey,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const url: string = utils.generateURL(
+            baseURL,
+            "/destinations/{destination_id}/refresh_objects_status",
+            req
+        );
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new components.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        const queryParams: string = utils.serializeQueryParams(req);
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: url + queryParams,
+            method: "get",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: operations.CheckObjectRefreshResponse =
+            new operations.CheckObjectRefreshResponse({
+                statusCode: httpRes.status,
+                contentType: contentType,
+                rawResponse: httpRes,
+            });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(contentType, `application/json`)) {
+                    res.destinationsCheckRefresh = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        components.DestinationsCheckRefresh
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + contentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new errors.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
      * Create a new destination
      */
-    async createDestination(
+    async create(
         req: components.ConfigurableDestinationAttributes,
         config?: AxiosRequestConfig
     ): Promise<operations.CreateDestinationResponse> {
@@ -118,7 +303,7 @@ export class Destinations {
      * @remarks
      * Deletes the destination specified
      */
-    async deleteDestination(
+    async delete(
         destinationId: number,
         config?: AxiosRequestConfig
     ): Promise<operations.DeleteDestinationResponse> {
@@ -168,9 +353,88 @@ export class Destinations {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.destinationsDelete = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.DeleteDestinationResponseBody
+                        components.DestinationsDelete
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + contentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new errors.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
+     * Fetch destination
+     */
+    async fetch(
+        destinationId: number,
+        config?: AxiosRequestConfig
+    ): Promise<operations.FetchDestinationResponse> {
+        const req = new operations.FetchDestinationRequest({
+            destinationId: destinationId,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const url: string = utils.generateURL(baseURL, "/destinations/{destination_id}", req);
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new components.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: url,
+            method: "get",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: operations.FetchDestinationResponse = new operations.FetchDestinationResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(contentType, `application/json`)) {
+                    res.destinationsFetch = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        components.DestinationsFetch
                     );
                 } else {
                     throw new errors.SDKError(
@@ -200,12 +464,12 @@ export class Destinations {
      * @remarks
      * This endpoint lists information for a given object, including information on what fields it includes.
      */
-    async fetchDestinationObject(
+    async fetchObject(
         destinationId: number,
         objectFullName: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.FetchDestinationObjectResponse> {
-        const req = new operations.FetchDestinationObjectRequest({
+    ): Promise<operations.FetchDestinationObjectsResponse> {
+        const req = new operations.FetchDestinationObjectsRequest({
             destinationId: destinationId,
             objectFullName: objectFullName,
         });
@@ -247,8 +511,8 @@ export class Destinations {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.FetchDestinationObjectResponse =
-            new operations.FetchDestinationObjectResponse({
+        const res: operations.FetchDestinationObjectsResponse =
+            new operations.FetchDestinationObjectsResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -257,9 +521,9 @@ export class Destinations {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.destinationsFetchObject = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.FetchDestinationObjectResponseBody
+                        components.DestinationsFetchObject
                     );
                 } else {
                     throw new errors.SDKError(
@@ -284,114 +548,24 @@ export class Destinations {
     }
 
     /**
-     * Fetch destination
+     * List destinations
      */
-    async getDestinationsDestinationId(
-        destinationId: number,
+    async list(
+        order?: components.Order,
+        page?: number,
+        perPage?: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.GetDestinationsDestinationIdResponse> {
-        const req = new operations.GetDestinationsDestinationIdRequest({
-            destinationId: destinationId,
+    ): Promise<operations.ListDestinationsResponse> {
+        const req = new operations.ListDestinationsRequest({
+            order: order,
+            page: page,
+            perPage: perPage,
         });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(baseURL, "/destinations/{destination_id}", req);
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url,
-            method: "get",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.GetDestinationsDestinationIdResponse =
-            new operations.GetDestinationsDestinationIdResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
-        switch (true) {
-            case httpRes?.status == 200:
-                if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.GetDestinationsDestinationIdResponseBody
-                    );
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + contentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    decodedRes,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Check fields refresh
-     *
-     * @remarks
-     * This endpoint checks whether the job refreshing fields for a destination object has completed.
-     */
-    async getDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatus(
-        destinationId: number,
-        objectFullName: number,
-        refreshKey: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.GetDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatusResponse> {
-        const req =
-            new operations.GetDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatusRequest(
-                {
-                    destinationId: destinationId,
-                    objectFullName: objectFullName,
-                    refreshKey: refreshKey,
-                }
-            );
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = utils.generateURL(
-            baseURL,
-            "/destinations/{destination_id}/objects/{object_full_name}/refresh_fields_status",
-            req
-        );
+        const url: string = baseURL.replace(/\/$/, "") + "/destinations";
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
@@ -422,111 +596,18 @@ export class Destinations {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.GetDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatusResponse =
-            new operations.GetDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatusResponse(
-                {
-                    statusCode: httpRes.status,
-                    contentType: contentType,
-                    rawResponse: httpRes,
-                }
-            );
+        const res: operations.ListDestinationsResponse = new operations.ListDestinationsResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
         const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.destinationsList = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.GetDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatusResponseBody
-                    );
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + contentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    decodedRes,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Check object refresh
-     *
-     * @remarks
-     * This endpoint checks whether the job refreshing objects for a destination has completed.
-     */
-    async getDestinationsDestinationIdRefreshObjectsStatus(
-        destinationId: number,
-        refreshKey: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.GetDestinationsDestinationIdRefreshObjectsStatusResponse> {
-        const req = new operations.GetDestinationsDestinationIdRefreshObjectsStatusRequest({
-            destinationId: destinationId,
-            refreshKey: refreshKey,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = utils.generateURL(
-            baseURL,
-            "/destinations/{destination_id}/refresh_objects_status",
-            req
-        );
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        const queryParams: string = utils.serializeQueryParams(req);
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url + queryParams,
-            method: "get",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.GetDestinationsDestinationIdRefreshObjectsStatusResponse =
-            new operations.GetDestinationsDestinationIdRefreshObjectsStatusResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
-        switch (true) {
-            case httpRes?.status == 200:
-                if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.GetDestinationsDestinationIdRefreshObjectsStatusResponseBody
+                        components.DestinationsList
                     );
                 } else {
                     throw new errors.SDKError(
@@ -553,7 +634,7 @@ export class Destinations {
     /**
      * List destination objects
      */
-    async listDestinationObjects(
+    async listObjects(
         destinationId: number,
         order?: components.Order,
         page?: number,
@@ -615,9 +696,9 @@ export class Destinations {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.destinationsListObject = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.ListDestinationObjectsResponseBody
+                        components.DestinationsListObject
                     );
                 } else {
                     throw new errors.SDKError(
@@ -642,24 +723,29 @@ export class Destinations {
     }
 
     /**
-     * List destinations
+     * Start fields refresh
+     *
+     * @remarks
+     * This endpoint queues a job to refresh the list of fields for a given destination object.
      */
-    async listDestinations(
-        order?: components.Order,
-        page?: number,
-        perPage?: number,
+    async startFieldRefresh(
+        destinationId: number,
+        objectFullName: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.ListDestinationsResponse> {
-        const req = new operations.ListDestinationsRequest({
-            order: order,
-            page: page,
-            perPage: perPage,
+    ): Promise<operations.StartFieldRefreshResponse> {
+        const req = new operations.StartFieldRefreshRequest({
+            destinationId: destinationId,
+            objectFullName: objectFullName,
         });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = baseURL.replace(/\/$/, "") + "/destinations";
+        const url: string = utils.generateURL(
+            baseURL,
+            "/destinations/{destination_id}/objects/{object_full_name}/refresh_fields",
+            req
+        );
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
@@ -670,15 +756,14 @@ export class Destinations {
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        const queryParams: string = utils.serializeQueryParams(req);
         headers["Accept"] = "application/json";
 
         headers["user-agent"] = this.sdkConfiguration.userAgent;
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url + queryParams,
-            method: "get",
+            url: url,
+            method: "post",
             headers: headers,
             responseType: "arraybuffer",
             ...config,
@@ -690,7 +775,7 @@ export class Destinations {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.ListDestinationsResponse = new operations.ListDestinationsResponse({
+        const res: operations.StartFieldRefreshResponse = new operations.StartFieldRefreshResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -699,9 +784,96 @@ export class Destinations {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.destinationsStartField = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.ListDestinationsResponseBody
+                        components.DestinationsStartField
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + contentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new errors.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
+     * Start object refresh
+     *
+     * @remarks
+     * This endpoint queues a job to refresh the list of objects for a destination.
+     */
+    async startObjectRefresh(
+        destinationId: number,
+        config?: AxiosRequestConfig
+    ): Promise<operations.StartObjectRefreshResponse> {
+        const req = new operations.StartObjectRefreshRequest({
+            destinationId: destinationId,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const url: string = utils.generateURL(
+            baseURL,
+            "/destinations/{destination_id}/refresh_objects",
+            req
+        );
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new components.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: url,
+            method: "post",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: operations.StartObjectRefreshResponse =
+            new operations.StartObjectRefreshResponse({
+                statusCode: httpRes.status,
+                contentType: contentType,
+                rawResponse: httpRes,
+            });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(contentType, `application/json`)) {
+                    res.destinationsStartRefresh = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        components.DestinationsStartRefresh
                     );
                 } else {
                     throw new errors.SDKError(
@@ -731,12 +903,12 @@ export class Destinations {
      * @remarks
      * Update certain values of a destination
      */
-    async patchDestinationsDestinationId(
+    async update(
         destinationId: number,
         configurableDestinationAttributes?: components.ConfigurableDestinationAttributes,
         config?: AxiosRequestConfig
-    ): Promise<operations.PatchDestinationsDestinationIdResponse> {
-        const req = new operations.PatchDestinationsDestinationIdRequest({
+    ): Promise<operations.UpdateDestinationResponse> {
+        const req = new operations.UpdateDestinationRequest({
             destinationId: destinationId,
             configurableDestinationAttributes: configurableDestinationAttributes,
         });
@@ -793,196 +965,18 @@ export class Destinations {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PatchDestinationsDestinationIdResponse =
-            new operations.PatchDestinationsDestinationIdResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
+        const res: operations.UpdateDestinationResponse = new operations.UpdateDestinationResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
         const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.destinationsUpdate = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.PatchDestinationsDestinationIdResponseBody
-                    );
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + contentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    decodedRes,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Start fields refresh
-     *
-     * @remarks
-     * This endpoint queues a job to refresh the list of fields for a given destination object.
-     */
-    async postDestinationsDestinationIdObjectsObjectFullNameRefreshFields(
-        destinationId: number,
-        objectFullName: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.PostDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsResponse> {
-        const req =
-            new operations.PostDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsRequest({
-                destinationId: destinationId,
-                objectFullName: objectFullName,
-            });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = utils.generateURL(
-            baseURL,
-            "/destinations/{destination_id}/objects/{object_full_name}/refresh_fields",
-            req
-        );
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url,
-            method: "post",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.PostDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsResponse =
-            new operations.PostDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
-        switch (true) {
-            case httpRes?.status == 200:
-                if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.PostDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsResponseBody
-                    );
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + contentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    decodedRes,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Start object refresh
-     *
-     * @remarks
-     * This endpoint queues a job to refresh the list of objects for a destination.
-     */
-    async postDestinationsDestinationIdRefreshObjects(
-        destinationId: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.PostDestinationsDestinationIdRefreshObjectsResponse> {
-        const req = new operations.PostDestinationsDestinationIdRefreshObjectsRequest({
-            destinationId: destinationId,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = utils.generateURL(
-            baseURL,
-            "/destinations/{destination_id}/refresh_objects",
-            req
-        );
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url,
-            method: "post",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.PostDestinationsDestinationIdRefreshObjectsResponse =
-            new operations.PostDestinationsDestinationIdRefreshObjectsResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
-        switch (true) {
-            case httpRes?.status == 200:
-                if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.PostDestinationsDestinationIdRefreshObjectsResponseBody
+                        components.DestinationsUpdate
                     );
                 } else {
                     throw new errors.SDKError(

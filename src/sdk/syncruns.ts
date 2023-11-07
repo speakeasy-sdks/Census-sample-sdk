@@ -22,7 +22,7 @@ export class SyncRuns {
      * @remarks
      * Use this endpoint to cancel a sync that is actively running.
      */
-    async cancelSyncRun(
+    async cancel(
         syncRunId: number,
         config?: AxiosRequestConfig
     ): Promise<operations.CancelSyncRunResponse> {
@@ -72,9 +72,9 @@ export class SyncRuns {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.twoHundredApplicationJsonObject = utils.objectToClass(
+                    res.syncRunsCancel = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.CancelSyncRunResponseBody
+                        components.SyncRunsCancel
                     );
                 } else {
                     throw new errors.SDKError(
@@ -121,7 +121,7 @@ export class SyncRuns {
      * @remarks
      * Retrieve the details of a particular sync run
      */
-    async fetchSyncRun(
+    async fetch(
         syncRunId: number,
         config?: AxiosRequestConfig
     ): Promise<operations.FetchSyncRunResponse> {
@@ -171,9 +171,9 @@ export class SyncRuns {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.twoHundredApplicationJsonObject = utils.objectToClass(
+                    res.syncRunsFetch = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.FetchSyncRunResponseBody
+                        components.SyncRunsFetch
                     );
                 } else {
                     throw new errors.SDKError(
@@ -217,14 +217,14 @@ export class SyncRuns {
     /**
      * List sync runs
      */
-    async getSyncsSyncIdSyncRuns(
+    async list(
         syncId: number,
         order?: components.Order,
         page?: number,
         perPage?: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.GetSyncsSyncIdSyncRunsResponse> {
-        const req = new operations.GetSyncsSyncIdSyncRunsRequest({
+    ): Promise<operations.ListSyncRunsResponse> {
+        const req = new operations.ListSyncRunsRequest({
             syncId: syncId,
             order: order,
             page: page,
@@ -265,19 +265,18 @@ export class SyncRuns {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.GetSyncsSyncIdSyncRunsResponse =
-            new operations.GetSyncsSyncIdSyncRunsResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
+        const res: operations.ListSyncRunsResponse = new operations.ListSyncRunsResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
         const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.syncRunsList = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.GetSyncsSyncIdSyncRunsResponseBody
+                        components.SyncRunsList
                     );
                 } else {
                     throw new errors.SDKError(

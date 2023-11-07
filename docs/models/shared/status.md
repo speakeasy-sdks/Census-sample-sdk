@@ -1,10 +1,10 @@
 # Status
 
-The outcome of the deletion request
+The outcome of the fetch request
 
 
 ## Values
 
 | Name      | Value     |
 | --------- | --------- |
-| `Deleted` | deleted   |
+| `Success` | success   |

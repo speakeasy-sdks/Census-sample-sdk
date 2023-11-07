@@ -1,27 +1,23 @@
 configVersion: 1.0.0
 management:
-  docChecksum: 8f19649c88db1baced314efc44eb12f9
+  docChecksum: 806deb7a84cf079eb1c40872614650d1
   docVersion: 1.0.0
-  speakeasyVersion: 1.114.0
-  generationVersion: 2.179.0
+  speakeasyVersion: 1.114.1
+  generationVersion: 2.181.1
 generation:
-  comments:
-    disableComments: false
-    omitDescriptionIfSummaryPresent: false
-  baseServerURL: ""
-  flattenGlobalSecurity: true
-  repoURL: https://github.com/speakeasy-sdks/Census-sample-sdk.git
+  comments: {}
   sdkClassName: Workspace-Management-API
-  singleTagPerOp: false
-  tagNamespacingDisabled: false
+  repoURL: https://github.com/speakeasy-sdks/Census-sample-sdk.git
 features:
   typescript:
     core: 3.1.0
     flattening: 2.81.1
     globalSecurity: 2.82.0
     globalServerURLs: 2.82.0
+    groups: 2.81.2
+    nameOverrides: 2.81.1
 typescript:
-  version: 0.1.0
+  version: 0.2.0
   author: Census
   clientServerStatusCodesAsErrors: true
   flattenGlobalSecurity: true

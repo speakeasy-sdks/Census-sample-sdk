@@ -5,7 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
 
 export class ListSourceObjectsRequest extends SpeakeasyBase {
     /**
@@ -33,46 +32,18 @@ export class ListSourceObjectsRequest extends SpeakeasyBase {
     perPage?: number;
 }
 
-/**
- * The outcome of the request
- */
-export enum ListSourceObjectsStatus {
-    Success = "success",
-}
-
-/**
- * A successfully fetched list of results.
- */
-export class ListSourceObjectsResponseBody extends SpeakeasyBase {
-    /**
-     * A list of source objects that this connection contains. May be either a `Model`, `Segment`, or `Table`.
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "data" })
-    data: any[];
-
-    /**
-     * An object to help you navigate the list of results.
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "pagination" })
-    @Type(() => components.Pagination)
-    pagination: components.Pagination;
-
-    /**
-     * The outcome of the request
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status: ListSourceObjectsStatus;
-}
-
 export class ListSourceObjectsResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation
      */
     @SpeakeasyMetadata()
     contentType: string;
+
+    /**
+     * Successfully retrieved the list of source objects.
+     */
+    @SpeakeasyMetadata()
+    objectListSources?: components.ObjectListSources;
 
     /**
      * HTTP response status code for this operation
@@ -85,10 +56,4 @@ export class ListSourceObjectsResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
-
-    /**
-     * Successfully retrieved the list of source objects.
-     */
-    @SpeakeasyMetadata()
-    object?: ListSourceObjectsResponseBody;
 }

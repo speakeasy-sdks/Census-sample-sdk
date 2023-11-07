@@ -5,7 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
 
 export class RevokeDestinationConnectLinkRequest extends SpeakeasyBase {
     /**
@@ -15,35 +14,18 @@ export class RevokeDestinationConnectLinkRequest extends SpeakeasyBase {
     connectLinkId: number;
 }
 
-/**
- * Successfully revoke the connect link.
- */
-export class RevokeDestinationConnectLinkResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "data" })
-    @Type(() => components.DestinationConnectLink)
-    data: components.DestinationConnectLink;
-
-    /**
-     * The outcome of the revoke request
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status: any;
-}
-
 export class RevokeDestinationConnectLinkResponse extends SpeakeasyBase {
-    /**
-     * Successfully revoke the connect link.
-     */
-    @SpeakeasyMetadata()
-    twoHundredApplicationJsonObject?: RevokeDestinationConnectLinkResponseBody;
-
     /**
      * HTTP response content type for this operation
      */
     @SpeakeasyMetadata()
     contentType: string;
+
+    /**
+     * Successfully revoke the connect link.
+     */
+    @SpeakeasyMetadata()
+    destinationsConnectRevoke?: components.DestinationsConnectRevoke;
 
     /**
      * HTTP response status code for this operation

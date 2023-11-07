@@ -3,8 +3,8 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
+import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
 
 export class TriggerSyncRequest extends SpeakeasyBase {
     /**
@@ -18,36 +18,6 @@ export class TriggerSyncRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=force_full_sync" })
     forceFullSync?: boolean;
-}
-
-export class TriggerSyncData extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "sync_run_id" })
-    syncRunId?: number;
-}
-
-/**
- * The outcome of the fetch request
- */
-export enum TriggerSyncStatus {
-    Success = "success",
-}
-
-/**
- * Sync triggered successfully.
- */
-export class TriggerSyncResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "data" })
-    @Type(() => TriggerSyncData)
-    data: TriggerSyncData;
-
-    /**
-     * The outcome of the fetch request
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status: TriggerSyncStatus;
 }
 
 export class TriggerSyncResponse extends SpeakeasyBase {
@@ -73,5 +43,5 @@ export class TriggerSyncResponse extends SpeakeasyBase {
      * Sync triggered successfully.
      */
     @SpeakeasyMetadata()
-    object?: TriggerSyncResponseBody;
+    syncTrigger?: components.SyncTrigger;
 }

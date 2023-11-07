@@ -3,42 +3,8 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
+import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
-
-export class CreateSyncData extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "sync_id" })
-    syncId?: number;
-}
-
-/**
- * Outcome of the operation.
- */
-export enum CreateSyncStatus {
-    Success = "success",
-    Updated = "updated",
-    Created = "created",
-    NotFound = "not_found",
-    Error = "error",
-}
-
-/**
- * Sync created successfully
- */
-export class CreateSyncResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "data" })
-    @Type(() => CreateSyncData)
-    data?: CreateSyncData;
-
-    /**
-     * Outcome of the operation.
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status?: CreateSyncStatus;
-}
 
 export class CreateSyncResponse extends SpeakeasyBase {
     /**
@@ -63,5 +29,5 @@ export class CreateSyncResponse extends SpeakeasyBase {
      * Sync created successfully
      */
     @SpeakeasyMetadata()
-    object?: CreateSyncResponseBody;
+    syncCreate?: components.SyncCreate;
 }

@@ -10,7 +10,7 @@ import { Expose, Type } from "class-transformer";
 /**
  * Outcome of the operation.
  */
-export enum CreateDestinationStatus {
+export enum Status {
     Success = "success",
     Updated = "updated",
     Created = "created",
@@ -32,7 +32,7 @@ export class CreateDestinationResponseBody extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "status" })
-    status?: CreateDestinationStatus;
+    status?: Status;
 }
 
 export class CreateDestinationResponse extends SpeakeasyBase {

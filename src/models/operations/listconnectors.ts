@@ -5,7 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
 
 export class ListConnectorsRequest extends SpeakeasyBase {
     /**
@@ -27,39 +26,13 @@ export class ListConnectorsRequest extends SpeakeasyBase {
     perPage?: number;
 }
 
-/**
- * The outcome of the request
- */
-export enum ListConnectorsStatus {
-    Success = "success",
-}
-
-/**
- * A successfully fetched list of results.
- */
-export class ListConnectorsResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata({ elemType: components.Connector })
-    @Expose({ name: "data" })
-    @Type(() => components.Connector)
-    data: components.Connector[];
-
-    /**
-     * An object to help you navigate the list of results.
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "pagination" })
-    @Type(() => components.Pagination)
-    pagination: components.Pagination;
-
-    /**
-     * The outcome of the request
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status: ListConnectorsStatus;
-}
-
 export class ListConnectorsResponse extends SpeakeasyBase {
+    /**
+     * Successfully retrieved the list of connectors.
+     */
+    @SpeakeasyMetadata()
+    connectorsList?: components.ConnectorsList;
+
     /**
      * HTTP response content type for this operation
      */
@@ -77,10 +50,4 @@ export class ListConnectorsResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
-
-    /**
-     * Successfully retrieved the list of connectors.
-     */
-    @SpeakeasyMetadata()
-    object?: ListConnectorsResponseBody;
 }

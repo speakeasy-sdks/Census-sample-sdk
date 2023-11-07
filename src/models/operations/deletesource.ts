@@ -3,8 +3,8 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
+import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose } from "class-transformer";
 
 export class DeleteSourceRequest extends SpeakeasyBase {
     /**
@@ -14,21 +14,18 @@ export class DeleteSourceRequest extends SpeakeasyBase {
     sourceId: number;
 }
 
-/**
- * Source successfully deleted.
- */
-export class DeleteSourceResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status?: string;
-}
-
 export class DeleteSourceResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation
      */
     @SpeakeasyMetadata()
     contentType: string;
+
+    /**
+     * Source successfully deleted.
+     */
+    @SpeakeasyMetadata()
+    sourcesDelete?: components.SourcesDelete;
 
     /**
      * HTTP response status code for this operation
@@ -41,10 +38,4 @@ export class DeleteSourceResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
-
-    /**
-     * Source successfully deleted.
-     */
-    @SpeakeasyMetadata()
-    object?: DeleteSourceResponseBody;
 }

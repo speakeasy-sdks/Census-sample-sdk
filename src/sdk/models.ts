@@ -9,6 +9,10 @@ import * as operations from "../models/operations";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
 
+/**
+ * Data structure or schema definition for data synchronization.
+ */
+
 export class Models {
     private sdkConfiguration: SDKConfiguration;
 
@@ -17,9 +21,101 @@ export class Models {
     }
 
     /**
+     * Check column refresh
+     *
+     * @remarks
+     * This endpoint checks whether the job refreshing columns for a model has completed.
+     */
+    async checkColumnRefresh(
+        modelId: number,
+        refreshKey: number,
+        sourceId: number,
+        config?: AxiosRequestConfig
+    ): Promise<operations.CheckModelsColumnRefreshResponse> {
+        const req = new operations.CheckModelsColumnRefreshRequest({
+            modelId: modelId,
+            refreshKey: refreshKey,
+            sourceId: sourceId,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const url: string = utils.generateURL(
+            baseURL,
+            "/sources/{source_id}/models/{model_id}/refresh_columns_status",
+            req
+        );
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new components.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        const queryParams: string = utils.serializeQueryParams(req);
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: url + queryParams,
+            method: "get",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: operations.CheckModelsColumnRefreshResponse =
+            new operations.CheckModelsColumnRefreshResponse({
+                statusCode: httpRes.status,
+                contentType: contentType,
+                rawResponse: httpRes,
+            });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(contentType, `application/json`)) {
+                    res.modelsCheckRefresh = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        components.ModelsCheckRefresh
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + contentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new errors.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
      * Create a new model
      */
-    async createModel(
+    async create(
         initialModelAttributes: components.InitialModelAttributes,
         sourceId: number,
         config?: AxiosRequestConfig
@@ -91,9 +187,9 @@ export class Models {
         switch (true) {
             case httpRes?.status == 201:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.modelsCreate = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.CreateModelResponseBody
+                        components.ModelsCreate
                     );
                 } else {
                     throw new errors.SDKError(
@@ -123,7 +219,7 @@ export class Models {
      * @remarks
      * Deletes the model specified
      */
-    async deleteModel(
+    async delete(
         modelId: number,
         sourceId: number,
         config?: AxiosRequestConfig
@@ -179,9 +275,9 @@ export class Models {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.modelsDelete = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.DeleteModelResponseBody
+                        components.ModelsDelete
                     );
                 } else {
                     throw new errors.SDKError(
@@ -211,12 +307,12 @@ export class Models {
      * @remarks
      * This endpoint lists information for a given model, including information on what columns it includes.
      */
-    async getSourcesSourceIdModelsModelId(
+    async fetch(
         modelId: number,
         sourceId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.GetSourcesSourceIdModelsModelIdResponse> {
-        const req = new operations.GetSourcesSourceIdModelsModelIdRequest({
+    ): Promise<operations.FetchModelResponse> {
+        const req = new operations.FetchModelRequest({
             modelId: modelId,
             sourceId: sourceId,
         });
@@ -258,111 +354,18 @@ export class Models {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.GetSourcesSourceIdModelsModelIdResponse =
-            new operations.GetSourcesSourceIdModelsModelIdResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
+        const res: operations.FetchModelResponse = new operations.FetchModelResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
         const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.modelsFetch = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.GetSourcesSourceIdModelsModelIdResponseBody
-                    );
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + contentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    decodedRes,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Check column refresh
-     *
-     * @remarks
-     * This endpoint checks whether the job refreshing columns for a model has completed.
-     */
-    async getSourcesSourceIdModelsModelIdRefreshColumnsStatus(
-        modelId: number,
-        refreshKey: number,
-        sourceId: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.GetSourcesSourceIdModelsModelIdRefreshColumnsStatusResponse> {
-        const req = new operations.GetSourcesSourceIdModelsModelIdRefreshColumnsStatusRequest({
-            modelId: modelId,
-            refreshKey: refreshKey,
-            sourceId: sourceId,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = utils.generateURL(
-            baseURL,
-            "/sources/{source_id}/models/{model_id}/refresh_columns_status",
-            req
-        );
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        const queryParams: string = utils.serializeQueryParams(req);
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url + queryParams,
-            method: "get",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.GetSourcesSourceIdModelsModelIdRefreshColumnsStatusResponse =
-            new operations.GetSourcesSourceIdModelsModelIdRefreshColumnsStatusResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
-        switch (true) {
-            case httpRes?.status == 200:
-                if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.GetSourcesSourceIdModelsModelIdRefreshColumnsStatusResponseBody
+                        components.ModelsFetch
                     );
                 } else {
                     throw new errors.SDKError(
@@ -389,7 +392,7 @@ export class Models {
     /**
      * List models
      */
-    async listModels(
+    async list(
         sourceId: number,
         order?: components.Order,
         page?: number,
@@ -446,9 +449,98 @@ export class Models {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.modelsList = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.ListModelsResponseBody
+                        components.ModelsList
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + contentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new errors.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
+     * Start column refresh
+     *
+     * @remarks
+     * This endpoint queues a job to refresh the list of columns for a model.
+     */
+    async startColumnRefresh(
+        modelId: number,
+        sourceId: number,
+        config?: AxiosRequestConfig
+    ): Promise<operations.StartModelsColumnRefreshResponse> {
+        const req = new operations.StartModelsColumnRefreshRequest({
+            modelId: modelId,
+            sourceId: sourceId,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const url: string = utils.generateURL(
+            baseURL,
+            "/sources/{source_id}/models/{model_id}/refresh_columns",
+            req
+        );
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new components.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: url,
+            method: "post",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: operations.StartModelsColumnRefreshResponse =
+            new operations.StartModelsColumnRefreshResponse({
+                statusCode: httpRes.status,
+                contentType: contentType,
+                rawResponse: httpRes,
+            });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(contentType, `application/json`)) {
+                    res.modelsStartRefresh = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        components.ModelsStartRefresh
                     );
                 } else {
                     throw new errors.SDKError(
@@ -478,13 +570,13 @@ export class Models {
      * @remarks
      * Update certain values of a specified model
      */
-    async patchSourcesSourceIdModelsModelId(
+    async update(
         modelId: number,
         sourceId: number,
         configurableModelAttributes?: components.ConfigurableModelAttributes,
         config?: AxiosRequestConfig
-    ): Promise<operations.PatchSourcesSourceIdModelsModelIdResponse> {
-        const req = new operations.PatchSourcesSourceIdModelsModelIdRequest({
+    ): Promise<operations.UpdateModelResponse> {
+        const req = new operations.UpdateModelRequest({
             modelId: modelId,
             sourceId: sourceId,
             configurableModelAttributes: configurableModelAttributes,
@@ -546,108 +638,18 @@ export class Models {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PatchSourcesSourceIdModelsModelIdResponse =
-            new operations.PatchSourcesSourceIdModelsModelIdResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
+        const res: operations.UpdateModelResponse = new operations.UpdateModelResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
         const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.modelsUpdate = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.PatchSourcesSourceIdModelsModelIdResponseBody
-                    );
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + contentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    decodedRes,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Start column refresh
-     *
-     * @remarks
-     * This endpoint queues a job to refresh the list of columns for a model.
-     */
-    async postSourcesSourceIdModelsModelIdRefreshColumns(
-        modelId: number,
-        sourceId: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.PostSourcesSourceIdModelsModelIdRefreshColumnsResponse> {
-        const req = new operations.PostSourcesSourceIdModelsModelIdRefreshColumnsRequest({
-            modelId: modelId,
-            sourceId: sourceId,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = utils.generateURL(
-            baseURL,
-            "/sources/{source_id}/models/{model_id}/refresh_columns",
-            req
-        );
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url,
-            method: "post",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.PostSourcesSourceIdModelsModelIdRefreshColumnsResponse =
-            new operations.PostSourcesSourceIdModelsModelIdRefreshColumnsResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
-        switch (true) {
-            case httpRes?.status == 200:
-                if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.PostSourcesSourceIdModelsModelIdRefreshColumnsResponseBody
+                        components.ModelsUpdate
                     );
                 } else {
                     throw new errors.SDKError(

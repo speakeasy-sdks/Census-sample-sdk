@@ -1,16 +1,20 @@
 # Syncs
 (*.syncs*)
 
+## Overview
+
+Operations related to synchronization.
+
 ### Available Operations
 
-* [createSync](#createsync) - Create a new sync
-* [deleteSync](#deletesync) - Delete a sync
-* [fetchSync](#fetchsync) - Fetch sync
-* [getSyncs](#getsyncs) - List Syncs
-* [triggerSync](#triggersync) - Trigger a sync run
-* [updateSync](#updatesync) - Update a sync
+* [create](#create) - Create a new sync
+* [delete](#delete) - Delete a sync
+* [fetch](#fetch) - Fetch sync
+* [list](#list) - List Syncs
+* [trigger](#trigger) - Trigger a sync run
+* [update](#update) - Update a sync
 
-## createSync
+## create
 
 Create a new sync
 
@@ -31,7 +35,7 @@ import {
     bearerAuth: "",
   });
 
-  const res = await sdk.syncs.createSync({
+  const res = await sdk.syncs.create({
     cronExpression: "* 1 * * *",
     destinationAttributes: {},
     failedRecordNotificationsEnabled: false,
@@ -68,7 +72,7 @@ import {
     scheduleHour: 10,
     scheduleMinute: 30,
     sourceAttributes: {
-      connectionId: 863923,
+      connectionId: 486589,
       object: {
         id: 1543,
         name: "New Signups",
@@ -114,7 +118,7 @@ import {
 **Promise<[operations.CreateSyncResponse](../../models/operations/createsyncresponse.md)>**
 
 
-## deleteSync
+## delete
 
 Deletes the sync with the specified ID.
 
@@ -128,9 +132,9 @@ import { DeleteSyncRequest } from "Workspace-Management-API/dist/models/operatio
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const syncId: number = 269738;
+const syncId: number = 545907;
 
-  const res = await sdk.syncs.deleteSync(syncId);
+  const res = await sdk.syncs.delete(syncId);
 
 
   if (res.statusCode == 200) {
@@ -152,7 +156,7 @@ const syncId: number = 269738;
 **Promise<[operations.DeleteSyncResponse](../../models/operations/deletesyncresponse.md)>**
 
 
-## fetchSync
+## fetch
 
 Retrieve the details of a specific sync
 
@@ -166,9 +170,9 @@ import { FetchSyncRequest } from "Workspace-Management-API/dist/models/operation
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const syncId: number = 798809;
+const syncId: number = 874373;
 
-  const res = await sdk.syncs.fetchSync(syncId);
+  const res = await sdk.syncs.fetch(syncId);
 
 
   if (res.statusCode == 200) {
@@ -190,7 +194,7 @@ const syncId: number = 798809;
 **Promise<[operations.FetchSyncResponse](../../models/operations/fetchsyncresponse.md)>**
 
 
-## getSyncs
+## list
 
 List Syncs
 
@@ -199,17 +203,17 @@ List Syncs
 ```typescript
 import { WorkspaceManagementAPI } from "Workspace-Management-API";
 import { Order } from "Workspace-Management-API/dist/models/components";
-import { GetSyncsRequest } from "Workspace-Management-API/dist/models/operations";
+import { ListSyncsRequest } from "Workspace-Management-API/dist/models/operations";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const order: Order = Order.Asc;
-const page: number = 9325.36;
-const perPage: number = 7147.14;
+const order: Order = Order.Desc;
+const page: number = 998.95;
+const perPage: number = 5472.72;
 
-  const res = await sdk.syncs.getSyncs(order, page, perPage);
+  const res = await sdk.syncs.list(order, page, perPage);
 
 
   if (res.statusCode == 200) {
@@ -230,10 +234,10 @@ const perPage: number = 7147.14;
 
 ### Response
 
-**Promise<[operations.GetSyncsResponse](../../models/operations/getsyncsresponse.md)>**
+**Promise<[operations.ListSyncsResponse](../../models/operations/listsyncsresponse.md)>**
 
 
-## triggerSync
+## trigger
 
 Triggers the sync with the specified ID to start a new sync run.
 
@@ -247,10 +251,10 @@ import { TriggerSyncRequest } from "Workspace-Management-API/dist/models/operati
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const syncId: number = 781383;
+const syncId: number = 705908;
 const forceFullSync: boolean = false;
 
-  const res = await sdk.syncs.triggerSync(syncId, forceFullSync);
+  const res = await sdk.syncs.trigger(syncId, forceFullSync);
 
 
   if (res.statusCode == 200) {
@@ -273,7 +277,7 @@ const forceFullSync: boolean = false;
 **Promise<[operations.TriggerSyncResponse](../../models/operations/triggersyncresponse.md)>**
 
 
-## updateSync
+## update
 
 Update certain configurable attributes of a sync
 
@@ -304,7 +308,7 @@ import { UpdateSyncRequest } from "Workspace-Management-API/dist/models/operatio
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const syncId: number = 341390;
+const syncId: number = 857478;
 const syncAttributes: SyncAttributes = {
   cronExpression: "* 1 * * *",
   destinationAttributes: {},
@@ -342,7 +346,7 @@ const syncAttributes: SyncAttributes = {
   scheduleHour: 10,
   scheduleMinute: 30,
   sourceAttributes: {
-    connectionId: 434336,
+    connectionId: 24555,
     object: {
       id: 1543,
       name: "New Signups",
@@ -368,7 +372,7 @@ const syncAttributes: SyncAttributes = {
   validateOnly: true,
 };
 
-  const res = await sdk.syncs.updateSync(syncId, syncAttributes);
+  const res = await sdk.syncs.update(syncId, syncAttributes);
 
 
   if (res.statusCode == 200) {

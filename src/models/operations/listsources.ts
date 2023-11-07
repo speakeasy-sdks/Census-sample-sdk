@@ -5,7 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
 
 export class ListSourcesRequest extends SpeakeasyBase {
     /**
@@ -27,44 +26,18 @@ export class ListSourcesRequest extends SpeakeasyBase {
     perPage?: number;
 }
 
-/**
- * The outcome of the request
- */
-export enum ListSourcesStatus {
-    Success = "success",
-}
-
-/**
- * A successfully fetched list of results.
- */
-export class ListSourcesResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata({ elemType: components.Source })
-    @Expose({ name: "data" })
-    @Type(() => components.Source)
-    data: components.Source[];
-
-    /**
-     * An object to help you navigate the list of results.
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "pagination" })
-    @Type(() => components.Pagination)
-    pagination: components.Pagination;
-
-    /**
-     * The outcome of the request
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status: ListSourcesStatus;
-}
-
 export class ListSourcesResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation
      */
     @SpeakeasyMetadata()
     contentType: string;
+
+    /**
+     * Successfully retrieved the list of sources.
+     */
+    @SpeakeasyMetadata()
+    sourcesList?: components.SourcesList;
 
     /**
      * HTTP response status code for this operation
@@ -77,10 +50,4 @@ export class ListSourcesResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
-
-    /**
-     * Successfully retrieved the list of sources.
-     */
-    @SpeakeasyMetadata()
-    object?: ListSourcesResponseBody;
 }

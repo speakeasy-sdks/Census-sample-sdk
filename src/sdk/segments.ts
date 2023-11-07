@@ -9,6 +9,10 @@ import * as operations from "../models/operations";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
 
+/**
+ * Partitions or groups of data within sources or destinations.
+ */
+
 export class Segments {
     private sdkConfiguration: SDKConfiguration;
 
@@ -19,7 +23,7 @@ export class Segments {
     /**
      * Create a new segment
      */
-    async createSegment(
+    async create(
         initialSegmentAttributes: components.InitialSegmentAttributes,
         sourceId: number,
         config?: AxiosRequestConfig
@@ -123,7 +127,7 @@ export class Segments {
      * @remarks
      * Deletes the segment specified
      */
-    async deleteSegment(
+    async delete(
         segmentId: number,
         sourceId: number,
         config?: AxiosRequestConfig
@@ -179,9 +183,9 @@ export class Segments {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.segmentsDelete = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.DeleteSegmentResponseBody
+                        components.SegmentsDelete
                     );
                 } else {
                     throw new errors.SDKError(
@@ -211,12 +215,12 @@ export class Segments {
      * @remarks
      * This endpoint lists information for a given segment, including information on its molecules (our data structure for recursive constraints).
      */
-    async getSourcesSourceIdFilterSegmentsSegmentId(
+    async fetch(
         segmentId: number,
         sourceId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.GetSourcesSourceIdFilterSegmentsSegmentIdResponse> {
-        const req = new operations.GetSourcesSourceIdFilterSegmentsSegmentIdRequest({
+    ): Promise<operations.FetchSegmentResponse> {
+        const req = new operations.FetchSegmentRequest({
             segmentId: segmentId,
             sourceId: sourceId,
         });
@@ -258,19 +262,18 @@ export class Segments {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.GetSourcesSourceIdFilterSegmentsSegmentIdResponse =
-            new operations.GetSourcesSourceIdFilterSegmentsSegmentIdResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
+        const res: operations.FetchSegmentResponse = new operations.FetchSegmentResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
         const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.segmentsFetch = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.GetSourcesSourceIdFilterSegmentsSegmentIdResponseBody
+                        components.SegmentsFetch
                     );
                 } else {
                     throw new errors.SDKError(
@@ -297,7 +300,7 @@ export class Segments {
     /**
      * List segments
      */
-    async listSegments(
+    async list(
         sourceId: number,
         order?: components.Order,
         page?: number,
@@ -354,9 +357,9 @@ export class Segments {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.segmentsList = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.ListSegmentsResponseBody
+                        components.SegmentsList
                     );
                 } else {
                     throw new errors.SDKError(
@@ -386,13 +389,13 @@ export class Segments {
      * @remarks
      * Update certain values of a specified segment
      */
-    async patchSourcesSourceIdFilterSegmentsSegmentId(
+    async update(
         segmentId: number,
         sourceId: number,
         configurableSegmentAttributes?: components.ConfigurableSegmentAttributes,
         config?: AxiosRequestConfig
-    ): Promise<operations.PatchSourcesSourceIdFilterSegmentsSegmentIdResponse> {
-        const req = new operations.PatchSourcesSourceIdFilterSegmentsSegmentIdRequest({
+    ): Promise<operations.UpdateSegmentResponse> {
+        const req = new operations.UpdateSegmentRequest({
             segmentId: segmentId,
             sourceId: sourceId,
             configurableSegmentAttributes: configurableSegmentAttributes,
@@ -454,19 +457,18 @@ export class Segments {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PatchSourcesSourceIdFilterSegmentsSegmentIdResponse =
-            new operations.PatchSourcesSourceIdFilterSegmentsSegmentIdResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
+        const res: operations.UpdateSegmentResponse = new operations.UpdateSegmentResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
         const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.segmentsUpdate = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.PatchSourcesSourceIdFilterSegmentsSegmentIdResponseBody
+                        components.SegmentsUpdate
                     );
                 } else {
                     throw new errors.SDKError(

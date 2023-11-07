@@ -9,6 +9,10 @@ import * as operations from "../models/operations";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
 
+/**
+ * Operations related to synchronization.
+ */
+
 export class Syncs {
     private sdkConfiguration: SDKConfiguration;
 
@@ -19,7 +23,7 @@ export class Syncs {
     /**
      * Create a new sync
      */
-    async createSync(
+    async create(
         req: components.SyncAttributes,
         config?: AxiosRequestConfig
     ): Promise<operations.CreateSyncResponse> {
@@ -86,9 +90,9 @@ export class Syncs {
         switch (true) {
             case httpRes?.status == 201:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.syncCreate = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.CreateSyncResponseBody
+                        components.SyncCreate
                     );
                 } else {
                     throw new errors.SDKError(
@@ -118,7 +122,7 @@ export class Syncs {
      * @remarks
      * Deletes the sync with the specified ID.
      */
-    async deleteSync(
+    async delete(
         syncId: number,
         config?: AxiosRequestConfig
     ): Promise<operations.DeleteSyncResponse> {
@@ -217,7 +221,7 @@ export class Syncs {
      * @remarks
      * Retrieve the details of a specific sync
      */
-    async fetchSync(
+    async fetch(
         syncId: number,
         config?: AxiosRequestConfig
     ): Promise<operations.FetchSyncResponse> {
@@ -267,9 +271,9 @@ export class Syncs {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.twoHundredApplicationJsonObject = utils.objectToClass(
+                    res.syncFetch = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.FetchSyncResponseBody
+                        components.SyncFetch
                     );
                 } else {
                     throw new errors.SDKError(
@@ -313,13 +317,13 @@ export class Syncs {
     /**
      * List Syncs
      */
-    async getSyncs(
+    async list(
         order?: components.Order,
         page?: number,
         perPage?: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.GetSyncsResponse> {
-        const req = new operations.GetSyncsRequest({
+    ): Promise<operations.ListSyncsResponse> {
+        const req = new operations.ListSyncsRequest({
             order: order,
             page: page,
             perPage: perPage,
@@ -359,7 +363,7 @@ export class Syncs {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.GetSyncsResponse = new operations.GetSyncsResponse({
+        const res: operations.ListSyncsResponse = new operations.ListSyncsResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -368,10 +372,7 @@ export class Syncs {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.GetSyncsResponseBody
-                    );
+                    res.syncList = utils.objectToClass(JSON.parse(decodedRes), components.SyncList);
                 } else {
                     throw new errors.SDKError(
                         "unknown content-type received: " + contentType,
@@ -400,7 +401,7 @@ export class Syncs {
      * @remarks
      * Triggers the sync with the specified ID to start a new sync run.
      */
-    async triggerSync(
+    async trigger(
         syncId: number,
         forceFullSync?: boolean,
         config?: AxiosRequestConfig
@@ -453,9 +454,9 @@ export class Syncs {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.syncTrigger = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.TriggerSyncResponseBody
+                        components.SyncTrigger
                     );
                 } else {
                     throw new errors.SDKError(
@@ -485,7 +486,7 @@ export class Syncs {
      * @remarks
      * Update certain configurable attributes of a sync
      */
-    async updateSync(
+    async update(
         syncId: number,
         syncAttributes?: components.SyncAttributes,
         config?: AxiosRequestConfig
@@ -552,9 +553,9 @@ export class Syncs {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.twoHundredApplicationJsonObject = utils.objectToClass(
+                    res.syncUpdate = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.UpdateSyncResponseBody
+                        components.SyncUpdate
                     );
                 } else {
                     throw new errors.SDKError(

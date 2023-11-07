@@ -5,7 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
 
 export class ListDestinationConnectLinksRequest extends SpeakeasyBase {
     /**
@@ -27,44 +26,18 @@ export class ListDestinationConnectLinksRequest extends SpeakeasyBase {
     perPage?: number;
 }
 
-/**
- * The outcome of the request
- */
-export enum ListDestinationConnectLinksStatus {
-    Success = "success",
-}
-
-/**
- * A successfully fetched list of results.
- */
-export class ListDestinationConnectLinksResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata({ elemType: components.DestinationConnectLink })
-    @Expose({ name: "data" })
-    @Type(() => components.DestinationConnectLink)
-    data: components.DestinationConnectLink[];
-
-    /**
-     * An object to help you navigate the list of results.
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "pagination" })
-    @Type(() => components.Pagination)
-    pagination: components.Pagination;
-
-    /**
-     * The outcome of the request
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status: ListDestinationConnectLinksStatus;
-}
-
 export class ListDestinationConnectLinksResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation
      */
     @SpeakeasyMetadata()
     contentType: string;
+
+    /**
+     * Successfully retrieved the list of destination connect links.
+     */
+    @SpeakeasyMetadata()
+    destinationsConnectList?: components.DestinationsConnectList;
 
     /**
      * HTTP response status code for this operation
@@ -77,10 +50,4 @@ export class ListDestinationConnectLinksResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
-
-    /**
-     * Successfully retrieved the list of destination connect links.
-     */
-    @SpeakeasyMetadata()
-    object?: ListDestinationConnectLinksResponseBody;
 }

@@ -3,11 +3,11 @@
 
 ### Available Operations
 
-* [cancelSyncRun](#cancelsyncrun) - Cancel a running sync
-* [fetchSyncRun](#fetchsyncrun) - Fetch sync run
-* [getSyncsSyncIdSyncRuns](#getsyncssyncidsyncruns) - List sync runs
+* [cancel](#cancel) - Cancel a running sync
+* [fetch](#fetch) - Fetch sync run
+* [list](#list) - List sync runs
 
-## cancelSyncRun
+## cancel
 
 Use this endpoint to cancel a sync that is actively running.
 
@@ -21,9 +21,9 @@ import { CancelSyncRunRequest } from "Workspace-Management-API/dist/models/opera
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const syncRunId: number = 609805;
+const syncRunId: number = 24812;
 
-  const res = await sdk.syncRuns.cancelSyncRun(syncRunId);
+  const res = await sdk.syncRuns.cancel(syncRunId);
 
 
   if (res.statusCode == 200) {
@@ -45,7 +45,7 @@ const syncRunId: number = 609805;
 **Promise<[operations.CancelSyncRunResponse](../../models/operations/cancelsyncrunresponse.md)>**
 
 
-## fetchSyncRun
+## fetch
 
 Retrieve the details of a particular sync run
 
@@ -59,9 +59,9 @@ import { FetchSyncRunRequest } from "Workspace-Management-API/dist/models/operat
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const syncRunId: number = 612246;
+const syncRunId: number = 874373;
 
-  const res = await sdk.syncRuns.fetchSyncRun(syncRunId);
+  const res = await sdk.syncRuns.fetch(syncRunId);
 
 
   if (res.statusCode == 200) {
@@ -83,7 +83,7 @@ const syncRunId: number = 612246;
 **Promise<[operations.FetchSyncRunResponse](../../models/operations/fetchsyncrunresponse.md)>**
 
 
-## getSyncsSyncIdSyncRuns
+## list
 
 List sync runs
 
@@ -92,18 +92,18 @@ List sync runs
 ```typescript
 import { WorkspaceManagementAPI } from "Workspace-Management-API";
 import { Order } from "Workspace-Management-API/dist/models/components";
-import { GetSyncsSyncIdSyncRunsRequest } from "Workspace-Management-API/dist/models/operations";
+import { ListSyncRunsRequest } from "Workspace-Management-API/dist/models/operations";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const syncId: number = 871833;
+const syncId: number = 768578;
 const order: Order = Order.Asc;
-const page: number = 6968.09;
-const perPage: number = 2344.94;
+const page: number = 5472.72;
+const perPage: number = 2576.49;
 
-  const res = await sdk.syncRuns.getSyncsSyncIdSyncRuns(syncId, order, page, perPage);
+  const res = await sdk.syncRuns.list(syncId, order, page, perPage);
 
 
   if (res.statusCode == 200) {
@@ -125,5 +125,5 @@ const perPage: number = 2344.94;
 
 ### Response
 
-**Promise<[operations.GetSyncsSyncIdSyncRunsResponse](../../models/operations/getsyncssyncidsyncrunsresponse.md)>**
+**Promise<[operations.ListSyncRunsResponse](../../models/operations/listsyncrunsresponse.md)>**
 

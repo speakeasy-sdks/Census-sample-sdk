@@ -1,17 +1,61 @@
 # Sources
 (*.sources*)
 
+## Overview
+
+Data repositories where the data originates from.
+
 ### Available Operations
 
-* [createSource](#createsource) - Create a new source
-* [deleteSource](#deletesource) - Delete source
-* [getSourcesSourceId](#getsourcessourceid) - Fetch source
-* [getSourcesSourceIdRefreshTablesStatus](#getsourcessourceidrefreshtablesstatus) - Check table refresh
-* [listSources](#listsources) - List sources
-* [patchSourcesSourceId](#patchsourcessourceid) - Update source
-* [postSourcesSourceIdRefreshTables](#postsourcessourceidrefreshtables) - Start table refresh
+* [check](#check) - Check table refresh
+* [create](#create) - Create a new source
+* [delete](#delete) - Delete source
+* [fetch](#fetch) - Fetch source
+* [list](#list) - List sources
+* [start](#start) - Start table refresh
+* [update](#update) - Update source
 
-## createSource
+## check
+
+This endpoint checks whether the job refreshing tables for a source has completed.
+
+### Example Usage
+
+```typescript
+import { WorkspaceManagementAPI } from "Workspace-Management-API";
+import { CheckTableRefreshRequest } from "Workspace-Management-API/dist/models/operations";
+
+(async() => {
+  const sdk = new WorkspaceManagementAPI({
+    bearerAuth: "",
+  });
+const refreshKey: number = 935464;
+const sourceId: number = 38270;
+
+  const res = await sdk.sources.check(refreshKey, sourceId);
+
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```
+
+### Parameters
+
+| Parameter                                                                                                     | Type                                                                                                          | Required                                                                                                      | Description                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `refreshKey`                                                                                                  | *number*                                                                                                      | :heavy_check_mark:                                                                                            | An `id` provided by the `refresh_tables` endpoint, used to check whether the refresh tables job has finished. |
+| `sourceId`                                                                                                    | *number*                                                                                                      | :heavy_check_mark:                                                                                            | ID of the source with an active refresh job                                                                   |
+| `config`                                                                                                      | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                                  | :heavy_minus_sign:                                                                                            | Available config options for making requests.                                                                 |
+
+
+### Response
+
+**Promise<[operations.CheckTableRefreshResponse](../../models/operations/checktablerefreshresponse.md)>**
+
+
+## create
 
 Create a new source
 
@@ -25,7 +69,7 @@ import { WorkspaceManagementAPI } from "Workspace-Management-API";
     bearerAuth: "",
   });
 
-  const res = await sdk.sources.createSource({
+  const res = await sdk.sources.create({
     connection: {
       type: "[\"snowflake\",\"redshift\",\"big_query\"]",
     },
@@ -51,7 +95,7 @@ import { WorkspaceManagementAPI } from "Workspace-Management-API";
 **Promise<[operations.CreateSourceResponse](../../models/operations/createsourceresponse.md)>**
 
 
-## deleteSource
+## delete
 
 Deletes the source specified
 
@@ -65,9 +109,9 @@ import { DeleteSourceRequest } from "Workspace-Management-API/dist/models/operat
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const sourceId: number = 13025;
+const sourceId: number = 545907;
 
-  const res = await sdk.sources.deleteSource(sourceId);
+  const res = await sdk.sources.delete(sourceId);
 
 
   if (res.statusCode == 200) {
@@ -89,7 +133,7 @@ const sourceId: number = 13025;
 **Promise<[operations.DeleteSourceResponse](../../models/operations/deletesourceresponse.md)>**
 
 
-## getSourcesSourceId
+## fetch
 
 Fetch source
 
@@ -97,15 +141,15 @@ Fetch source
 
 ```typescript
 import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { GetSourcesSourceIdRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchSourceRequest } from "Workspace-Management-API/dist/models/operations";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const sourceId: number = 220863;
+const sourceId: number = 874373;
 
-  const res = await sdk.sources.getSourcesSourceId(sourceId);
+  const res = await sdk.sources.fetch(sourceId);
 
 
   if (res.statusCode == 200) {
@@ -124,50 +168,10 @@ const sourceId: number = 220863;
 
 ### Response
 
-**Promise<[operations.GetSourcesSourceIdResponse](../../models/operations/getsourcessourceidresponse.md)>**
+**Promise<[operations.FetchSourceResponse](../../models/operations/fetchsourceresponse.md)>**
 
 
-## getSourcesSourceIdRefreshTablesStatus
-
-This endpoint checks whether the job refreshing tables for a source has completed.
-
-### Example Usage
-
-```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { GetSourcesSourceIdRefreshTablesStatusRequest } from "Workspace-Management-API/dist/models/operations";
-
-(async() => {
-  const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
-  });
-const refreshKey: number = 716894;
-const sourceId: number = 868878;
-
-  const res = await sdk.sources.getSourcesSourceIdRefreshTablesStatus(refreshKey, sourceId);
-
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                                                                     | Type                                                                                                          | Required                                                                                                      | Description                                                                                                   |
-| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `refreshKey`                                                                                                  | *number*                                                                                                      | :heavy_check_mark:                                                                                            | An `id` provided by the `refresh_tables` endpoint, used to check whether the refresh tables job has finished. |
-| `sourceId`                                                                                                    | *number*                                                                                                      | :heavy_check_mark:                                                                                            | ID of the source with an active refresh job                                                                   |
-| `config`                                                                                                      | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                                  | :heavy_minus_sign:                                                                                            | Available config options for making requests.                                                                 |
-
-
-### Response
-
-**Promise<[operations.GetSourcesSourceIdRefreshTablesStatusResponse](../../models/operations/getsourcessourceidrefreshtablesstatusresponse.md)>**
-
-
-## listSources
+## list
 
 List sources
 
@@ -182,11 +186,11 @@ import { ListSourcesRequest } from "Workspace-Management-API/dist/models/operati
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const order: Order = Order.Asc;
-const page: number = 2845.64;
-const perPage: number = 8550.6;
+const order: Order = Order.Desc;
+const page: number = 998.95;
+const perPage: number = 5472.72;
 
-  const res = await sdk.sources.listSources(order, page, perPage);
+  const res = await sdk.sources.list(order, page, perPage);
 
 
   if (res.statusCode == 200) {
@@ -210,7 +214,45 @@ const perPage: number = 8550.6;
 **Promise<[operations.ListSourcesResponse](../../models/operations/listsourcesresponse.md)>**
 
 
-## patchSourcesSourceId
+## start
+
+This endpoint queues a job to refresh the list of tables for a source.
+
+### Example Usage
+
+```typescript
+import { WorkspaceManagementAPI } from "Workspace-Management-API";
+import { StartTableRefreshRequest } from "Workspace-Management-API/dist/models/operations";
+
+(async() => {
+  const sdk = new WorkspaceManagementAPI({
+    bearerAuth: "",
+  });
+const sourceId: number = 50099;
+
+  const res = await sdk.sources.start(sourceId);
+
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `sourceId`                                                   | *number*                                                     | :heavy_check_mark:                                           | ID of the source to update                                   |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[operations.StartTableRefreshResponse](../../models/operations/starttablerefreshresponse.md)>**
+
+
+## update
 
 Update certain values of a source
 
@@ -219,27 +261,27 @@ Update certain values of a source
 ```typescript
 import { WorkspaceManagementAPI } from "Workspace-Management-API";
 import { ConfigurableSourceAttributes, Connection } from "Workspace-Management-API/dist/models/components";
-import { PatchSourcesSourceIdRequest } from "Workspace-Management-API/dist/models/operations";
+import { UpdateSourceRequest } from "Workspace-Management-API/dist/models/operations";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const sourceId: number = 793790;
+const sourceId: number = 857478;
 const configurableSourceAttributes: ConfigurableSourceAttributes = {
   connection: {
     credentials: {
-      "database": "string",
-      "hostname": "string",
       "port": "string",
       "user": "string",
       "password": "string",
+      "database": "string",
+      "hostname": "string",
     },
     label: "Acme Inc. Snowflake",
   },
 };
 
-  const res = await sdk.sources.patchSourcesSourceId(sourceId, configurableSourceAttributes);
+  const res = await sdk.sources.update(sourceId, configurableSourceAttributes);
 
 
   if (res.statusCode == 200) {
@@ -259,43 +301,5 @@ const configurableSourceAttributes: ConfigurableSourceAttributes = {
 
 ### Response
 
-**Promise<[operations.PatchSourcesSourceIdResponse](../../models/operations/patchsourcessourceidresponse.md)>**
-
-
-## postSourcesSourceIdRefreshTables
-
-This endpoint queues a job to refresh the list of tables for a source.
-
-### Example Usage
-
-```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { PostSourcesSourceIdRefreshTablesRequest } from "Workspace-Management-API/dist/models/operations";
-
-(async() => {
-  const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
-  });
-const sourceId: number = 641743;
-
-  const res = await sdk.sources.postSourcesSourceIdRefreshTables(sourceId);
-
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `sourceId`                                                   | *number*                                                     | :heavy_check_mark:                                           | ID of the source to update                                   |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.PostSourcesSourceIdRefreshTablesResponse](../../models/operations/postsourcessourceidrefreshtablesresponse.md)>**
+**Promise<[operations.UpdateSourceResponse](../../models/operations/updatesourceresponse.md)>**
 

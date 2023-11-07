@@ -9,6 +9,10 @@ import * as operations from "../models/operations";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
 
+/**
+ * Data repositories where the data originates from.
+ */
+
 export class Sources {
     private sdkConfiguration: SDKConfiguration;
 
@@ -17,9 +21,98 @@ export class Sources {
     }
 
     /**
+     * Check table refresh
+     *
+     * @remarks
+     * This endpoint checks whether the job refreshing tables for a source has completed.
+     */
+    async check(
+        refreshKey: number,
+        sourceId: number,
+        config?: AxiosRequestConfig
+    ): Promise<operations.CheckTableRefreshResponse> {
+        const req = new operations.CheckTableRefreshRequest({
+            refreshKey: refreshKey,
+            sourceId: sourceId,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const url: string = utils.generateURL(
+            baseURL,
+            "/sources/{source_id}/refresh_tables_status",
+            req
+        );
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new components.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        const queryParams: string = utils.serializeQueryParams(req);
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: url + queryParams,
+            method: "get",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: operations.CheckTableRefreshResponse = new operations.CheckTableRefreshResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(contentType, `application/json`)) {
+                    res.sourcesCheckRefresh = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        components.SourcesCheckRefresh
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + contentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new errors.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
      * Create a new source
      */
-    async createSource(
+    async create(
         req: components.InitialSourceAttributes,
         config?: AxiosRequestConfig
     ): Promise<operations.CreateSourceResponse> {
@@ -86,9 +179,9 @@ export class Sources {
         switch (true) {
             case httpRes?.status == 201:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.sourcesCreate = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.CreateSourceResponseBody
+                        components.SourcesCreate
                     );
                 } else {
                     throw new errors.SDKError(
@@ -118,7 +211,7 @@ export class Sources {
      * @remarks
      * Deletes the source specified
      */
-    async deleteSource(
+    async delete(
         sourceId: number,
         config?: AxiosRequestConfig
     ): Promise<operations.DeleteSourceResponse> {
@@ -168,9 +261,9 @@ export class Sources {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.sourcesDelete = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.DeleteSourceResponseBody
+                        components.SourcesDelete
                     );
                 } else {
                     throw new errors.SDKError(
@@ -197,11 +290,11 @@ export class Sources {
     /**
      * Fetch source
      */
-    async getSourcesSourceId(
+    async fetch(
         sourceId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.GetSourcesSourceIdResponse> {
-        const req = new operations.GetSourcesSourceIdRequest({
+    ): Promise<operations.FetchSourceResponse> {
+        const req = new operations.FetchSourceRequest({
             sourceId: sourceId,
         });
         const baseURL: string = utils.templateUrl(
@@ -238,109 +331,18 @@ export class Sources {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.GetSourcesSourceIdResponse =
-            new operations.GetSourcesSourceIdResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
+        const res: operations.FetchSourceResponse = new operations.FetchSourceResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
         const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.sourcesFetch = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.GetSourcesSourceIdResponseBody
-                    );
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + contentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    decodedRes,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Check table refresh
-     *
-     * @remarks
-     * This endpoint checks whether the job refreshing tables for a source has completed.
-     */
-    async getSourcesSourceIdRefreshTablesStatus(
-        refreshKey: number,
-        sourceId: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.GetSourcesSourceIdRefreshTablesStatusResponse> {
-        const req = new operations.GetSourcesSourceIdRefreshTablesStatusRequest({
-            refreshKey: refreshKey,
-            sourceId: sourceId,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = utils.generateURL(
-            baseURL,
-            "/sources/{source_id}/refresh_tables_status",
-            req
-        );
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        const queryParams: string = utils.serializeQueryParams(req);
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url + queryParams,
-            method: "get",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.GetSourcesSourceIdRefreshTablesStatusResponse =
-            new operations.GetSourcesSourceIdRefreshTablesStatusResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
-        switch (true) {
-            case httpRes?.status == 200:
-                if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.GetSourcesSourceIdRefreshTablesStatusResponseBody
+                        components.SourcesFetch
                     );
                 } else {
                     throw new errors.SDKError(
@@ -367,7 +369,7 @@ export class Sources {
     /**
      * List sources
      */
-    async listSources(
+    async list(
         order?: components.Order,
         page?: number,
         perPage?: number,
@@ -422,9 +424,91 @@ export class Sources {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.sourcesList = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.ListSourcesResponseBody
+                        components.SourcesList
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + contentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new errors.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
+     * Start table refresh
+     *
+     * @remarks
+     * This endpoint queues a job to refresh the list of tables for a source.
+     */
+    async start(
+        sourceId: number,
+        config?: AxiosRequestConfig
+    ): Promise<operations.StartTableRefreshResponse> {
+        const req = new operations.StartTableRefreshRequest({
+            sourceId: sourceId,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const url: string = utils.generateURL(baseURL, "/sources/{source_id}/refresh_tables", req);
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new components.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: url,
+            method: "post",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: operations.StartTableRefreshResponse = new operations.StartTableRefreshResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(contentType, `application/json`)) {
+                    res.sourcesStartRefresh = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        components.SourcesStartRefresh
                     );
                 } else {
                     throw new errors.SDKError(
@@ -454,12 +538,12 @@ export class Sources {
      * @remarks
      * Update certain values of a source
      */
-    async patchSourcesSourceId(
+    async update(
         sourceId: number,
         configurableSourceAttributes?: components.ConfigurableSourceAttributes,
         config?: AxiosRequestConfig
-    ): Promise<operations.PatchSourcesSourceIdResponse> {
-        const req = new operations.PatchSourcesSourceIdRequest({
+    ): Promise<operations.UpdateSourceResponse> {
+        const req = new operations.UpdateSourceRequest({
             sourceId: sourceId,
             configurableSourceAttributes: configurableSourceAttributes,
         });
@@ -516,102 +600,18 @@ export class Sources {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PatchSourcesSourceIdResponse =
-            new operations.PatchSourcesSourceIdResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
+        const res: operations.UpdateSourceResponse = new operations.UpdateSourceResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
         const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.sourcesUpdate = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.PatchSourcesSourceIdResponseBody
-                    );
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + contentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    decodedRes,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Start table refresh
-     *
-     * @remarks
-     * This endpoint queues a job to refresh the list of tables for a source.
-     */
-    async postSourcesSourceIdRefreshTables(
-        sourceId: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.PostSourcesSourceIdRefreshTablesResponse> {
-        const req = new operations.PostSourcesSourceIdRefreshTablesRequest({
-            sourceId: sourceId,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = utils.generateURL(baseURL, "/sources/{source_id}/refresh_tables", req);
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url,
-            method: "post",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.PostSourcesSourceIdRefreshTablesResponse =
-            new operations.PostSourcesSourceIdRefreshTablesResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
-        switch (true) {
-            case httpRes?.status == 200:
-                if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.PostSourcesSourceIdRefreshTablesResponseBody
+                        components.SourcesUpdate
                     );
                 } else {
                     throw new errors.SDKError(

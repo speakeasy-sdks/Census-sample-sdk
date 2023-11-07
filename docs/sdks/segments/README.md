@@ -1,15 +1,19 @@
 # Segments
 (*.segments*)
 
+## Overview
+
+Partitions or groups of data within sources or destinations.
+
 ### Available Operations
 
-* [createSegment](#createsegment) - Create a new segment
-* [deleteSegment](#deletesegment) - Delete Segment
-* [getSourcesSourceIdFilterSegmentsSegmentId](#getsourcessourceidfiltersegmentssegmentid) - Fetch segment
-* [listSegments](#listsegments) - List segments
-* [patchSourcesSourceIdFilterSegmentsSegmentId](#patchsourcessourceidfiltersegmentssegmentid) - Update segment
+* [create](#create) - Create a new segment
+* [delete](#delete) - Delete Segment
+* [fetch](#fetch) - Fetch segment
+* [list](#list) - List segments
+* [update](#update) - Update segment
 
-## createSegment
+## create
 
 Create a new segment
 
@@ -25,15 +29,15 @@ import { CreateSegmentRequest } from "Workspace-Management-API/dist/models/opera
     bearerAuth: "",
   });
 const initialSegmentAttributes: InitialSegmentAttributes = {
-  businessObjectId: 207592,
+  businessObjectId: 486589,
   molecules: [
     "string",
   ],
   name: "priority accounts",
 };
-const sourceId: number = 669801;
+const sourceId: number = 489382;
 
-  const res = await sdk.segments.createSegment(initialSegmentAttributes, sourceId);
+  const res = await sdk.segments.create(initialSegmentAttributes, sourceId);
 
 
   if (res.statusCode == 200) {
@@ -56,7 +60,7 @@ const sourceId: number = 669801;
 **Promise<[operations.CreateSegmentResponse](../../models/operations/createsegmentresponse.md)>**
 
 
-## deleteSegment
+## delete
 
 Deletes the segment specified
 
@@ -70,10 +74,10 @@ import { DeleteSegmentRequest } from "Workspace-Management-API/dist/models/opera
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const segmentId: number = 138936;
-const sourceId: number = 819461;
+const segmentId: number = 545907;
+const sourceId: number = 841399;
 
-  const res = await sdk.segments.deleteSegment(segmentId, sourceId);
+  const res = await sdk.segments.delete(segmentId, sourceId);
 
 
   if (res.statusCode == 200) {
@@ -96,7 +100,7 @@ const sourceId: number = 819461;
 **Promise<[operations.DeleteSegmentResponse](../../models/operations/deletesegmentresponse.md)>**
 
 
-## getSourcesSourceIdFilterSegmentsSegmentId
+## fetch
 
 This endpoint lists information for a given segment, including information on its molecules (our data structure for recursive constraints).
 
@@ -104,16 +108,16 @@ This endpoint lists information for a given segment, including information on it
 
 ```typescript
 import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { GetSourcesSourceIdFilterSegmentsSegmentIdRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchSegmentRequest } from "Workspace-Management-API/dist/models/operations";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const segmentId: number = 770291;
-const sourceId: number = 189145;
+const segmentId: number = 874373;
+const sourceId: number = 347223;
 
-  const res = await sdk.segments.getSourcesSourceIdFilterSegmentsSegmentId(segmentId, sourceId);
+  const res = await sdk.segments.fetch(segmentId, sourceId);
 
 
   if (res.statusCode == 200) {
@@ -133,10 +137,10 @@ const sourceId: number = 189145;
 
 ### Response
 
-**Promise<[operations.GetSourcesSourceIdFilterSegmentsSegmentIdResponse](../../models/operations/getsourcessourceidfiltersegmentssegmentidresponse.md)>**
+**Promise<[operations.FetchSegmentResponse](../../models/operations/fetchsegmentresponse.md)>**
 
 
-## listSegments
+## list
 
 List segments
 
@@ -151,12 +155,12 @@ import { ListSegmentsRequest } from "Workspace-Management-API/dist/models/operat
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const sourceId: number = 76687;
-const order: Order = Order.Desc;
-const page: number = 6857.66;
-const perPage: number = 7875.81;
+const sourceId: number = 768578;
+const order: Order = Order.Asc;
+const page: number = 5472.72;
+const perPage: number = 2576.49;
 
-  const res = await sdk.segments.listSegments(sourceId, order, page, perPage);
+  const res = await sdk.segments.list(sourceId, order, page, perPage);
 
 
   if (res.statusCode == 200) {
@@ -181,7 +185,7 @@ const perPage: number = 7875.81;
 **Promise<[operations.ListSegmentsResponse](../../models/operations/listsegmentsresponse.md)>**
 
 
-## patchSourcesSourceIdFilterSegmentsSegmentId
+## update
 
 Update certain values of a specified segment
 
@@ -190,14 +194,14 @@ Update certain values of a specified segment
 ```typescript
 import { WorkspaceManagementAPI } from "Workspace-Management-API";
 import { ConfigurableSegmentAttributes } from "Workspace-Management-API/dist/models/components";
-import { PatchSourcesSourceIdFilterSegmentsSegmentIdRequest } from "Workspace-Management-API/dist/models/operations";
+import { UpdateSegmentRequest } from "Workspace-Management-API/dist/models/operations";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const segmentId: number = 440202;
-const sourceId: number = 562156;
+const segmentId: number = 857478;
+const sourceId: number = 24555;
 const configurableSegmentAttributes: ConfigurableSegmentAttributes = {
   molecules: [
     "string",
@@ -205,7 +209,7 @@ const configurableSegmentAttributes: ConfigurableSegmentAttributes = {
   name: "priority accounts",
 };
 
-  const res = await sdk.segments.patchSourcesSourceIdFilterSegmentsSegmentId(segmentId, sourceId, configurableSegmentAttributes);
+  const res = await sdk.segments.update(segmentId, sourceId, configurableSegmentAttributes);
 
 
   if (res.statusCode == 200) {
@@ -226,5 +230,5 @@ const configurableSegmentAttributes: ConfigurableSegmentAttributes = {
 
 ### Response
 
-**Promise<[operations.PatchSourcesSourceIdFilterSegmentsSegmentIdResponse](../../models/operations/patchsourcessourceidfiltersegmentssegmentidresponse.md)>**
+**Promise<[operations.UpdateSegmentResponse](../../models/operations/updatesegmentresponse.md)>**
 

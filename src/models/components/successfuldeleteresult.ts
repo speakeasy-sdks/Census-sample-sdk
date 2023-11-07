@@ -8,7 +8,7 @@ import { Expose } from "class-transformer";
 /**
  * The outcome of the deletion request
  */
-export enum Status {
+export enum SuccessfulDeleteResultStatus {
     Deleted = "deleted",
 }
 
@@ -18,5 +18,5 @@ export class SuccessfulDeleteResult extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "status" })
-    status: Status;
+    status: SuccessfulDeleteResultStatus;
 }

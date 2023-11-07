@@ -5,7 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
 
 export class CreateModelRequest extends SpeakeasyBase {
     @SpeakeasyMetadata({ data: "request, media_type=application/json" })
@@ -18,40 +17,18 @@ export class CreateModelRequest extends SpeakeasyBase {
     sourceId: number;
 }
 
-/**
- * Outcome of the operation.
- */
-export enum CreateModelStatus {
-    Success = "success",
-    Updated = "updated",
-    Created = "created",
-    NotFound = "not_found",
-    Error = "error",
-}
-
-/**
- * Model created successfully
- */
-export class CreateModelResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "data" })
-    @Type(() => components.Model)
-    data?: components.Model;
-
-    /**
-     * Outcome of the operation.
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status?: CreateModelStatus;
-}
-
 export class CreateModelResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation
      */
     @SpeakeasyMetadata()
     contentType: string;
+
+    /**
+     * Model created successfully
+     */
+    @SpeakeasyMetadata()
+    modelsCreate?: components.ModelsCreate;
 
     /**
      * HTTP response status code for this operation
@@ -64,10 +41,4 @@ export class CreateModelResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
-
-    /**
-     * Model created successfully
-     */
-    @SpeakeasyMetadata()
-    object?: CreateModelResponseBody;
 }

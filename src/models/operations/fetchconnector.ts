@@ -5,7 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
 
 export class FetchConnectorRequest extends SpeakeasyBase {
     /**
@@ -15,31 +14,13 @@ export class FetchConnectorRequest extends SpeakeasyBase {
     serviceName: string;
 }
 
-/**
- * The outcome of the fetch request
- */
-export enum Status {
-    Success = "success",
-}
-
-/**
- * Successfully retrieved the connector
- */
-export class FetchConnectorResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "data" })
-    @Type(() => components.Connector)
-    data: components.Connector;
-
+export class FetchConnectorResponse extends SpeakeasyBase {
     /**
-     * The outcome of the fetch request
+     * Successfully retrieved the connector
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status: Status;
-}
+    connectorsFetch?: components.ConnectorsFetch;
 
-export class FetchConnectorResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation
      */
@@ -57,10 +38,4 @@ export class FetchConnectorResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
-
-    /**
-     * Successfully retrieved the connector
-     */
-    @SpeakeasyMetadata()
-    object?: FetchConnectorResponseBody;
 }

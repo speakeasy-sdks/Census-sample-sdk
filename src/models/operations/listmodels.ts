@@ -5,7 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-import { Expose, Type } from "class-transformer";
 
 export class ListModelsRequest extends SpeakeasyBase {
     /**
@@ -33,44 +32,18 @@ export class ListModelsRequest extends SpeakeasyBase {
     perPage?: number;
 }
 
-/**
- * The outcome of the request
- */
-export enum ListModelsStatus {
-    Success = "success",
-}
-
-/**
- * A successfully fetched list of results.
- */
-export class ListModelsResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata({ elemType: components.Model })
-    @Expose({ name: "data" })
-    @Type(() => components.Model)
-    data: components.Model[];
-
-    /**
-     * An object to help you navigate the list of results.
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "pagination" })
-    @Type(() => components.Pagination)
-    pagination: components.Pagination;
-
-    /**
-     * The outcome of the request
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "status" })
-    status: ListModelsStatus;
-}
-
 export class ListModelsResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation
      */
     @SpeakeasyMetadata()
     contentType: string;
+
+    /**
+     * Successfully retrieved the list of models.
+     */
+    @SpeakeasyMetadata()
+    modelsList?: components.ModelsList;
 
     /**
      * HTTP response status code for this operation
@@ -83,10 +56,4 @@ export class ListModelsResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
-
-    /**
-     * Successfully retrieved the list of models.
-     */
-    @SpeakeasyMetadata()
-    object?: ListModelsResponseBody;
 }

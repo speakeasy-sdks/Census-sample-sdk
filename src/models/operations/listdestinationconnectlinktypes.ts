@@ -13,6 +13,12 @@ export class ListDestinationConnectLinkTypesResponse extends SpeakeasyBase {
     contentType: string;
 
     /**
+     * Successfully retrieved the list of destination connect link types
+     */
+    @SpeakeasyMetadata()
+    destinationsConnectListTypes?: string[];
+
+    /**
      * HTTP response status code for this operation
      */
     @SpeakeasyMetadata()
@@ -23,10 +29,4 @@ export class ListDestinationConnectLinkTypesResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
-
-    /**
-     * Successfully retrieved the list of destination connect link types
-     */
-    @SpeakeasyMetadata()
-    strings?: string[];
 }
