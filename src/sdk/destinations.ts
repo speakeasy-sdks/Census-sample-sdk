@@ -3,11 +3,13 @@
  */
 
 import * as utils from "../internal/utils";
-import * as components from "../models/components";
-import * as errors from "../models/errors";
-import * as operations from "../models/operations";
+import * as models from "../models";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
+
+/**
+ * Target data storage or databases for data synchronization.
+ */
 
 export class Destinations {
     private sdkConfiguration: SDKConfiguration;
@@ -17,14 +19,194 @@ export class Destinations {
     }
 
     /**
+     * Check fields refresh
+     *
+     * @remarks
+     * This endpoint checks whether the job refreshing fields for a destination object has completed.
+     */
+    async checkFieldRefresh(
+        destinationId: number,
+        objectFullName: number,
+        refreshKey: number,
+        config?: AxiosRequestConfig
+    ): Promise<models.CheckFieldRefreshResponse> {
+        const req = new models.CheckFieldRefreshRequest({
+            destinationId: destinationId,
+            objectFullName: objectFullName,
+            refreshKey: refreshKey,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const url: string = utils.generateURL(
+            baseURL,
+            "/destinations/{destination_id}/objects/{object_full_name}/refresh_fields_status",
+            req
+        );
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new models.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        const queryParams: string = utils.serializeQueryParams(req);
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: url + queryParams,
+            method: "get",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: models.CheckFieldRefreshResponse = new models.CheckFieldRefreshResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(contentType, `application/json`)) {
+                    res.destinationsCheckField = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        models.DestinationsCheckField
+                    );
+                } else {
+                    throw new models.SDKError(
+                        "unknown content-type received: " + contentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new models.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
+     * Check object refresh
+     *
+     * @remarks
+     * This endpoint checks whether the job refreshing objects for a destination has completed.
+     */
+    async checkObjectRefresh(
+        destinationId: number,
+        refreshKey: number,
+        config?: AxiosRequestConfig
+    ): Promise<models.CheckObjectRefreshResponse> {
+        const req = new models.CheckObjectRefreshRequest({
+            destinationId: destinationId,
+            refreshKey: refreshKey,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const url: string = utils.generateURL(
+            baseURL,
+            "/destinations/{destination_id}/refresh_objects_status",
+            req
+        );
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new models.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        const queryParams: string = utils.serializeQueryParams(req);
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: url + queryParams,
+            method: "get",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: models.CheckObjectRefreshResponse = new models.CheckObjectRefreshResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(contentType, `application/json`)) {
+                    res.destinationsCheckRefresh = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        models.DestinationsCheckRefresh
+                    );
+                } else {
+                    throw new models.SDKError(
+                        "unknown content-type received: " + contentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new models.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
      * Create a new destination
      */
-    async createDestination(
-        req: components.ConfigurableDestinationAttributes,
+    async create(
+        req: models.ConfigurableDestinationAttributes,
         config?: AxiosRequestConfig
-    ): Promise<operations.CreateDestinationResponse> {
+    ): Promise<models.CreateDestinationResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new components.ConfigurableDestinationAttributes(req);
+            req = new models.ConfigurableDestinationAttributes(req);
         }
 
         const baseURL: string = utils.templateUrl(
@@ -48,7 +230,7 @@ export class Destinations {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = {
@@ -77,7 +259,7 @@ export class Destinations {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.CreateDestinationResponse = new operations.CreateDestinationResponse({
+        const res: models.CreateDestinationResponse = new models.CreateDestinationResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -88,10 +270,10 @@ export class Destinations {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.object = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.CreateDestinationResponseBody
+                        models.CreateDestinationResponseBody
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -101,7 +283,7 @@ export class Destinations {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -118,11 +300,11 @@ export class Destinations {
      * @remarks
      * Deletes the destination specified
      */
-    async deleteDestination(
+    async delete(
         destinationId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.DeleteDestinationResponse> {
-        const req = new operations.DeleteDestinationRequest({
+    ): Promise<models.DeleteDestinationResponse> {
+        const req = new models.DeleteDestinationRequest({
             destinationId: destinationId,
         });
         const baseURL: string = utils.templateUrl(
@@ -136,7 +318,7 @@ export class Destinations {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -159,7 +341,7 @@ export class Destinations {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.DeleteDestinationResponse = new operations.DeleteDestinationResponse({
+        const res: models.DeleteDestinationResponse = new models.DeleteDestinationResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -168,12 +350,12 @@ export class Destinations {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.destinationsDelete = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.DeleteDestinationResponseBody
+                        models.DestinationsDelete
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -183,7 +365,86 @@ export class Destinations {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
+     * Fetch destination
+     */
+    async fetch(
+        destinationId: number,
+        config?: AxiosRequestConfig
+    ): Promise<models.FetchDestinationResponse> {
+        const req = new models.FetchDestinationRequest({
+            destinationId: destinationId,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const url: string = utils.generateURL(baseURL, "/destinations/{destination_id}", req);
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new models.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: url,
+            method: "get",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: models.FetchDestinationResponse = new models.FetchDestinationResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(contentType, `application/json`)) {
+                    res.destinationsFetch = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        models.DestinationsFetch
+                    );
+                } else {
+                    throw new models.SDKError(
+                        "unknown content-type received: " + contentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -200,12 +461,12 @@ export class Destinations {
      * @remarks
      * This endpoint lists information for a given object, including information on what fields it includes.
      */
-    async fetchDestinationObject(
+    async fetchObject(
         destinationId: number,
         objectFullName: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.FetchDestinationObjectResponse> {
-        const req = new operations.FetchDestinationObjectRequest({
+    ): Promise<models.FetchDestinationObjectsResponse> {
+        const req = new models.FetchDestinationObjectsRequest({
             destinationId: destinationId,
             objectFullName: objectFullName,
         });
@@ -224,7 +485,7 @@ export class Destinations {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -247,8 +508,8 @@ export class Destinations {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.FetchDestinationObjectResponse =
-            new operations.FetchDestinationObjectResponse({
+        const res: models.FetchDestinationObjectsResponse =
+            new models.FetchDestinationObjectsResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -257,12 +518,12 @@ export class Destinations {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.destinationsFetchObject = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.FetchDestinationObjectResponseBody
+                        models.DestinationsFetchObject
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -272,7 +533,7 @@ export class Destinations {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -284,121 +545,31 @@ export class Destinations {
     }
 
     /**
-     * Fetch destination
+     * List destinations
      */
-    async getDestinationsDestinationId(
-        destinationId: number,
+    async list(
+        order?: models.Order,
+        page?: number,
+        perPage?: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.GetDestinationsDestinationIdResponse> {
-        const req = new operations.GetDestinationsDestinationIdRequest({
-            destinationId: destinationId,
+    ): Promise<models.ListDestinationsResponse> {
+        const req = new models.ListDestinationsRequest({
+            order: order,
+            page: page,
+            perPage: perPage,
         });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(baseURL, "/destinations/{destination_id}", req);
+        const url: string = baseURL.replace(/\/$/, "") + "/destinations";
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url,
-            method: "get",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.GetDestinationsDestinationIdResponse =
-            new operations.GetDestinationsDestinationIdResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
-        switch (true) {
-            case httpRes?.status == 200:
-                if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.GetDestinationsDestinationIdResponseBody
-                    );
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + contentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    decodedRes,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Check fields refresh
-     *
-     * @remarks
-     * This endpoint checks whether the job refreshing fields for a destination object has completed.
-     */
-    async getDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatus(
-        destinationId: number,
-        objectFullName: number,
-        refreshKey: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.GetDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatusResponse> {
-        const req =
-            new operations.GetDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatusRequest(
-                {
-                    destinationId: destinationId,
-                    objectFullName: objectFullName,
-                    refreshKey: refreshKey,
-                }
-            );
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = utils.generateURL(
-            baseURL,
-            "/destinations/{destination_id}/objects/{object_full_name}/refresh_fields_status",
-            req
-        );
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -422,24 +593,21 @@ export class Destinations {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.GetDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatusResponse =
-            new operations.GetDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatusResponse(
-                {
-                    statusCode: httpRes.status,
-                    contentType: contentType,
-                    rawResponse: httpRes,
-                }
-            );
+        const res: models.ListDestinationsResponse = new models.ListDestinationsResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
         const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.destinationsList = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.GetDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatusResponseBody
+                        models.DestinationsList
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -449,97 +617,7 @@ export class Destinations {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    decodedRes,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Check object refresh
-     *
-     * @remarks
-     * This endpoint checks whether the job refreshing objects for a destination has completed.
-     */
-    async getDestinationsDestinationIdRefreshObjectsStatus(
-        destinationId: number,
-        refreshKey: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.GetDestinationsDestinationIdRefreshObjectsStatusResponse> {
-        const req = new operations.GetDestinationsDestinationIdRefreshObjectsStatusRequest({
-            destinationId: destinationId,
-            refreshKey: refreshKey,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = utils.generateURL(
-            baseURL,
-            "/destinations/{destination_id}/refresh_objects_status",
-            req
-        );
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        const queryParams: string = utils.serializeQueryParams(req);
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url + queryParams,
-            method: "get",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.GetDestinationsDestinationIdRefreshObjectsStatusResponse =
-            new operations.GetDestinationsDestinationIdRefreshObjectsStatusResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
-        switch (true) {
-            case httpRes?.status == 200:
-                if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.GetDestinationsDestinationIdRefreshObjectsStatusResponseBody
-                    );
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + contentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -553,14 +631,14 @@ export class Destinations {
     /**
      * List destination objects
      */
-    async listDestinationObjects(
+    async listObjects(
         destinationId: number,
-        order?: components.Order,
+        order?: models.Order,
         page?: number,
         perPage?: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.ListDestinationObjectsResponse> {
-        const req = new operations.ListDestinationObjectsRequest({
+    ): Promise<models.ListDestinationObjectsResponse> {
+        const req = new models.ListDestinationObjectsRequest({
             destinationId: destinationId,
             order: order,
             page: page,
@@ -581,7 +659,7 @@ export class Destinations {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -605,8 +683,8 @@ export class Destinations {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.ListDestinationObjectsResponse =
-            new operations.ListDestinationObjectsResponse({
+        const res: models.ListDestinationObjectsResponse =
+            new models.ListDestinationObjectsResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -615,12 +693,12 @@ export class Destinations {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.destinationsListObject = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.ListDestinationObjectsResponseBody
+                        models.DestinationsListObject
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -630,7 +708,7 @@ export class Destinations {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -642,43 +720,47 @@ export class Destinations {
     }
 
     /**
-     * List destinations
+     * Start fields refresh
+     *
+     * @remarks
+     * This endpoint queues a job to refresh the list of fields for a given destination object.
      */
-    async listDestinations(
-        order?: components.Order,
-        page?: number,
-        perPage?: number,
+    async startFieldRefresh(
+        destinationId: number,
+        objectFullName: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.ListDestinationsResponse> {
-        const req = new operations.ListDestinationsRequest({
-            order: order,
-            page: page,
-            perPage: perPage,
+    ): Promise<models.StartFieldRefreshResponse> {
+        const req = new models.StartFieldRefreshRequest({
+            destinationId: destinationId,
+            objectFullName: objectFullName,
         });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = baseURL.replace(/\/$/, "") + "/destinations";
+        const url: string = utils.generateURL(
+            baseURL,
+            "/destinations/{destination_id}/objects/{object_full_name}/refresh_fields",
+            req
+        );
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        const queryParams: string = utils.serializeQueryParams(req);
         headers["Accept"] = "application/json";
 
         headers["user-agent"] = this.sdkConfiguration.userAgent;
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url + queryParams,
-            method: "get",
+            url: url,
+            method: "post",
             headers: headers,
             responseType: "arraybuffer",
             ...config,
@@ -690,7 +772,7 @@ export class Destinations {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.ListDestinationsResponse = new operations.ListDestinationsResponse({
+        const res: models.StartFieldRefreshResponse = new models.StartFieldRefreshResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -699,12 +781,12 @@ export class Destinations {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.destinationsStartField = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.ListDestinationsResponseBody
+                        models.DestinationsStartField
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -714,7 +796,93 @@ export class Destinations {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
+     * Start object refresh
+     *
+     * @remarks
+     * This endpoint queues a job to refresh the list of objects for a destination.
+     */
+    async startObjectRefresh(
+        destinationId: number,
+        config?: AxiosRequestConfig
+    ): Promise<models.StartObjectRefreshResponse> {
+        const req = new models.StartObjectRefreshRequest({
+            destinationId: destinationId,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const url: string = utils.generateURL(
+            baseURL,
+            "/destinations/{destination_id}/refresh_objects",
+            req
+        );
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new models.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: url,
+            method: "post",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: models.StartObjectRefreshResponse = new models.StartObjectRefreshResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(contentType, `application/json`)) {
+                    res.destinationsStartRefresh = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        models.DestinationsStartRefresh
+                    );
+                } else {
+                    throw new models.SDKError(
+                        "unknown content-type received: " + contentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -731,12 +899,12 @@ export class Destinations {
      * @remarks
      * Update certain values of a destination
      */
-    async patchDestinationsDestinationId(
+    async update(
         destinationId: number,
-        configurableDestinationAttributes?: components.ConfigurableDestinationAttributes,
+        configurableDestinationAttributes?: models.ConfigurableDestinationAttributes,
         config?: AxiosRequestConfig
-    ): Promise<operations.PatchDestinationsDestinationIdResponse> {
-        const req = new operations.PatchDestinationsDestinationIdRequest({
+    ): Promise<models.UpdateDestinationResponse> {
+        const req = new models.UpdateDestinationRequest({
             destinationId: destinationId,
             configurableDestinationAttributes: configurableDestinationAttributes,
         });
@@ -765,7 +933,7 @@ export class Destinations {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = {
@@ -793,22 +961,21 @@ export class Destinations {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PatchDestinationsDestinationIdResponse =
-            new operations.PatchDestinationsDestinationIdResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
+        const res: models.UpdateDestinationResponse = new models.UpdateDestinationResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
         const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.destinationsUpdate = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.PatchDestinationsDestinationIdResponseBody
+                        models.DestinationsUpdate
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -818,184 +985,7 @@ export class Destinations {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    decodedRes,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Start fields refresh
-     *
-     * @remarks
-     * This endpoint queues a job to refresh the list of fields for a given destination object.
-     */
-    async postDestinationsDestinationIdObjectsObjectFullNameRefreshFields(
-        destinationId: number,
-        objectFullName: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.PostDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsResponse> {
-        const req =
-            new operations.PostDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsRequest({
-                destinationId: destinationId,
-                objectFullName: objectFullName,
-            });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = utils.generateURL(
-            baseURL,
-            "/destinations/{destination_id}/objects/{object_full_name}/refresh_fields",
-            req
-        );
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url,
-            method: "post",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.PostDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsResponse =
-            new operations.PostDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
-        switch (true) {
-            case httpRes?.status == 200:
-                if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.PostDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsResponseBody
-                    );
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + contentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    decodedRes,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Start object refresh
-     *
-     * @remarks
-     * This endpoint queues a job to refresh the list of objects for a destination.
-     */
-    async postDestinationsDestinationIdRefreshObjects(
-        destinationId: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.PostDestinationsDestinationIdRefreshObjectsResponse> {
-        const req = new operations.PostDestinationsDestinationIdRefreshObjectsRequest({
-            destinationId: destinationId,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = utils.generateURL(
-            baseURL,
-            "/destinations/{destination_id}/refresh_objects",
-            req
-        );
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url,
-            method: "post",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.PostDestinationsDestinationIdRefreshObjectsResponse =
-            new operations.PostDestinationsDestinationIdRefreshObjectsResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
-        switch (true) {
-            case httpRes?.status == 200:
-                if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.PostDestinationsDestinationIdRefreshObjectsResponseBody
-                    );
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + contentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,

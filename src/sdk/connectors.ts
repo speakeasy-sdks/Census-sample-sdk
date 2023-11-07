@@ -3,11 +3,13 @@
  */
 
 import * as utils from "../internal/utils";
-import * as components from "../models/components";
-import * as errors from "../models/errors";
-import * as operations from "../models/operations";
+import * as models from "../models";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
+
+/**
+ * Software components facilitating data connections and transfers between systems.
+ */
 
 export class Connectors {
     private sdkConfiguration: SDKConfiguration;
@@ -22,11 +24,11 @@ export class Connectors {
      * @remarks
      * Use this endpoint to fetch the details for a specific types of destination connection that can be created in the current workspace. This is particularly useful for Census Embedded solutions when determining the required values to authorize a new destination connection.
      */
-    async fetchConnector(
+    async fetch(
         serviceName: string,
         config?: AxiosRequestConfig
-    ): Promise<operations.FetchConnectorResponse> {
-        const req = new operations.FetchConnectorRequest({
+    ): Promise<models.FetchConnectorResponse> {
+        const req = new models.FetchConnectorRequest({
             serviceName: serviceName,
         });
         const baseURL: string = utils.templateUrl(
@@ -40,7 +42,7 @@ export class Connectors {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -63,7 +65,7 @@ export class Connectors {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.FetchConnectorResponse = new operations.FetchConnectorResponse({
+        const res: models.FetchConnectorResponse = new models.FetchConnectorResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -72,12 +74,12 @@ export class Connectors {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.connectorsFetch = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.FetchConnectorResponseBody
+                        models.ConnectorsFetch
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -87,7 +89,7 @@ export class Connectors {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -104,13 +106,13 @@ export class Connectors {
      * @remarks
      * Use this endpoint to list out the types of destination connections that can be created in the current workspace. This is particularly useful for Census Embedded solutions when determining the required values to authorize a new destination connection.
      */
-    async listConnectors(
-        order?: components.Order,
+    async list(
+        order?: models.Order,
         page?: number,
         perPage?: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.ListConnectorsResponse> {
-        const req = new operations.ListConnectorsRequest({
+    ): Promise<models.ListConnectorsResponse> {
+        const req = new models.ListConnectorsRequest({
             order: order,
             page: page,
             perPage: perPage,
@@ -126,7 +128,7 @@ export class Connectors {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -150,7 +152,7 @@ export class Connectors {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.ListConnectorsResponse = new operations.ListConnectorsResponse({
+        const res: models.ListConnectorsResponse = new models.ListConnectorsResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -159,12 +161,12 @@ export class Connectors {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
+                    res.connectorsList = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.ListConnectorsResponseBody
+                        models.ConnectorsList
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -174,7 +176,7 @@ export class Connectors {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,

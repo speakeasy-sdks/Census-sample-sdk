@@ -1,0 +1,9 @@
+# DestinationsFetch
+
+
+## Fields
+
+| Field                                                                            | Type                                                                             | Required                                                                         | Description                                                                      | Example                                                                          |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `data`                                                                           | [models.Destination](../../models/shared/destination.md)                         | :heavy_minus_sign:                                                               | N/A                                                                              |                                                                                  |
+| `status`                                                                         | [models.DestinationsFetchStatus](../../models/shared/destinationsfetchstatus.md) | :heavy_minus_sign:                                                               | Outcome of the operation.                                                        | created                                                                          |

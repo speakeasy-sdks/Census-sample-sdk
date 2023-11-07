@@ -1,196 +1,42 @@
 # Destinations
 (*.destinations*)
 
+## Overview
+
+Target data storage or databases for data synchronization.
+
 ### Available Operations
 
-* [createDestination](#createdestination) - Create a new destination
-* [deleteDestination](#deletedestination) - Delete destination
-* [fetchDestinationObject](#fetchdestinationobject) - Fetch destination object
-* [getDestinationsDestinationId](#getdestinationsdestinationid) - Fetch destination
-* [getDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatus](#getdestinationsdestinationidobjectsobjectfullnamerefreshfieldsstatus) - Check fields refresh
-* [getDestinationsDestinationIdRefreshObjectsStatus](#getdestinationsdestinationidrefreshobjectsstatus) - Check object refresh
-* [listDestinationObjects](#listdestinationobjects) - List destination objects
-* [listDestinations](#listdestinations) - List destinations
-* [patchDestinationsDestinationId](#patchdestinationsdestinationid) - Update destination
-* [postDestinationsDestinationIdObjectsObjectFullNameRefreshFields](#postdestinationsdestinationidobjectsobjectfullnamerefreshfields) - Start fields refresh
-* [postDestinationsDestinationIdRefreshObjects](#postdestinationsdestinationidrefreshobjects) - Start object refresh
+* [checkFieldRefresh](#checkfieldrefresh) - Check fields refresh
+* [checkObjectRefresh](#checkobjectrefresh) - Check object refresh
+* [create](#create) - Create a new destination
+* [delete](#delete) - Delete destination
+* [fetch](#fetch) - Fetch destination
+* [fetchObject](#fetchobject) - Fetch destination object
+* [list](#list) - List destinations
+* [listObjects](#listobjects) - List destination objects
+* [startFieldRefresh](#startfieldrefresh) - Start fields refresh
+* [startObjectRefresh](#startobjectrefresh) - Start object refresh
+* [update](#update) - Update destination
 
-## createDestination
-
-Create a new destination
-
-### Example Usage
-
-```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-
-(async() => {
-  const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
-  });
-
-  const res = await sdk.destinations.createDestination({
-    serviceConnection: {
-      credentials: {},
-      name: "Google Sheets",
-    },
-  });
-
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                                                                | Type                                                                                                     | Required                                                                                                 | Description                                                                                              |
-| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `request`                                                                                                | [components.ConfigurableDestinationAttributes](../../models/shared/configurabledestinationattributes.md) | :heavy_check_mark:                                                                                       | The request object to use for the request.                                                               |
-| `config`                                                                                                 | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                             | :heavy_minus_sign:                                                                                       | Available config options for making requests.                                                            |
-
-
-### Response
-
-**Promise<[operations.CreateDestinationResponse](../../models/operations/createdestinationresponse.md)>**
-
-
-## deleteDestination
-
-Deletes the destination specified
-
-### Example Usage
-
-```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { DeleteDestinationRequest } from "Workspace-Management-API/dist/models/operations";
-
-(async() => {
-  const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
-  });
-const destinationId: number = 361536;
-
-  const res = await sdk.destinations.deleteDestination(destinationId);
-
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `destinationId`                                              | *number*                                                     | :heavy_check_mark:                                           | The ID of the destination to be deleted.                     |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.DeleteDestinationResponse](../../models/operations/deletedestinationresponse.md)>**
-
-
-## fetchDestinationObject
-
-This endpoint lists information for a given object, including information on what fields it includes.
-
-### Example Usage
-
-```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchDestinationObjectRequest } from "Workspace-Management-API/dist/models/operations";
-
-(async() => {
-  const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
-  });
-const destinationId: number = 150073;
-const objectFullName: number = 651441;
-
-  const res = await sdk.destinations.fetchDestinationObject(destinationId, objectFullName);
-
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `destinationId`                                              | *number*                                                     | :heavy_check_mark:                                           | ID of the destination that owns the object                   |
-| `objectFullName`                                             | *number*                                                     | :heavy_check_mark:                                           | `full_name` of the destination object                        |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.FetchDestinationObjectResponse](../../models/operations/fetchdestinationobjectresponse.md)>**
-
-
-## getDestinationsDestinationId
-
-Fetch destination
-
-### Example Usage
-
-```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { GetDestinationsDestinationIdRequest } from "Workspace-Management-API/dist/models/operations";
-
-(async() => {
-  const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
-  });
-const destinationId: number = 267761;
-
-  const res = await sdk.destinations.getDestinationsDestinationId(destinationId);
-
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `destinationId`                                              | *number*                                                     | :heavy_check_mark:                                           | ID of the destination to retrieve                            |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.GetDestinationsDestinationIdResponse](../../models/operations/getdestinationsdestinationidresponse.md)>**
-
-
-## getDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatus
+## checkFieldRefresh
 
 This endpoint checks whether the job refreshing fields for a destination object has completed.
 
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { GetDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatusRequest } from "Workspace-Management-API/dist/models/operations";
+import { CheckFieldRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const destinationId: number = 997322;
-const objectFullName: number = 344497;
-const refreshKey: number = 283677;
+const destinationId: number = 325518;
+const objectFullName: number = 26858;
+const refreshKey: number = 173894;
 
-  const res = await sdk.destinations.getDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatus(destinationId, objectFullName, refreshKey);
+  const res = await sdk.destinations.checkFieldRefresh(destinationId, objectFullName, refreshKey);
 
 
   if (res.statusCode == 200) {
@@ -211,27 +57,26 @@ const refreshKey: number = 283677;
 
 ### Response
 
-**Promise<[operations.GetDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsStatusResponse](../../models/operations/getdestinationsdestinationidobjectsobjectfullnamerefreshfieldsstatusresponse.md)>**
+**Promise<[models.CheckFieldRefreshResponse](../../models/operations/checkfieldrefreshresponse.md)>**
 
 
-## getDestinationsDestinationIdRefreshObjectsStatus
+## checkObjectRefresh
 
 This endpoint checks whether the job refreshing objects for a destination has completed.
 
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { GetDestinationsDestinationIdRefreshObjectsStatusRequest } from "Workspace-Management-API/dist/models/operations";
+import { CheckObjectRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const destinationId: number = 113612;
-const refreshKey: number = 843295;
+const destinationId: number = 275167;
+const refreshKey: number = 881363;
 
-  const res = await sdk.destinations.getDestinationsDestinationIdRefreshObjectsStatus(destinationId, refreshKey);
+  const res = await sdk.destinations.checkObjectRefresh(destinationId, refreshKey);
 
 
   if (res.statusCode == 200) {
@@ -251,30 +96,223 @@ const refreshKey: number = 843295;
 
 ### Response
 
-**Promise<[operations.GetDestinationsDestinationIdRefreshObjectsStatusResponse](../../models/operations/getdestinationsdestinationidrefreshobjectsstatusresponse.md)>**
+**Promise<[models.CheckObjectRefreshResponse](../../models/operations/checkobjectrefreshresponse.md)>**
 
 
-## listDestinationObjects
+## create
+
+Create a new destination
+
+### Example Usage
+
+```typescript
+import { WorkspaceManagementAPI } from "Workspace-Management-API";
+
+(async() => {
+  const sdk = new WorkspaceManagementAPI({
+    bearerAuth: "",
+  });
+
+  const res = await sdk.destinations.create({
+    serviceConnection: {
+      credentials: {},
+      name: "Google Sheets",
+    },
+  });
+
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```
+
+### Parameters
+
+| Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `request`                                                                                            | [models.ConfigurableDestinationAttributes](../../models/shared/configurabledestinationattributes.md) | :heavy_check_mark:                                                                                   | The request object to use for the request.                                                           |
+| `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
+
+
+### Response
+
+**Promise<[models.CreateDestinationResponse](../../models/operations/createdestinationresponse.md)>**
+
+
+## delete
+
+Deletes the destination specified
+
+### Example Usage
+
+```typescript
+import { DeleteDestinationRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
+
+(async() => {
+  const sdk = new WorkspaceManagementAPI({
+    bearerAuth: "",
+  });
+const destinationId: number = 545907;
+
+  const res = await sdk.destinations.delete(destinationId);
+
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `destinationId`                                              | *number*                                                     | :heavy_check_mark:                                           | The ID of the destination to be deleted.                     |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[models.DeleteDestinationResponse](../../models/operations/deletedestinationresponse.md)>**
+
+
+## fetch
+
+Fetch destination
+
+### Example Usage
+
+```typescript
+import { FetchDestinationRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
+
+(async() => {
+  const sdk = new WorkspaceManagementAPI({
+    bearerAuth: "",
+  });
+const destinationId: number = 874373;
+
+  const res = await sdk.destinations.fetch(destinationId);
+
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `destinationId`                                              | *number*                                                     | :heavy_check_mark:                                           | ID of the destination to retrieve                            |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[models.FetchDestinationResponse](../../models/operations/fetchdestinationresponse.md)>**
+
+
+## fetchObject
+
+This endpoint lists information for a given object, including information on what fields it includes.
+
+### Example Usage
+
+```typescript
+import { FetchDestinationObjectsRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
+
+(async() => {
+  const sdk = new WorkspaceManagementAPI({
+    bearerAuth: "",
+  });
+const destinationId: number = 808221;
+const objectFullName: number = 271899;
+
+  const res = await sdk.destinations.fetchObject(destinationId, objectFullName);
+
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `destinationId`                                              | *number*                                                     | :heavy_check_mark:                                           | ID of the destination that owns the object                   |
+| `objectFullName`                                             | *number*                                                     | :heavy_check_mark:                                           | `full_name` of the destination object                        |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[models.FetchDestinationObjectsResponse](../../models/operations/fetchdestinationobjectsresponse.md)>**
+
+
+## list
+
+List destinations
+
+### Example Usage
+
+```typescript
+import { ListDestinationsRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
+
+(async() => {
+  const sdk = new WorkspaceManagementAPI({
+    bearerAuth: "",
+  });
+const order: Order = Order.Desc;
+const page: number = 998.95;
+const perPage: number = 5472.72;
+
+  const res = await sdk.destinations.list(order, page, perPage);
+
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```
+
+### Parameters
+
+| Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `order`                                                                                              | [models.Order](../../models/shared/order.md)                                                         | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
+| `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
+| `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
+
+
+### Response
+
+**Promise<[models.ListDestinationsResponse](../../models/operations/listdestinationsresponse.md)>**
+
+
+## listObjects
 
 List destination objects
 
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { Order } from "Workspace-Management-API/dist/models/components";
-import { ListDestinationObjectsRequest } from "Workspace-Management-API/dist/models/operations";
+import { ListDestinationObjectsRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const destinationId: number = 926774;
-const order: Order = Order.Asc;
-const page: number = 7248.92;
-const perPage: number = 7922.06;
+const destinationId: number = 62502;
+const order: Order = Order.Desc;
+const page: number = 8317.9;
+const perPage: number = 1994.22;
 
-  const res = await sdk.destinations.listDestinationObjects(destinationId, order, page, perPage);
+  const res = await sdk.destinations.listObjects(destinationId, order, page, perPage);
 
 
   if (res.statusCode == 200) {
@@ -288,7 +326,7 @@ const perPage: number = 7922.06;
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `destinationId`                                                                                      | *number*                                                                                             | :heavy_check_mark:                                                                                   | ID of the destination                                                                                |
-| `order`                                                                                              | [components.Order](../../models/shared/order.md)                                                     | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../../models/shared/order.md)                                                         | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -296,116 +334,26 @@ const perPage: number = 7922.06;
 
 ### Response
 
-**Promise<[operations.ListDestinationObjectsResponse](../../models/operations/listdestinationobjectsresponse.md)>**
+**Promise<[models.ListDestinationObjectsResponse](../../models/operations/listdestinationobjectsresponse.md)>**
 
 
-## listDestinations
-
-List destinations
-
-### Example Usage
-
-```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { Order } from "Workspace-Management-API/dist/models/components";
-import { ListDestinationsRequest } from "Workspace-Management-API/dist/models/operations";
-
-(async() => {
-  const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
-  });
-const order: Order = Order.Desc;
-const page: number = 1259.99;
-const perPage: number = 6072.89;
-
-  const res = await sdk.destinations.listDestinations(order, page, perPage);
-
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
-| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `order`                                                                                              | [components.Order](../../models/shared/order.md)                                                     | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
-| `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
-| `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
-| `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
-
-
-### Response
-
-**Promise<[operations.ListDestinationsResponse](../../models/operations/listdestinationsresponse.md)>**
-
-
-## patchDestinationsDestinationId
-
-Update certain values of a destination
-
-### Example Usage
-
-```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { ConfigurableDestinationAttributes, Credentials, ServiceConnection } from "Workspace-Management-API/dist/models/components";
-import { PatchDestinationsDestinationIdRequest } from "Workspace-Management-API/dist/models/operations";
-
-(async() => {
-  const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
-  });
-const destinationId: number = 3435;
-const configurableDestinationAttributes: ConfigurableDestinationAttributes = {
-  serviceConnection: {
-    credentials: {},
-    name: "Google Sheets",
-  },
-};
-
-  const res = await sdk.destinations.patchDestinationsDestinationId(destinationId, configurableDestinationAttributes);
-
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                                                                | Type                                                                                                     | Required                                                                                                 | Description                                                                                              |
-| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `destinationId`                                                                                          | *number*                                                                                                 | :heavy_check_mark:                                                                                       | ID of the destination to update                                                                          |
-| `configurableDestinationAttributes`                                                                      | [components.ConfigurableDestinationAttributes](../../models/shared/configurabledestinationattributes.md) | :heavy_minus_sign:                                                                                       | N/A                                                                                                      |
-| `config`                                                                                                 | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                             | :heavy_minus_sign:                                                                                       | Available config options for making requests.                                                            |
-
-
-### Response
-
-**Promise<[operations.PatchDestinationsDestinationIdResponse](../../models/operations/patchdestinationsdestinationidresponse.md)>**
-
-
-## postDestinationsDestinationIdObjectsObjectFullNameRefreshFields
+## startFieldRefresh
 
 This endpoint queues a job to refresh the list of fields for a given destination object.
 
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { PostDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsRequest } from "Workspace-Management-API/dist/models/operations";
+import { StartFieldRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const destinationId: number = 664130;
-const objectFullName: number = 348782;
+const destinationId: number = 987417;
+const objectFullName: number = 472220;
 
-  const res = await sdk.destinations.postDestinationsDestinationIdObjectsObjectFullNameRefreshFields(destinationId, objectFullName);
+  const res = await sdk.destinations.startFieldRefresh(destinationId, objectFullName);
 
 
   if (res.statusCode == 200) {
@@ -425,26 +373,25 @@ const objectFullName: number = 348782;
 
 ### Response
 
-**Promise<[operations.PostDestinationsDestinationIdObjectsObjectFullNameRefreshFieldsResponse](../../models/operations/postdestinationsdestinationidobjectsobjectfullnamerefreshfieldsresponse.md)>**
+**Promise<[models.StartFieldRefreshResponse](../../models/operations/startfieldrefreshresponse.md)>**
 
 
-## postDestinationsDestinationIdRefreshObjects
+## startObjectRefresh
 
 This endpoint queues a job to refresh the list of objects for a destination.
 
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { PostDestinationsDestinationIdRefreshObjectsRequest } from "Workspace-Management-API/dist/models/operations";
+import { StartObjectRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "",
   });
-const destinationId: number = 453680;
+const destinationId: number = 225371;
 
-  const res = await sdk.destinations.postDestinationsDestinationIdRefreshObjects(destinationId);
+  const res = await sdk.destinations.startObjectRefresh(destinationId);
 
 
   if (res.statusCode == 200) {
@@ -463,5 +410,55 @@ const destinationId: number = 453680;
 
 ### Response
 
-**Promise<[operations.PostDestinationsDestinationIdRefreshObjectsResponse](../../models/operations/postdestinationsdestinationidrefreshobjectsresponse.md)>**
+**Promise<[models.StartObjectRefreshResponse](../../models/operations/startobjectrefreshresponse.md)>**
+
+
+## update
+
+Update certain values of a destination
+
+### Example Usage
+
+```typescript
+import {
+  ConfigurableDestinationAttributes,
+  Credentials,
+  ServiceConnection,
+  UpdateDestinationRequest,
+  WorkspaceManagementAPI,
+} from "Workspace-Management-API";
+
+(async() => {
+  const sdk = new WorkspaceManagementAPI({
+    bearerAuth: "",
+  });
+const destinationId: number = 857478;
+const configurableDestinationAttributes: ConfigurableDestinationAttributes = {
+  serviceConnection: {
+    credentials: {},
+    name: "Google Sheets",
+  },
+};
+
+  const res = await sdk.destinations.update(destinationId, configurableDestinationAttributes);
+
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```
+
+### Parameters
+
+| Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `destinationId`                                                                                      | *number*                                                                                             | :heavy_check_mark:                                                                                   | ID of the destination to update                                                                      |
+| `configurableDestinationAttributes`                                                                  | [models.ConfigurableDestinationAttributes](../../models/shared/configurabledestinationattributes.md) | :heavy_minus_sign:                                                                                   | N/A                                                                                                  |
+| `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
+
+
+### Response
+
+**Promise<[models.UpdateDestinationResponse](../../models/operations/updatedestinationresponse.md)>**
 

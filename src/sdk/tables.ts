@@ -3,11 +3,13 @@
  */
 
 import * as utils from "../internal/utils";
-import * as components from "../models/components";
-import * as errors from "../models/errors";
-import * as operations from "../models/operations";
+import * as models from "../models";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
+
+/**
+ * Containers for storing data within a destination, often part of data models.
+ */
 
 export class Tables {
     private sdkConfiguration: SDKConfiguration;
@@ -17,107 +19,18 @@ export class Tables {
     }
 
     /**
-     * Fetch table
-     *
-     * @remarks
-     * This endpoint lists information for a given table, including information on what columns it includes.
-     */
-    async getSourcesSourceIdTablesTableId(
-        sourceId: number,
-        tableId: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.GetSourcesSourceIdTablesTableIdResponse> {
-        const req = new operations.GetSourcesSourceIdTablesTableIdRequest({
-            sourceId: sourceId,
-            tableId: tableId,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = utils.generateURL(
-            baseURL,
-            "/sources/{source_id}/tables/{table_id}",
-            req
-        );
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url,
-            method: "get",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.GetSourcesSourceIdTablesTableIdResponse =
-            new operations.GetSourcesSourceIdTablesTableIdResponse({
-                statusCode: httpRes.status,
-                contentType: contentType,
-                rawResponse: httpRes,
-            });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
-        switch (true) {
-            case httpRes?.status == 200:
-                if (utils.matchContentType(contentType, `application/json`)) {
-                    res.object = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        operations.GetSourcesSourceIdTablesTableIdResponseBody
-                    );
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + contentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    decodedRes,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
      * Check column refresh
      *
      * @remarks
      * This endpoint checks whether the job refreshing columns for a table has completed.
      */
-    async getSourcesSourceIdTablesTableIdRefreshColumnsStatus(
+    async checkColumnRefresh(
         refreshKey: number,
         sourceId: number,
         tableId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.GetSourcesSourceIdTablesTableIdRefreshColumnsStatusResponse> {
-        const req = new operations.GetSourcesSourceIdTablesTableIdRefreshColumnsStatusRequest({
+    ): Promise<models.CheckTablesColumnRefreshResponse> {
+        const req = new models.CheckTablesColumnRefreshRequest({
             refreshKey: refreshKey,
             sourceId: sourceId,
             tableId: tableId,
@@ -137,7 +50,7 @@ export class Tables {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -161,8 +74,8 @@ export class Tables {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.GetSourcesSourceIdTablesTableIdRefreshColumnsStatusResponse =
-            new operations.GetSourcesSourceIdTablesTableIdRefreshColumnsStatusResponse({
+        const res: models.CheckTablesColumnRefreshResponse =
+            new models.CheckTablesColumnRefreshResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -173,10 +86,10 @@ export class Tables {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.object = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.GetSourcesSourceIdTablesTableIdRefreshColumnsStatusResponseBody
+                        models.CheckTablesColumnRefreshResponseBody
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -186,7 +99,95 @@ export class Tables {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
+     * Fetch table
+     *
+     * @remarks
+     * This endpoint lists information for a given table, including information on what columns it includes.
+     */
+    async fetch(
+        sourceId: number,
+        tableId: number,
+        config?: AxiosRequestConfig
+    ): Promise<models.FetchTableResponse> {
+        const req = new models.FetchTableRequest({
+            sourceId: sourceId,
+            tableId: tableId,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const url: string = utils.generateURL(
+            baseURL,
+            "/sources/{source_id}/tables/{table_id}",
+            req
+        );
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new models.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: url,
+            method: "get",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: models.FetchTableResponse = new models.FetchTableResponse({
+            statusCode: httpRes.status,
+            contentType: contentType,
+            rawResponse: httpRes,
+        });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(contentType, `application/json`)) {
+                    res.tablesFetch = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        models.TablesFetch
+                    );
+                } else {
+                    throw new models.SDKError(
+                        "unknown content-type received: " + contentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -203,12 +204,12 @@ export class Tables {
      * @remarks
      * This endpoint queues a job to refresh the list of columns for a table.
      */
-    async postSourcesSourceIdTablesTableIdRefreshColumns(
+    async startColumnRefresh(
         sourceId: number,
         tableId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.PostSourcesSourceIdTablesTableIdRefreshColumnsResponse> {
-        const req = new operations.PostSourcesSourceIdTablesTableIdRefreshColumnsRequest({
+    ): Promise<models.StartTablesColumnRefreshResponse> {
+        const req = new models.StartTablesColumnRefreshRequest({
             sourceId: sourceId,
             tableId: tableId,
         });
@@ -227,7 +228,7 @@ export class Tables {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -250,8 +251,8 @@ export class Tables {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PostSourcesSourceIdTablesTableIdRefreshColumnsResponse =
-            new operations.PostSourcesSourceIdTablesTableIdRefreshColumnsResponse({
+        const res: models.StartTablesColumnRefreshResponse =
+            new models.StartTablesColumnRefreshResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -260,12 +261,9 @@ export class Tables {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.refreshKey = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        components.RefreshKey
-                    );
+                    res.refreshKey = utils.objectToClass(JSON.parse(decodedRes), models.RefreshKey);
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -275,7 +273,7 @@ export class Tables {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
