@@ -5,9 +5,15 @@ management:
   speakeasyVersion: 1.114.0
   generationVersion: 2.179.0
 generation:
-  comments: {}
-  sdkClassName: Workspace-Management-API
+  comments:
+    disableComments: false
+    omitDescriptionIfSummaryPresent: false
+  baseServerURL: ""
+  flattenGlobalSecurity: true
   repoURL: https://github.com/speakeasy-sdks/Census-sample-sdk.git
+  sdkClassName: Workspace-Management-API
+  singleTagPerOp: false
+  tagNamespacingDisabled: false
 features:
   typescript:
     core: 3.1.0
