@@ -1,5 +1,5 @@
 # Syncs
-(*.syncs*)
+(*syncs*)
 
 ## Overview
 
@@ -21,14 +21,14 @@ Create a new sync
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
 import {
   SourceAttributesType,
   SyncAttributesFieldNormalization,
   SyncAttributesOperation,
   SyncAttributesScheduleDay,
   SyncAttributesScheduleFrequency,
-} from "Workspace-Management-API/dist/models/components";
+  WorkspaceManagementAPI,
+} from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -98,7 +98,6 @@ import {
     validateOnly: true,
   });
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -107,16 +106,20 @@ import {
 
 ### Parameters
 
-| Parameter                                                          | Type                                                               | Required                                                           | Description                                                        |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
-| `request`                                                          | [components.SyncAttributes](../../models/shared/syncattributes.md) | :heavy_check_mark:                                                 | The request object to use for the request.                         |
-| `config`                                                           | [AxiosRequestConfig](https://axios-http.com/docs/req_config)       | :heavy_minus_sign:                                                 | Available config options for making requests.                      |
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `request`                                                    | [models.SyncAttributes](../../models/syncattributes.md)      | :heavy_check_mark:                                           | The request object to use for the request.                   |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
 
 
 ### Response
 
-**Promise<[operations.CreateSyncResponse](../../models/operations/createsyncresponse.md)>**
+**Promise<[models.CreateSyncResponse](../../models/createsyncresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## delete
 
@@ -125,8 +128,7 @@ Deletes the sync with the specified ID.
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { DeleteSyncRequest } from "Workspace-Management-API/dist/models/operations";
+import { DeleteSyncRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -136,7 +138,6 @@ const syncId: number = 545907;
 
   const res = await sdk.syncs.delete(syncId);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -153,8 +154,13 @@ const syncId: number = 545907;
 
 ### Response
 
-**Promise<[operations.DeleteSyncResponse](../../models/operations/deletesyncresponse.md)>**
+**Promise<[models.DeleteSyncResponse](../../models/deletesyncresponse.md)>**
+### Errors
 
+| Error Object                  | Status Code                   | Content Type                  |
+| ----------------------------- | ----------------------------- | ----------------------------- |
+| models.DeleteSyncResponseBody | 404                           | application/json              |
+| models.SDKError               | 400-600                       | */*                           |
 
 ## fetch
 
@@ -163,8 +169,7 @@ Retrieve the details of a specific sync
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchSyncRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchSyncRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -174,7 +179,6 @@ const syncId: number = 874373;
 
   const res = await sdk.syncs.fetch(syncId);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -191,8 +195,13 @@ const syncId: number = 874373;
 
 ### Response
 
-**Promise<[operations.FetchSyncResponse](../../models/operations/fetchsyncresponse.md)>**
+**Promise<[models.FetchSyncResponse](../../models/fetchsyncresponse.md)>**
+### Errors
 
+| Error Object                 | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| models.FetchSyncResponseBody | 404                          | application/json             |
+| models.SDKError              | 400-600                      | */*                          |
 
 ## list
 
@@ -201,9 +210,7 @@ List Syncs
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { Order } from "Workspace-Management-API/dist/models/components";
-import { ListSyncsRequest } from "Workspace-Management-API/dist/models/operations";
+import { ListSyncsRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -215,7 +222,6 @@ const perPage: number = 5472.72;
 
   const res = await sdk.syncs.list(order, page, perPage);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -226,7 +232,7 @@ const perPage: number = 5472.72;
 
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `order`                                                                                              | [components.Order](../../models/shared/order.md)                                                     | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../models/order.md)                                                                   | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -234,8 +240,12 @@ const perPage: number = 5472.72;
 
 ### Response
 
-**Promise<[operations.ListSyncsResponse](../../models/operations/listsyncsresponse.md)>**
+**Promise<[models.ListSyncsResponse](../../models/listsyncsresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## trigger
 
@@ -244,8 +254,7 @@ Triggers the sync with the specified ID to start a new sync run.
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { TriggerSyncRequest } from "Workspace-Management-API/dist/models/operations";
+import { TriggerSyncRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -255,7 +264,6 @@ const syncId: number = 705908;
 const forceFullSync: boolean = false;
 
   const res = await sdk.syncs.trigger(syncId, forceFullSync);
-
 
   if (res.statusCode == 200) {
     // handle response
@@ -274,8 +282,12 @@ const forceFullSync: boolean = false;
 
 ### Response
 
-**Promise<[operations.TriggerSyncResponse](../../models/operations/triggersyncresponse.md)>**
+**Promise<[models.TriggerSyncResponse](../../models/triggersyncresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## update
 
@@ -284,7 +296,6 @@ Update certain configurable attributes of a sync
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
 import {
   DestinationAttributes,
   MappingAttributes,
@@ -301,8 +312,9 @@ import {
   SyncAttributesScheduleFrequency,
   SyncAttributesSyncSequence,
   SyncAttributesTriggers,
-} from "Workspace-Management-API/dist/models/components";
-import { UpdateSyncRequest } from "Workspace-Management-API/dist/models/operations";
+  UpdateSyncRequest,
+  WorkspaceManagementAPI,
+} from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -374,7 +386,6 @@ const syncAttributes: SyncAttributes = {
 
   const res = await sdk.syncs.update(syncId, syncAttributes);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -383,14 +394,19 @@ const syncAttributes: SyncAttributes = {
 
 ### Parameters
 
-| Parameter                                                          | Type                                                               | Required                                                           | Description                                                        |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
-| `syncId`                                                           | *number*                                                           | :heavy_check_mark:                                                 | ID of the sync                                                     |
-| `syncAttributes`                                                   | [components.SyncAttributes](../../models/shared/syncattributes.md) | :heavy_minus_sign:                                                 | N/A                                                                |
-| `config`                                                           | [AxiosRequestConfig](https://axios-http.com/docs/req_config)       | :heavy_minus_sign:                                                 | Available config options for making requests.                      |
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `syncId`                                                     | *number*                                                     | :heavy_check_mark:                                           | ID of the sync                                               |
+| `syncAttributes`                                             | [models.SyncAttributes](../models/syncattributes.md)         | :heavy_minus_sign:                                           | N/A                                                          |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
 
 
 ### Response
 
-**Promise<[operations.UpdateSyncResponse](../../models/operations/updatesyncresponse.md)>**
+**Promise<[models.UpdateSyncResponse](../../models/updatesyncresponse.md)>**
+### Errors
 
+| Error Object                  | Status Code                   | Content Type                  |
+| ----------------------------- | ----------------------------- | ----------------------------- |
+| models.UpdateSyncResponseBody | 404                           | application/json              |
+| models.SDKError               | 400-600                       | */*                           |

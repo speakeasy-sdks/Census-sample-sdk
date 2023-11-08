@@ -1,5 +1,5 @@
 # DestinationsConnectLinks
-(*.destinationsConnectLinks*)
+(*destinationsConnectLinks*)
 
 ### Available Operations
 
@@ -27,7 +27,6 @@ import { WorkspaceManagementAPI } from "Workspace-Management-API";
     type: "hubspot",
   });
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -36,16 +35,20 @@ import { WorkspaceManagementAPI } from "Workspace-Management-API";
 
 ### Parameters
 
-| Parameter                                                                                                            | Type                                                                                                                 | Required                                                                                                             | Description                                                                                                          |
-| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `request`                                                                                                            | [components.InitialDestinationConnectLinkAttributes](../../models/shared/initialdestinationconnectlinkattributes.md) | :heavy_check_mark:                                                                                                   | The request object to use for the request.                                                                           |
-| `config`                                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                                         | :heavy_minus_sign:                                                                                                   | Available config options for making requests.                                                                        |
+| Parameter                                                                                                 | Type                                                                                                      | Required                                                                                                  | Description                                                                                               |
+| --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `request`                                                                                                 | [models.InitialDestinationConnectLinkAttributes](../../models/initialdestinationconnectlinkattributes.md) | :heavy_check_mark:                                                                                        | The request object to use for the request.                                                                |
+| `config`                                                                                                  | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                              | :heavy_minus_sign:                                                                                        | Available config options for making requests.                                                             |
 
 
 ### Response
 
-**Promise<[operations.CreateDestinationConnectLinkResponse](../../models/operations/createdestinationconnectlinkresponse.md)>**
+**Promise<[models.CreateDestinationConnectLinkResponse](../../models/createdestinationconnectlinkresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## fetch
 
@@ -54,8 +57,7 @@ Retrieve the details of a specific destination connect link
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchDestinationConnectLinkRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchDestinationConnectLinkRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -64,7 +66,6 @@ import { FetchDestinationConnectLinkRequest } from "Workspace-Management-API/dis
 const connectLinkId: number = 874373;
 
   const res = await sdk.destinationsConnectLinks.fetch(connectLinkId);
-
 
   if (res.statusCode == 200) {
     // handle response
@@ -82,8 +83,13 @@ const connectLinkId: number = 874373;
 
 ### Response
 
-**Promise<[operations.FetchDestinationConnectLinkResponse](../../models/operations/fetchdestinationconnectlinkresponse.md)>**
+**Promise<[models.FetchDestinationConnectLinkResponse](../../models/fetchdestinationconnectlinkresponse.md)>**
+### Errors
 
+| Error Object                                   | Status Code                                    | Content Type                                   |
+| ---------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- |
+| models.FetchDestinationConnectLinkResponseBody | 404                                            | application/json                               |
+| models.SDKError                                | 400-600                                        | */*                                            |
 
 ## list
 
@@ -92,9 +98,7 @@ This endpoint returns details for all active and expired connect links in the cu
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { Order } from "Workspace-Management-API/dist/models/components";
-import { ListDestinationConnectLinksRequest } from "Workspace-Management-API/dist/models/operations";
+import { ListDestinationConnectLinksRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -106,7 +110,6 @@ const perPage: number = 5472.72;
 
   const res = await sdk.destinationsConnectLinks.list(order, page, perPage);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -117,7 +120,7 @@ const perPage: number = 5472.72;
 
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `order`                                                                                              | [components.Order](../../models/shared/order.md)                                                     | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../models/order.md)                                                                   | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -125,8 +128,12 @@ const perPage: number = 5472.72;
 
 ### Response
 
-**Promise<[operations.ListDestinationConnectLinksResponse](../../models/operations/listdestinationconnectlinksresponse.md)>**
+**Promise<[models.ListDestinationConnectLinksResponse](../../models/listdestinationconnectlinksresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## listTypes
 
@@ -144,7 +151,6 @@ import { WorkspaceManagementAPI } from "Workspace-Management-API";
 
   const res = await sdk.destinationsConnectLinks.listTypes();
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -160,8 +166,12 @@ import { WorkspaceManagementAPI } from "Workspace-Management-API";
 
 ### Response
 
-**Promise<[operations.ListDestinationConnectLinkTypesResponse](../../models/operations/listdestinationconnectlinktypesresponse.md)>**
+**Promise<[models.ListDestinationConnectLinkTypesResponse](../../models/listdestinationconnectlinktypesresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## revoke
 
@@ -170,8 +180,7 @@ Revokes a destination connect link so that it can no longer be used.
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { RevokeDestinationConnectLinkRequest } from "Workspace-Management-API/dist/models/operations";
+import { RevokeDestinationConnectLinkRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -180,7 +189,6 @@ import { RevokeDestinationConnectLinkRequest } from "Workspace-Management-API/di
 const connectLinkId: number = 861369;
 
   const res = await sdk.destinationsConnectLinks.revoke(connectLinkId);
-
 
   if (res.statusCode == 200) {
     // handle response
@@ -198,5 +206,10 @@ const connectLinkId: number = 861369;
 
 ### Response
 
-**Promise<[operations.RevokeDestinationConnectLinkResponse](../../models/operations/revokedestinationconnectlinkresponse.md)>**
+**Promise<[models.RevokeDestinationConnectLinkResponse](../../models/revokedestinationconnectlinkresponse.md)>**
+### Errors
 
+| Error Object                                    | Status Code                                     | Content Type                                    |
+| ----------------------------------------------- | ----------------------------------------------- | ----------------------------------------------- |
+| models.RevokeDestinationConnectLinkResponseBody | 404                                             | application/json                                |
+| models.SDKError                                 | 400-600                                         | */*                                             |

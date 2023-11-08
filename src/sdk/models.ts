@@ -3,9 +3,7 @@
  */
 
 import * as utils from "../internal/utils";
-import * as components from "../models/components";
-import * as errors from "../models/errors";
-import * as operations from "../models/operations";
+import * as models from "../models";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
 
@@ -31,8 +29,8 @@ export class Models {
         refreshKey: number,
         sourceId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.CheckModelsColumnRefreshResponse> {
-        const req = new operations.CheckModelsColumnRefreshRequest({
+    ): Promise<models.CheckModelsColumnRefreshResponse> {
+        const req = new models.CheckModelsColumnRefreshRequest({
             modelId: modelId,
             refreshKey: refreshKey,
             sourceId: sourceId,
@@ -41,7 +39,7 @@ export class Models {
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(
+        const operationUrl: string = utils.generateURL(
             baseURL,
             "/sources/{source_id}/models/{model_id}/refresh_columns_status",
             req
@@ -52,7 +50,7 @@ export class Models {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -63,7 +61,7 @@ export class Models {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url + queryParams,
+            url: operationUrl + queryParams,
             method: "get",
             headers: headers,
             responseType: "arraybuffer",
@@ -76,8 +74,8 @@ export class Models {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.CheckModelsColumnRefreshResponse =
-            new operations.CheckModelsColumnRefreshResponse({
+        const res: models.CheckModelsColumnRefreshResponse =
+            new models.CheckModelsColumnRefreshResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -88,10 +86,10 @@ export class Models {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.modelsCheckRefresh = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.ModelsCheckRefresh
+                        models.ModelsCheckRefresh
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -101,7 +99,7 @@ export class Models {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -116,11 +114,11 @@ export class Models {
      * Create a new model
      */
     async create(
-        initialModelAttributes: components.InitialModelAttributes,
+        initialModelAttributes: models.InitialModelAttributes,
         sourceId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.CreateModelResponse> {
-        const req = new operations.CreateModelRequest({
+    ): Promise<models.CreateModelResponse> {
+        const req = new models.CreateModelRequest({
             initialModelAttributes: initialModelAttributes,
             sourceId: sourceId,
         });
@@ -128,7 +126,7 @@ export class Models {
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(baseURL, "/sources/{source_id}/models", req);
+        const operationUrl: string = utils.generateURL(baseURL, "/sources/{source_id}/models", req);
 
         let [reqBodyHeaders, reqBody]: [object, any] = [{}, null];
 
@@ -149,7 +147,7 @@ export class Models {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = {
@@ -164,7 +162,7 @@ export class Models {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "post",
             headers: headers,
             responseType: "arraybuffer",
@@ -178,7 +176,7 @@ export class Models {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.CreateModelResponse = new operations.CreateModelResponse({
+        const res: models.CreateModelResponse = new models.CreateModelResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -189,10 +187,10 @@ export class Models {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.modelsCreate = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.ModelsCreate
+                        models.ModelsCreate
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -202,7 +200,7 @@ export class Models {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -223,8 +221,8 @@ export class Models {
         modelId: number,
         sourceId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.DeleteModelResponse> {
-        const req = new operations.DeleteModelRequest({
+    ): Promise<models.DeleteModelResponse> {
+        const req = new models.DeleteModelRequest({
             modelId: modelId,
             sourceId: sourceId,
         });
@@ -232,7 +230,7 @@ export class Models {
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(
+        const operationUrl: string = utils.generateURL(
             baseURL,
             "/sources/{source_id}/models/{model_id}",
             req
@@ -243,7 +241,7 @@ export class Models {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -253,7 +251,7 @@ export class Models {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "delete",
             headers: headers,
             responseType: "arraybuffer",
@@ -266,7 +264,7 @@ export class Models {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.DeleteModelResponse = new operations.DeleteModelResponse({
+        const res: models.DeleteModelResponse = new models.DeleteModelResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -277,10 +275,10 @@ export class Models {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.modelsDelete = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.ModelsDelete
+                        models.ModelsDelete
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -290,7 +288,7 @@ export class Models {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -311,8 +309,8 @@ export class Models {
         modelId: number,
         sourceId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.FetchModelResponse> {
-        const req = new operations.FetchModelRequest({
+    ): Promise<models.FetchModelResponse> {
+        const req = new models.FetchModelRequest({
             modelId: modelId,
             sourceId: sourceId,
         });
@@ -320,7 +318,7 @@ export class Models {
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(
+        const operationUrl: string = utils.generateURL(
             baseURL,
             "/sources/{source_id}/models/{model_id}",
             req
@@ -331,7 +329,7 @@ export class Models {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -341,7 +339,7 @@ export class Models {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "get",
             headers: headers,
             responseType: "arraybuffer",
@@ -354,7 +352,7 @@ export class Models {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.FetchModelResponse = new operations.FetchModelResponse({
+        const res: models.FetchModelResponse = new models.FetchModelResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -365,10 +363,10 @@ export class Models {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.modelsFetch = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.ModelsFetch
+                        models.ModelsFetch
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -378,7 +376,7 @@ export class Models {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -394,12 +392,12 @@ export class Models {
      */
     async list(
         sourceId: number,
-        order?: components.Order,
+        order?: models.Order,
         page?: number,
         perPage?: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.ListModelsResponse> {
-        const req = new operations.ListModelsRequest({
+    ): Promise<models.ListModelsResponse> {
+        const req = new models.ListModelsRequest({
             sourceId: sourceId,
             order: order,
             page: page,
@@ -409,14 +407,14 @@ export class Models {
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(baseURL, "/sources/{source_id}/models", req);
+        const operationUrl: string = utils.generateURL(baseURL, "/sources/{source_id}/models", req);
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -427,7 +425,7 @@ export class Models {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url + queryParams,
+            url: operationUrl + queryParams,
             method: "get",
             headers: headers,
             responseType: "arraybuffer",
@@ -440,7 +438,7 @@ export class Models {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.ListModelsResponse = new operations.ListModelsResponse({
+        const res: models.ListModelsResponse = new models.ListModelsResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -449,12 +447,9 @@ export class Models {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.modelsList = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        components.ModelsList
-                    );
+                    res.modelsList = utils.objectToClass(JSON.parse(decodedRes), models.ModelsList);
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -464,7 +459,7 @@ export class Models {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -485,8 +480,8 @@ export class Models {
         modelId: number,
         sourceId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.StartModelsColumnRefreshResponse> {
-        const req = new operations.StartModelsColumnRefreshRequest({
+    ): Promise<models.StartModelsColumnRefreshResponse> {
+        const req = new models.StartModelsColumnRefreshRequest({
             modelId: modelId,
             sourceId: sourceId,
         });
@@ -494,7 +489,7 @@ export class Models {
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(
+        const operationUrl: string = utils.generateURL(
             baseURL,
             "/sources/{source_id}/models/{model_id}/refresh_columns",
             req
@@ -505,7 +500,7 @@ export class Models {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -515,7 +510,7 @@ export class Models {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "post",
             headers: headers,
             responseType: "arraybuffer",
@@ -528,8 +523,8 @@ export class Models {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.StartModelsColumnRefreshResponse =
-            new operations.StartModelsColumnRefreshResponse({
+        const res: models.StartModelsColumnRefreshResponse =
+            new models.StartModelsColumnRefreshResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -540,10 +535,10 @@ export class Models {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.modelsStartRefresh = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.ModelsStartRefresh
+                        models.ModelsStartRefresh
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -553,7 +548,7 @@ export class Models {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -573,10 +568,10 @@ export class Models {
     async update(
         modelId: number,
         sourceId: number,
-        configurableModelAttributes?: components.ConfigurableModelAttributes,
+        configurableModelAttributes?: models.ConfigurableModelAttributes,
         config?: AxiosRequestConfig
-    ): Promise<operations.UpdateModelResponse> {
-        const req = new operations.UpdateModelRequest({
+    ): Promise<models.UpdateModelResponse> {
+        const req = new models.UpdateModelRequest({
             modelId: modelId,
             sourceId: sourceId,
             configurableModelAttributes: configurableModelAttributes,
@@ -585,7 +580,7 @@ export class Models {
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(
+        const operationUrl: string = utils.generateURL(
             baseURL,
             "/sources/{source_id}/models/{model_id}",
             req
@@ -610,7 +605,7 @@ export class Models {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = {
@@ -624,7 +619,7 @@ export class Models {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "patch",
             headers: headers,
             responseType: "arraybuffer",
@@ -638,7 +633,7 @@ export class Models {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.UpdateModelResponse = new operations.UpdateModelResponse({
+        const res: models.UpdateModelResponse = new models.UpdateModelResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -649,10 +644,10 @@ export class Models {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.modelsUpdate = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.ModelsUpdate
+                        models.ModelsUpdate
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -662,7 +657,7 @@ export class Models {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,

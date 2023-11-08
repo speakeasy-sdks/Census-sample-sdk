@@ -1,5 +1,5 @@
 # Sources
-(*.sources*)
+(*sources*)
 
 ## Overview
 
@@ -22,8 +22,7 @@ This endpoint checks whether the job refreshing tables for a source has complete
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { CheckTableRefreshRequest } from "Workspace-Management-API/dist/models/operations";
+import { CheckTableRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -33,7 +32,6 @@ const refreshKey: number = 935464;
 const sourceId: number = 38270;
 
   const res = await sdk.sources.check(refreshKey, sourceId);
-
 
   if (res.statusCode == 200) {
     // handle response
@@ -52,8 +50,12 @@ const sourceId: number = 38270;
 
 ### Response
 
-**Promise<[operations.CheckTableRefreshResponse](../../models/operations/checktablerefreshresponse.md)>**
+**Promise<[models.CheckTableRefreshResponse](../../models/checktablerefreshresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## create
 
@@ -75,7 +77,6 @@ import { WorkspaceManagementAPI } from "Workspace-Management-API";
     },
   });
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -84,16 +85,20 @@ import { WorkspaceManagementAPI } from "Workspace-Management-API";
 
 ### Parameters
 
-| Parameter                                                                            | Type                                                                                 | Required                                                                             | Description                                                                          |
-| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| `request`                                                                            | [components.InitialSourceAttributes](../../models/shared/initialsourceattributes.md) | :heavy_check_mark:                                                                   | The request object to use for the request.                                           |
-| `config`                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                         | :heavy_minus_sign:                                                                   | Available config options for making requests.                                        |
+| Parameter                                                                 | Type                                                                      | Required                                                                  | Description                                                               |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `request`                                                                 | [models.InitialSourceAttributes](../../models/initialsourceattributes.md) | :heavy_check_mark:                                                        | The request object to use for the request.                                |
+| `config`                                                                  | [AxiosRequestConfig](https://axios-http.com/docs/req_config)              | :heavy_minus_sign:                                                        | Available config options for making requests.                             |
 
 
 ### Response
 
-**Promise<[operations.CreateSourceResponse](../../models/operations/createsourceresponse.md)>**
+**Promise<[models.CreateSourceResponse](../../models/createsourceresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## delete
 
@@ -102,8 +107,7 @@ Deletes the source specified
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { DeleteSourceRequest } from "Workspace-Management-API/dist/models/operations";
+import { DeleteSourceRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -112,7 +116,6 @@ import { DeleteSourceRequest } from "Workspace-Management-API/dist/models/operat
 const sourceId: number = 545907;
 
   const res = await sdk.sources.delete(sourceId);
-
 
   if (res.statusCode == 200) {
     // handle response
@@ -130,8 +133,12 @@ const sourceId: number = 545907;
 
 ### Response
 
-**Promise<[operations.DeleteSourceResponse](../../models/operations/deletesourceresponse.md)>**
+**Promise<[models.DeleteSourceResponse](../../models/deletesourceresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## fetch
 
@@ -140,8 +147,7 @@ Fetch source
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchSourceRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchSourceRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -150,7 +156,6 @@ import { FetchSourceRequest } from "Workspace-Management-API/dist/models/operati
 const sourceId: number = 874373;
 
   const res = await sdk.sources.fetch(sourceId);
-
 
   if (res.statusCode == 200) {
     // handle response
@@ -168,8 +173,12 @@ const sourceId: number = 874373;
 
 ### Response
 
-**Promise<[operations.FetchSourceResponse](../../models/operations/fetchsourceresponse.md)>**
+**Promise<[models.FetchSourceResponse](../../models/fetchsourceresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## list
 
@@ -178,9 +187,7 @@ List sources
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { Order } from "Workspace-Management-API/dist/models/components";
-import { ListSourcesRequest } from "Workspace-Management-API/dist/models/operations";
+import { ListSourcesRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -192,7 +199,6 @@ const perPage: number = 5472.72;
 
   const res = await sdk.sources.list(order, page, perPage);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -203,7 +209,7 @@ const perPage: number = 5472.72;
 
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `order`                                                                                              | [components.Order](../../models/shared/order.md)                                                     | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../models/order.md)                                                                   | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -211,8 +217,12 @@ const perPage: number = 5472.72;
 
 ### Response
 
-**Promise<[operations.ListSourcesResponse](../../models/operations/listsourcesresponse.md)>**
+**Promise<[models.ListSourcesResponse](../../models/listsourcesresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## start
 
@@ -221,8 +231,7 @@ This endpoint queues a job to refresh the list of tables for a source.
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { StartTableRefreshRequest } from "Workspace-Management-API/dist/models/operations";
+import { StartTableRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -231,7 +240,6 @@ import { StartTableRefreshRequest } from "Workspace-Management-API/dist/models/o
 const sourceId: number = 50099;
 
   const res = await sdk.sources.start(sourceId);
-
 
   if (res.statusCode == 200) {
     // handle response
@@ -249,8 +257,12 @@ const sourceId: number = 50099;
 
 ### Response
 
-**Promise<[operations.StartTableRefreshResponse](../../models/operations/starttablerefreshresponse.md)>**
+**Promise<[models.StartTableRefreshResponse](../../models/starttablerefreshresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## update
 
@@ -259,9 +271,12 @@ Update certain values of a source
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { ConfigurableSourceAttributes, Connection } from "Workspace-Management-API/dist/models/components";
-import { UpdateSourceRequest } from "Workspace-Management-API/dist/models/operations";
+import {
+  ConfigurableSourceAttributes,
+  Connection,
+  UpdateSourceRequest,
+  WorkspaceManagementAPI,
+} from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -271,18 +286,17 @@ const sourceId: number = 857478;
 const configurableSourceAttributes: ConfigurableSourceAttributes = {
   connection: {
     credentials: {
+      "hostname": "string",
       "port": "string",
       "user": "string",
       "password": "string",
       "database": "string",
-      "hostname": "string",
     },
     label: "Acme Inc. Snowflake",
   },
 };
 
   const res = await sdk.sources.update(sourceId, configurableSourceAttributes);
-
 
   if (res.statusCode == 200) {
     // handle response
@@ -292,14 +306,18 @@ const configurableSourceAttributes: ConfigurableSourceAttributes = {
 
 ### Parameters
 
-| Parameter                                                                                      | Type                                                                                           | Required                                                                                       | Description                                                                                    |
-| ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `sourceId`                                                                                     | *number*                                                                                       | :heavy_check_mark:                                                                             | ID of the source to update                                                                     |
-| `configurableSourceAttributes`                                                                 | [components.ConfigurableSourceAttributes](../../models/shared/configurablesourceattributes.md) | :heavy_minus_sign:                                                                             | N/A                                                                                            |
-| `config`                                                                                       | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                   | :heavy_minus_sign:                                                                             | Available config options for making requests.                                                  |
+| Parameter                                                                        | Type                                                                             | Required                                                                         | Description                                                                      |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `sourceId`                                                                       | *number*                                                                         | :heavy_check_mark:                                                               | ID of the source to update                                                       |
+| `configurableSourceAttributes`                                                   | [models.ConfigurableSourceAttributes](../models/configurablesourceattributes.md) | :heavy_minus_sign:                                                               | N/A                                                                              |
+| `config`                                                                         | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                     | :heavy_minus_sign:                                                               | Available config options for making requests.                                    |
 
 
 ### Response
 
-**Promise<[operations.UpdateSourceResponse](../../models/operations/updatesourceresponse.md)>**
+**Promise<[models.UpdateSourceResponse](../../models/updatesourceresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |

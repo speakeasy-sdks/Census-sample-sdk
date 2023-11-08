@@ -1,0 +1,9 @@
+# DestinationsConnectFetch
+
+
+## Fields
+
+| Field                                                                                | Type                                                                                 | Required                                                                             | Description                                                                          | Example                                                                              |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `data`                                                                               | [models.DestinationConnectLink](../models/destinationconnectlink.md)                 | :heavy_check_mark:                                                                   | N/A                                                                                  |                                                                                      |
+| `status`                                                                             | [models.DestinationsConnectFetchStatus](../models/destinationsconnectfetchstatus.md) | :heavy_check_mark:                                                                   | The outcome of the fetch request                                                     | success                                                                              |

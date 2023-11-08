@@ -1,5 +1,5 @@
 # Models
-(*.models*)
+(*models*)
 
 ## Overview
 
@@ -22,8 +22,7 @@ This endpoint checks whether the job refreshing columns for a model has complete
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { CheckModelsColumnRefreshRequest } from "Workspace-Management-API/dist/models/operations";
+import { CheckModelsColumnRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -34,7 +33,6 @@ const refreshKey: number = 162362;
 const sourceId: number = 613668;
 
   const res = await sdk.models.checkColumnRefresh(modelId, refreshKey, sourceId);
-
 
   if (res.statusCode == 200) {
     // handle response
@@ -54,8 +52,12 @@ const sourceId: number = 613668;
 
 ### Response
 
-**Promise<[operations.CheckModelsColumnRefreshResponse](../../models/operations/checkmodelscolumnrefreshresponse.md)>**
+**Promise<[models.CheckModelsColumnRefreshResponse](../../models/checkmodelscolumnrefreshresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## create
 
@@ -64,9 +66,7 @@ Create a new model
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { InitialModelAttributes } from "Workspace-Management-API/dist/models/components";
-import { CreateModelRequest } from "Workspace-Management-API/dist/models/operations";
+import { CreateModelRequest, InitialModelAttributes, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -81,7 +81,6 @@ const sourceId: number = 486589;
 
   const res = await sdk.models.create(initialModelAttributes, sourceId);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -90,17 +89,21 @@ const sourceId: number = 486589;
 
 ### Parameters
 
-| Parameter                                                                          | Type                                                                               | Required                                                                           | Description                                                                        |
-| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `initialModelAttributes`                                                           | [components.InitialModelAttributes](../../models/shared/initialmodelattributes.md) | :heavy_check_mark:                                                                 | N/A                                                                                |
-| `sourceId`                                                                         | *number*                                                                           | :heavy_check_mark:                                                                 | ID of the source                                                                   |
-| `config`                                                                           | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                       | :heavy_minus_sign:                                                                 | Available config options for making requests.                                      |
+| Parameter                                                            | Type                                                                 | Required                                                             | Description                                                          |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `initialModelAttributes`                                             | [models.InitialModelAttributes](../models/initialmodelattributes.md) | :heavy_check_mark:                                                   | N/A                                                                  |
+| `sourceId`                                                           | *number*                                                             | :heavy_check_mark:                                                   | ID of the source                                                     |
+| `config`                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)         | :heavy_minus_sign:                                                   | Available config options for making requests.                        |
 
 
 ### Response
 
-**Promise<[operations.CreateModelResponse](../../models/operations/createmodelresponse.md)>**
+**Promise<[models.CreateModelResponse](../../models/createmodelresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## delete
 
@@ -109,8 +112,7 @@ Deletes the model specified
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { DeleteModelRequest } from "Workspace-Management-API/dist/models/operations";
+import { DeleteModelRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -121,7 +123,6 @@ const sourceId: number = 841399;
 
   const res = await sdk.models.delete(modelId, sourceId);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -139,8 +140,12 @@ const sourceId: number = 841399;
 
 ### Response
 
-**Promise<[operations.DeleteModelResponse](../../models/operations/deletemodelresponse.md)>**
+**Promise<[models.DeleteModelResponse](../../models/deletemodelresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## fetch
 
@@ -149,8 +154,7 @@ This endpoint lists information for a given model, including information on what
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchModelRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchModelRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -161,7 +165,6 @@ const sourceId: number = 347223;
 
   const res = await sdk.models.fetch(modelId, sourceId);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -179,8 +182,12 @@ const sourceId: number = 347223;
 
 ### Response
 
-**Promise<[operations.FetchModelResponse](../../models/operations/fetchmodelresponse.md)>**
+**Promise<[models.FetchModelResponse](../../models/fetchmodelresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## list
 
@@ -189,9 +196,7 @@ List models
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { Order } from "Workspace-Management-API/dist/models/components";
-import { ListModelsRequest } from "Workspace-Management-API/dist/models/operations";
+import { ListModelsRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -204,7 +209,6 @@ const perPage: number = 2576.49;
 
   const res = await sdk.models.list(sourceId, order, page, perPage);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -216,7 +220,7 @@ const perPage: number = 2576.49;
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `sourceId`                                                                                           | *number*                                                                                             | :heavy_check_mark:                                                                                   | ID of the source                                                                                     |
-| `order`                                                                                              | [components.Order](../../models/shared/order.md)                                                     | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../models/order.md)                                                                   | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -224,8 +228,12 @@ const perPage: number = 2576.49;
 
 ### Response
 
-**Promise<[operations.ListModelsResponse](../../models/operations/listmodelsresponse.md)>**
+**Promise<[models.ListModelsResponse](../../models/listmodelsresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## startColumnRefresh
 
@@ -234,8 +242,7 @@ This endpoint queues a job to refresh the list of columns for a model.
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { StartModelsColumnRefreshRequest } from "Workspace-Management-API/dist/models/operations";
+import { StartModelsColumnRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -245,7 +252,6 @@ const modelId: number = 934723;
 const sourceId: number = 644632;
 
   const res = await sdk.models.startColumnRefresh(modelId, sourceId);
-
 
   if (res.statusCode == 200) {
     // handle response
@@ -264,8 +270,12 @@ const sourceId: number = 644632;
 
 ### Response
 
-**Promise<[operations.StartModelsColumnRefreshResponse](../../models/operations/startmodelscolumnrefreshresponse.md)>**
+**Promise<[models.StartModelsColumnRefreshResponse](../../models/startmodelscolumnrefreshresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## update
 
@@ -274,9 +284,7 @@ Update certain values of a specified model
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { ConfigurableModelAttributes } from "Workspace-Management-API/dist/models/components";
-import { UpdateModelRequest } from "Workspace-Management-API/dist/models/operations";
+import { ConfigurableModelAttributes, UpdateModelRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -292,7 +300,6 @@ const configurableModelAttributes: ConfigurableModelAttributes = {
 
   const res = await sdk.models.update(modelId, sourceId, configurableModelAttributes);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -301,15 +308,19 @@ const configurableModelAttributes: ConfigurableModelAttributes = {
 
 ### Parameters
 
-| Parameter                                                                                    | Type                                                                                         | Required                                                                                     | Description                                                                                  |
-| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `modelId`                                                                                    | *number*                                                                                     | :heavy_check_mark:                                                                           | ID of the model                                                                              |
-| `sourceId`                                                                                   | *number*                                                                                     | :heavy_check_mark:                                                                           | ID of the source                                                                             |
-| `configurableModelAttributes`                                                                | [components.ConfigurableModelAttributes](../../models/shared/configurablemodelattributes.md) | :heavy_minus_sign:                                                                           | N/A                                                                                          |
-| `config`                                                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                 | :heavy_minus_sign:                                                                           | Available config options for making requests.                                                |
+| Parameter                                                                      | Type                                                                           | Required                                                                       | Description                                                                    |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| `modelId`                                                                      | *number*                                                                       | :heavy_check_mark:                                                             | ID of the model                                                                |
+| `sourceId`                                                                     | *number*                                                                       | :heavy_check_mark:                                                             | ID of the source                                                               |
+| `configurableModelAttributes`                                                  | [models.ConfigurableModelAttributes](../models/configurablemodelattributes.md) | :heavy_minus_sign:                                                             | N/A                                                                            |
+| `config`                                                                       | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                   | :heavy_minus_sign:                                                             | Available config options for making requests.                                  |
 
 
 ### Response
 
-**Promise<[operations.UpdateModelResponse](../../models/operations/updatemodelresponse.md)>**
+**Promise<[models.UpdateModelResponse](../../models/updatemodelresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |

@@ -3,9 +3,7 @@
  */
 
 import * as utils from "../internal/utils";
-import * as components from "../models/components";
-import * as errors from "../models/errors";
-import * as operations from "../models/operations";
+import * as models from "../models";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
 
@@ -20,18 +18,18 @@ export class DestinationsConnectLinks {
      * Create a new destination connect link
      */
     async create(
-        req: components.InitialDestinationConnectLinkAttributes,
+        req: models.InitialDestinationConnectLinkAttributes,
         config?: AxiosRequestConfig
-    ): Promise<operations.CreateDestinationConnectLinkResponse> {
+    ): Promise<models.CreateDestinationConnectLinkResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new components.InitialDestinationConnectLinkAttributes(req);
+            req = new models.InitialDestinationConnectLinkAttributes(req);
         }
 
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = baseURL.replace(/\/$/, "") + "/destination_connect_links";
+        const operationUrl: string = baseURL.replace(/\/$/, "") + "/destination_connect_links";
 
         let [reqBodyHeaders, reqBody]: [object, any] = [{}, null];
 
@@ -48,7 +46,7 @@ export class DestinationsConnectLinks {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = {
@@ -63,7 +61,7 @@ export class DestinationsConnectLinks {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "post",
             headers: headers,
             responseType: "arraybuffer",
@@ -77,8 +75,8 @@ export class DestinationsConnectLinks {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.CreateDestinationConnectLinkResponse =
-            new operations.CreateDestinationConnectLinkResponse({
+        const res: models.CreateDestinationConnectLinkResponse =
+            new models.CreateDestinationConnectLinkResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -89,10 +87,10 @@ export class DestinationsConnectLinks {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.destinationsConnectCreate = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.DestinationsConnectCreate
+                        models.DestinationsConnectCreate
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -102,7 +100,7 @@ export class DestinationsConnectLinks {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -122,15 +120,15 @@ export class DestinationsConnectLinks {
     async fetch(
         connectLinkId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.FetchDestinationConnectLinkResponse> {
-        const req = new operations.FetchDestinationConnectLinkRequest({
+    ): Promise<models.FetchDestinationConnectLinkResponse> {
+        const req = new models.FetchDestinationConnectLinkRequest({
             connectLinkId: connectLinkId,
         });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(
+        const operationUrl: string = utils.generateURL(
             baseURL,
             "/destination_connect_links/{connect_link_id}",
             req
@@ -141,7 +139,7 @@ export class DestinationsConnectLinks {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -151,7 +149,7 @@ export class DestinationsConnectLinks {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "get",
             headers: headers,
             responseType: "arraybuffer",
@@ -164,8 +162,8 @@ export class DestinationsConnectLinks {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.FetchDestinationConnectLinkResponse =
-            new operations.FetchDestinationConnectLinkResponse({
+        const res: models.FetchDestinationConnectLinkResponse =
+            new models.FetchDestinationConnectLinkResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -176,10 +174,10 @@ export class DestinationsConnectLinks {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.destinationsConnectFetch = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.DestinationsConnectFetch
+                        models.DestinationsConnectFetch
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -191,12 +189,12 @@ export class DestinationsConnectLinks {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     const err = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        errors.FetchDestinationConnectLinkResponseBody
+                        models.FetchDestinationConnectLinkResponseBody
                     );
                     err.rawResponse = httpRes;
-                    throw new errors.FetchDestinationConnectLinkResponseBody(err);
+                    throw new models.FetchDestinationConnectLinkResponseBody(err);
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -206,7 +204,7 @@ export class DestinationsConnectLinks {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -224,12 +222,12 @@ export class DestinationsConnectLinks {
      * This endpoint returns details for all active and expired connect links in the current workspace.
      */
     async list(
-        order?: components.Order,
+        order?: models.Order,
         page?: number,
         perPage?: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.ListDestinationConnectLinksResponse> {
-        const req = new operations.ListDestinationConnectLinksRequest({
+    ): Promise<models.ListDestinationConnectLinksResponse> {
+        const req = new models.ListDestinationConnectLinksRequest({
             order: order,
             page: page,
             perPage: perPage,
@@ -238,14 +236,14 @@ export class DestinationsConnectLinks {
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = baseURL.replace(/\/$/, "") + "/destination_connect_links";
+        const operationUrl: string = baseURL.replace(/\/$/, "") + "/destination_connect_links";
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -256,7 +254,7 @@ export class DestinationsConnectLinks {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url + queryParams,
+            url: operationUrl + queryParams,
             method: "get",
             headers: headers,
             responseType: "arraybuffer",
@@ -269,8 +267,8 @@ export class DestinationsConnectLinks {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.ListDestinationConnectLinksResponse =
-            new operations.ListDestinationConnectLinksResponse({
+        const res: models.ListDestinationConnectLinksResponse =
+            new models.ListDestinationConnectLinksResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -281,10 +279,10 @@ export class DestinationsConnectLinks {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.destinationsConnectList = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.DestinationsConnectList
+                        models.DestinationsConnectList
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -294,7 +292,7 @@ export class DestinationsConnectLinks {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -313,19 +311,20 @@ export class DestinationsConnectLinks {
      */
     async listTypes(
         config?: AxiosRequestConfig
-    ): Promise<operations.ListDestinationConnectLinkTypesResponse> {
+    ): Promise<models.ListDestinationConnectLinkTypesResponse> {
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = baseURL.replace(/\/$/, "") + "/destination_connect_links/types";
+        const operationUrl: string =
+            baseURL.replace(/\/$/, "") + "/destination_connect_links/types";
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -335,7 +334,7 @@ export class DestinationsConnectLinks {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "get",
             headers: headers,
             responseType: "arraybuffer",
@@ -348,8 +347,8 @@ export class DestinationsConnectLinks {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.ListDestinationConnectLinkTypesResponse =
-            new operations.ListDestinationConnectLinkTypesResponse({
+        const res: models.ListDestinationConnectLinkTypesResponse =
+            new models.ListDestinationConnectLinkTypesResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -360,7 +359,7 @@ export class DestinationsConnectLinks {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.destinationsConnectListTypes = utils.objectToClass(JSON.parse(decodedRes));
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -370,7 +369,7 @@ export class DestinationsConnectLinks {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -390,15 +389,15 @@ export class DestinationsConnectLinks {
     async revoke(
         connectLinkId: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.RevokeDestinationConnectLinkResponse> {
-        const req = new operations.RevokeDestinationConnectLinkRequest({
+    ): Promise<models.RevokeDestinationConnectLinkResponse> {
+        const req = new models.RevokeDestinationConnectLinkRequest({
             connectLinkId: connectLinkId,
         });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(
+        const operationUrl: string = utils.generateURL(
             baseURL,
             "/destination_connect_links/{connect_link_id}/revoke",
             req
@@ -409,7 +408,7 @@ export class DestinationsConnectLinks {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -419,7 +418,7 @@ export class DestinationsConnectLinks {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "post",
             headers: headers,
             responseType: "arraybuffer",
@@ -432,8 +431,8 @@ export class DestinationsConnectLinks {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.RevokeDestinationConnectLinkResponse =
-            new operations.RevokeDestinationConnectLinkResponse({
+        const res: models.RevokeDestinationConnectLinkResponse =
+            new models.RevokeDestinationConnectLinkResponse({
                 statusCode: httpRes.status,
                 contentType: contentType,
                 rawResponse: httpRes,
@@ -444,10 +443,10 @@ export class DestinationsConnectLinks {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.destinationsConnectRevoke = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.DestinationsConnectRevoke
+                        models.DestinationsConnectRevoke
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -459,12 +458,12 @@ export class DestinationsConnectLinks {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     const err = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        errors.RevokeDestinationConnectLinkResponseBody
+                        models.RevokeDestinationConnectLinkResponseBody
                     );
                     err.rawResponse = httpRes;
-                    throw new errors.RevokeDestinationConnectLinkResponseBody(err);
+                    throw new models.RevokeDestinationConnectLinkResponseBody(err);
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -474,7 +473,7 @@ export class DestinationsConnectLinks {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,

@@ -1,0 +1,9 @@
+# DestinationsConnectCreate
+
+
+## Fields
+
+| Field                                                                                  | Type                                                                                   | Required                                                                               | Description                                                                            | Example                                                                                |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `data`                                                                                 | [models.DestinationConnectLink](../models/destinationconnectlink.md)                   | :heavy_minus_sign:                                                                     | N/A                                                                                    |                                                                                        |
+| `status`                                                                               | [models.DestinationsConnectCreateStatus](../models/destinationsconnectcreatestatus.md) | :heavy_minus_sign:                                                                     | Outcome of the operation.                                                              | created                                                                                |

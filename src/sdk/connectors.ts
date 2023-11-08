@@ -3,9 +3,7 @@
  */
 
 import * as utils from "../internal/utils";
-import * as components from "../models/components";
-import * as errors from "../models/errors";
-import * as operations from "../models/operations";
+import * as models from "../models";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
 
@@ -29,22 +27,22 @@ export class Connectors {
     async fetch(
         serviceName: string,
         config?: AxiosRequestConfig
-    ): Promise<operations.FetchConnectorResponse> {
-        const req = new operations.FetchConnectorRequest({
+    ): Promise<models.FetchConnectorResponse> {
+        const req = new models.FetchConnectorRequest({
             serviceName: serviceName,
         });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(baseURL, "/connectors/{service_name}", req);
+        const operationUrl: string = utils.generateURL(baseURL, "/connectors/{service_name}", req);
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -54,7 +52,7 @@ export class Connectors {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "get",
             headers: headers,
             responseType: "arraybuffer",
@@ -67,7 +65,7 @@ export class Connectors {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.FetchConnectorResponse = new operations.FetchConnectorResponse({
+        const res: models.FetchConnectorResponse = new models.FetchConnectorResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -78,10 +76,10 @@ export class Connectors {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.connectorsFetch = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.ConnectorsFetch
+                        models.ConnectorsFetch
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -91,7 +89,7 @@ export class Connectors {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -109,12 +107,12 @@ export class Connectors {
      * Use this endpoint to list out the types of destination connections that can be created in the current workspace. This is particularly useful for Census Embedded solutions when determining the required values to authorize a new destination connection.
      */
     async list(
-        order?: components.Order,
+        order?: models.Order,
         page?: number,
         perPage?: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.ListConnectorsResponse> {
-        const req = new operations.ListConnectorsRequest({
+    ): Promise<models.ListConnectorsResponse> {
+        const req = new models.ListConnectorsRequest({
             order: order,
             page: page,
             perPage: perPage,
@@ -123,14 +121,14 @@ export class Connectors {
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = baseURL.replace(/\/$/, "") + "/connectors";
+        const operationUrl: string = baseURL.replace(/\/$/, "") + "/connectors";
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -141,7 +139,7 @@ export class Connectors {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url + queryParams,
+            url: operationUrl + queryParams,
             method: "get",
             headers: headers,
             responseType: "arraybuffer",
@@ -154,7 +152,7 @@ export class Connectors {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.ListConnectorsResponse = new operations.ListConnectorsResponse({
+        const res: models.ListConnectorsResponse = new models.ListConnectorsResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -165,10 +163,10 @@ export class Connectors {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.connectorsList = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.ConnectorsList
+                        models.ConnectorsList
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -178,7 +176,7 @@ export class Connectors {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,

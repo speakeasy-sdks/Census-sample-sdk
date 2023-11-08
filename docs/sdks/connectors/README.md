@@ -1,5 +1,5 @@
 # Connectors
-(*.connectors*)
+(*connectors*)
 
 ## Overview
 
@@ -17,8 +17,7 @@ Use this endpoint to fetch the details for a specific types of destination conne
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchConnectorRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -27,7 +26,6 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 const serviceName: string = "string";
 
   const res = await sdk.connectors.fetch(serviceName);
-
 
   if (res.statusCode == 200) {
     // handle response
@@ -45,8 +43,12 @@ const serviceName: string = "string";
 
 ### Response
 
-**Promise<[operations.FetchConnectorResponse](../../models/operations/fetchconnectorresponse.md)>**
+**Promise<[models.FetchConnectorResponse](../../models/fetchconnectorresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## list
 
@@ -55,9 +57,7 @@ Use this endpoint to list out the types of destination connections that can be c
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { Order } from "Workspace-Management-API/dist/models/components";
-import { ListConnectorsRequest } from "Workspace-Management-API/dist/models/operations";
+import { ListConnectorsRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -69,7 +69,6 @@ const perPage: number = 5472.72;
 
   const res = await sdk.connectors.list(order, page, perPage);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -80,7 +79,7 @@ const perPage: number = 5472.72;
 
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `order`                                                                                              | [components.Order](../../models/shared/order.md)                                                     | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../models/order.md)                                                                   | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -88,5 +87,9 @@ const perPage: number = 5472.72;
 
 ### Response
 
-**Promise<[operations.ListConnectorsResponse](../../models/operations/listconnectorsresponse.md)>**
+**Promise<[models.ListConnectorsResponse](../../models/listconnectorsresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |

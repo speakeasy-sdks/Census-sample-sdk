@@ -3,9 +3,7 @@
  */
 
 import * as utils from "../internal/utils";
-import * as components from "../models/components";
-import * as errors from "../models/errors";
-import * as operations from "../models/operations";
+import * as models from "../models";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
 
@@ -24,18 +22,18 @@ export class Syncs {
      * Create a new sync
      */
     async create(
-        req: components.SyncAttributes,
+        req: models.SyncAttributes,
         config?: AxiosRequestConfig
-    ): Promise<operations.CreateSyncResponse> {
+    ): Promise<models.CreateSyncResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new components.SyncAttributes(req);
+            req = new models.SyncAttributes(req);
         }
 
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = baseURL.replace(/\/$/, "") + "/syncs";
+        const operationUrl: string = baseURL.replace(/\/$/, "") + "/syncs";
 
         let [reqBodyHeaders, reqBody]: [object, any] = [{}, null];
 
@@ -52,7 +50,7 @@ export class Syncs {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = {
@@ -67,7 +65,7 @@ export class Syncs {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "post",
             headers: headers,
             responseType: "arraybuffer",
@@ -81,7 +79,7 @@ export class Syncs {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.CreateSyncResponse = new operations.CreateSyncResponse({
+        const res: models.CreateSyncResponse = new models.CreateSyncResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -90,12 +88,9 @@ export class Syncs {
         switch (true) {
             case httpRes?.status == 201:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.syncCreate = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        components.SyncCreate
-                    );
+                    res.syncCreate = utils.objectToClass(JSON.parse(decodedRes), models.SyncCreate);
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -105,7 +100,7 @@ export class Syncs {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -122,25 +117,22 @@ export class Syncs {
      * @remarks
      * Deletes the sync with the specified ID.
      */
-    async delete(
-        syncId: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.DeleteSyncResponse> {
-        const req = new operations.DeleteSyncRequest({
+    async delete(syncId: number, config?: AxiosRequestConfig): Promise<models.DeleteSyncResponse> {
+        const req = new models.DeleteSyncRequest({
             syncId: syncId,
         });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(baseURL, "/syncs/{sync_id}", req);
+        const operationUrl: string = utils.generateURL(baseURL, "/syncs/{sync_id}", req);
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -150,7 +142,7 @@ export class Syncs {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "delete",
             headers: headers,
             responseType: "arraybuffer",
@@ -163,7 +155,7 @@ export class Syncs {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.DeleteSyncResponse = new operations.DeleteSyncResponse({
+        const res: models.DeleteSyncResponse = new models.DeleteSyncResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -174,10 +166,10 @@ export class Syncs {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.successfulDeleteResult = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.SuccessfulDeleteResult
+                        models.SuccessfulDeleteResult
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -189,12 +181,12 @@ export class Syncs {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     const err = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        errors.DeleteSyncResponseBody
+                        models.DeleteSyncResponseBody
                     );
                     err.rawResponse = httpRes;
-                    throw new errors.DeleteSyncResponseBody(err);
+                    throw new models.DeleteSyncResponseBody(err);
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -204,7 +196,7 @@ export class Syncs {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -221,25 +213,22 @@ export class Syncs {
      * @remarks
      * Retrieve the details of a specific sync
      */
-    async fetch(
-        syncId: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.FetchSyncResponse> {
-        const req = new operations.FetchSyncRequest({
+    async fetch(syncId: number, config?: AxiosRequestConfig): Promise<models.FetchSyncResponse> {
+        const req = new models.FetchSyncRequest({
             syncId: syncId,
         });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(baseURL, "/syncs/{sync_id}", req);
+        const operationUrl: string = utils.generateURL(baseURL, "/syncs/{sync_id}", req);
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -249,7 +238,7 @@ export class Syncs {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "get",
             headers: headers,
             responseType: "arraybuffer",
@@ -262,7 +251,7 @@ export class Syncs {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.FetchSyncResponse = new operations.FetchSyncResponse({
+        const res: models.FetchSyncResponse = new models.FetchSyncResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -271,12 +260,9 @@ export class Syncs {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.syncFetch = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        components.SyncFetch
-                    );
+                    res.syncFetch = utils.objectToClass(JSON.parse(decodedRes), models.SyncFetch);
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -288,12 +274,12 @@ export class Syncs {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     const err = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        errors.FetchSyncResponseBody
+                        models.FetchSyncResponseBody
                     );
                     err.rawResponse = httpRes;
-                    throw new errors.FetchSyncResponseBody(err);
+                    throw new models.FetchSyncResponseBody(err);
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -303,7 +289,7 @@ export class Syncs {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -318,12 +304,12 @@ export class Syncs {
      * List Syncs
      */
     async list(
-        order?: components.Order,
+        order?: models.Order,
         page?: number,
         perPage?: number,
         config?: AxiosRequestConfig
-    ): Promise<operations.ListSyncsResponse> {
-        const req = new operations.ListSyncsRequest({
+    ): Promise<models.ListSyncsResponse> {
+        const req = new models.ListSyncsRequest({
             order: order,
             page: page,
             perPage: perPage,
@@ -332,14 +318,14 @@ export class Syncs {
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = baseURL.replace(/\/$/, "") + "/syncs";
+        const operationUrl: string = baseURL.replace(/\/$/, "") + "/syncs";
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -350,7 +336,7 @@ export class Syncs {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url + queryParams,
+            url: operationUrl + queryParams,
             method: "get",
             headers: headers,
             responseType: "arraybuffer",
@@ -363,7 +349,7 @@ export class Syncs {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.ListSyncsResponse = new operations.ListSyncsResponse({
+        const res: models.ListSyncsResponse = new models.ListSyncsResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -372,9 +358,9 @@ export class Syncs {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.syncList = utils.objectToClass(JSON.parse(decodedRes), components.SyncList);
+                    res.syncList = utils.objectToClass(JSON.parse(decodedRes), models.SyncList);
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -384,7 +370,7 @@ export class Syncs {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -405,8 +391,8 @@ export class Syncs {
         syncId: number,
         forceFullSync?: boolean,
         config?: AxiosRequestConfig
-    ): Promise<operations.TriggerSyncResponse> {
-        const req = new operations.TriggerSyncRequest({
+    ): Promise<models.TriggerSyncResponse> {
+        const req = new models.TriggerSyncRequest({
             syncId: syncId,
             forceFullSync: forceFullSync,
         });
@@ -414,14 +400,14 @@ export class Syncs {
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(baseURL, "/syncs/{sync_id}/trigger", req);
+        const operationUrl: string = utils.generateURL(baseURL, "/syncs/{sync_id}/trigger", req);
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
@@ -432,7 +418,7 @@ export class Syncs {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url + queryParams,
+            url: operationUrl + queryParams,
             method: "post",
             headers: headers,
             responseType: "arraybuffer",
@@ -445,7 +431,7 @@ export class Syncs {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.TriggerSyncResponse = new operations.TriggerSyncResponse({
+        const res: models.TriggerSyncResponse = new models.TriggerSyncResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -456,10 +442,10 @@ export class Syncs {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     res.syncTrigger = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.SyncTrigger
+                        models.SyncTrigger
                     );
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -469,7 +455,7 @@ export class Syncs {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,
@@ -488,10 +474,10 @@ export class Syncs {
      */
     async update(
         syncId: number,
-        syncAttributes?: components.SyncAttributes,
+        syncAttributes?: models.SyncAttributes,
         config?: AxiosRequestConfig
-    ): Promise<operations.UpdateSyncResponse> {
-        const req = new operations.UpdateSyncRequest({
+    ): Promise<models.UpdateSyncResponse> {
+        const req = new models.UpdateSyncRequest({
             syncId: syncId,
             syncAttributes: syncAttributes,
         });
@@ -499,7 +485,7 @@ export class Syncs {
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = utils.generateURL(baseURL, "/syncs/{sync_id}", req);
+        const operationUrl: string = utils.generateURL(baseURL, "/syncs/{sync_id}", req);
 
         let [reqBodyHeaders, reqBody]: [object, any] = [{}, null];
 
@@ -516,7 +502,7 @@ export class Syncs {
             globalSecurity = await globalSecurity();
         }
         if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
+            globalSecurity = new models.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = {
@@ -530,7 +516,7 @@ export class Syncs {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: url,
+            url: operationUrl,
             method: "patch",
             headers: headers,
             responseType: "arraybuffer",
@@ -544,7 +530,7 @@ export class Syncs {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.UpdateSyncResponse = new operations.UpdateSyncResponse({
+        const res: models.UpdateSyncResponse = new models.UpdateSyncResponse({
             statusCode: httpRes.status,
             contentType: contentType,
             rawResponse: httpRes,
@@ -553,12 +539,9 @@ export class Syncs {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.syncUpdate = utils.objectToClass(
-                        JSON.parse(decodedRes),
-                        components.SyncUpdate
-                    );
+                    res.syncUpdate = utils.objectToClass(JSON.parse(decodedRes), models.SyncUpdate);
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -570,12 +553,12 @@ export class Syncs {
                 if (utils.matchContentType(contentType, `application/json`)) {
                     const err = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        errors.UpdateSyncResponseBody
+                        models.UpdateSyncResponseBody
                     );
                     err.rawResponse = httpRes;
-                    throw new errors.UpdateSyncResponseBody(err);
+                    throw new models.UpdateSyncResponseBody(err);
                 } else {
-                    throw new errors.SDKError(
+                    throw new models.SDKError(
                         "unknown content-type received: " + contentType,
                         httpRes.status,
                         decodedRes,
@@ -585,7 +568,7 @@ export class Syncs {
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
+                throw new models.SDKError(
                     "API error occurred",
                     httpRes.status,
                     decodedRes,

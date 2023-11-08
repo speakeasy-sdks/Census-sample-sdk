@@ -1,5 +1,5 @@
 # Segments
-(*.segments*)
+(*segments*)
 
 ## Overview
 
@@ -20,9 +20,7 @@ Create a new segment
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { InitialSegmentAttributes } from "Workspace-Management-API/dist/models/components";
-import { CreateSegmentRequest } from "Workspace-Management-API/dist/models/operations";
+import { CreateSegmentRequest, InitialSegmentAttributes, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -39,7 +37,6 @@ const sourceId: number = 489382;
 
   const res = await sdk.segments.create(initialSegmentAttributes, sourceId);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -48,17 +45,21 @@ const sourceId: number = 489382;
 
 ### Parameters
 
-| Parameter                                                                              | Type                                                                                   | Required                                                                               | Description                                                                            |
-| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `initialSegmentAttributes`                                                             | [components.InitialSegmentAttributes](../../models/shared/initialsegmentattributes.md) | :heavy_check_mark:                                                                     | N/A                                                                                    |
-| `sourceId`                                                                             | *number*                                                                               | :heavy_check_mark:                                                                     | ID of the source                                                                       |
-| `config`                                                                               | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                           | :heavy_minus_sign:                                                                     | Available config options for making requests.                                          |
+| Parameter                                                                | Type                                                                     | Required                                                                 | Description                                                              |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| `initialSegmentAttributes`                                               | [models.InitialSegmentAttributes](../models/initialsegmentattributes.md) | :heavy_check_mark:                                                       | N/A                                                                      |
+| `sourceId`                                                               | *number*                                                                 | :heavy_check_mark:                                                       | ID of the source                                                         |
+| `config`                                                                 | [AxiosRequestConfig](https://axios-http.com/docs/req_config)             | :heavy_minus_sign:                                                       | Available config options for making requests.                            |
 
 
 ### Response
 
-**Promise<[operations.CreateSegmentResponse](../../models/operations/createsegmentresponse.md)>**
+**Promise<[models.CreateSegmentResponse](../../models/createsegmentresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## delete
 
@@ -67,8 +68,7 @@ Deletes the segment specified
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { DeleteSegmentRequest } from "Workspace-Management-API/dist/models/operations";
+import { DeleteSegmentRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -79,7 +79,6 @@ const sourceId: number = 841399;
 
   const res = await sdk.segments.delete(segmentId, sourceId);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -97,8 +96,12 @@ const sourceId: number = 841399;
 
 ### Response
 
-**Promise<[operations.DeleteSegmentResponse](../../models/operations/deletesegmentresponse.md)>**
+**Promise<[models.DeleteSegmentResponse](../../models/deletesegmentresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## fetch
 
@@ -107,8 +110,7 @@ This endpoint lists information for a given segment, including information on it
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchSegmentRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchSegmentRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -119,7 +121,6 @@ const sourceId: number = 347223;
 
   const res = await sdk.segments.fetch(segmentId, sourceId);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -137,8 +138,12 @@ const sourceId: number = 347223;
 
 ### Response
 
-**Promise<[operations.FetchSegmentResponse](../../models/operations/fetchsegmentresponse.md)>**
+**Promise<[models.FetchSegmentResponse](../../models/fetchsegmentresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## list
 
@@ -147,9 +152,7 @@ List segments
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { Order } from "Workspace-Management-API/dist/models/components";
-import { ListSegmentsRequest } from "Workspace-Management-API/dist/models/operations";
+import { ListSegmentsRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -162,7 +165,6 @@ const perPage: number = 2576.49;
 
   const res = await sdk.segments.list(sourceId, order, page, perPage);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -174,7 +176,7 @@ const perPage: number = 2576.49;
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `sourceId`                                                                                           | *number*                                                                                             | :heavy_check_mark:                                                                                   | ID of the source                                                                                     |
-| `order`                                                                                              | [components.Order](../../models/shared/order.md)                                                     | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../models/order.md)                                                                   | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -182,8 +184,12 @@ const perPage: number = 2576.49;
 
 ### Response
 
-**Promise<[operations.ListSegmentsResponse](../../models/operations/listsegmentsresponse.md)>**
+**Promise<[models.ListSegmentsResponse](../../models/listsegmentsresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## update
 
@@ -192,9 +198,7 @@ Update certain values of a specified segment
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { ConfigurableSegmentAttributes } from "Workspace-Management-API/dist/models/components";
-import { UpdateSegmentRequest } from "Workspace-Management-API/dist/models/operations";
+import { ConfigurableSegmentAttributes, UpdateSegmentRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -211,7 +215,6 @@ const configurableSegmentAttributes: ConfigurableSegmentAttributes = {
 
   const res = await sdk.segments.update(segmentId, sourceId, configurableSegmentAttributes);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -220,15 +223,19 @@ const configurableSegmentAttributes: ConfigurableSegmentAttributes = {
 
 ### Parameters
 
-| Parameter                                                                                        | Type                                                                                             | Required                                                                                         | Description                                                                                      |
-| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| `segmentId`                                                                                      | *number*                                                                                         | :heavy_check_mark:                                                                               | ID of the segment                                                                                |
-| `sourceId`                                                                                       | *number*                                                                                         | :heavy_check_mark:                                                                               | ID of the source                                                                                 |
-| `configurableSegmentAttributes`                                                                  | [components.ConfigurableSegmentAttributes](../../models/shared/configurablesegmentattributes.md) | :heavy_minus_sign:                                                                               | N/A                                                                                              |
-| `config`                                                                                         | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                     | :heavy_minus_sign:                                                                               | Available config options for making requests.                                                    |
+| Parameter                                                                          | Type                                                                               | Required                                                                           | Description                                                                        |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `segmentId`                                                                        | *number*                                                                           | :heavy_check_mark:                                                                 | ID of the segment                                                                  |
+| `sourceId`                                                                         | *number*                                                                           | :heavy_check_mark:                                                                 | ID of the source                                                                   |
+| `configurableSegmentAttributes`                                                    | [models.ConfigurableSegmentAttributes](../models/configurablesegmentattributes.md) | :heavy_minus_sign:                                                                 | N/A                                                                                |
+| `config`                                                                           | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                       | :heavy_minus_sign:                                                                 | Available config options for making requests.                                      |
 
 
 ### Response
 
-**Promise<[operations.UpdateSegmentResponse](../../models/operations/updatesegmentresponse.md)>**
+**Promise<[models.UpdateSegmentResponse](../../models/updatesegmentresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |

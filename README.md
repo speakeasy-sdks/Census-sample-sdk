@@ -33,8 +33,7 @@ yarn add https://github.com/speakeasy-sdks/Census-sample-sdk
 ## SDK Example Usage
 <!-- Start SDK Example Usage -->
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchConnectorRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async () => {
     const sdk = new WorkspaceManagementAPI({
@@ -56,12 +55,12 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 ## Available Resources and Operations
 
 
-### [.connectors](docs/sdks/connectors/README.md)
+### [connectors](docs/sdks/connectors/README.md)
 
 * [fetch](docs/sdks/connectors/README.md#fetch) - Fetch connector
 * [list](docs/sdks/connectors/README.md#list) - List connectors
 
-### [.destinationsConnectLinks](docs/sdks/destinationsconnectlinks/README.md)
+### [destinationsConnectLinks](docs/sdks/destinationsconnectlinks/README.md)
 
 * [create](docs/sdks/destinationsconnectlinks/README.md#create) - Create a new destination connect link
 * [fetch](docs/sdks/destinationsconnectlinks/README.md#fetch) - Fetch destination connect link
@@ -69,7 +68,7 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 * [listTypes](docs/sdks/destinationsconnectlinks/README.md#listtypes) - List destination connect link types
 * [revoke](docs/sdks/destinationsconnectlinks/README.md#revoke) - Revoke a destination connect link
 
-### [.destinations](docs/sdks/destinations/README.md)
+### [destinations](docs/sdks/destinations/README.md)
 
 * [checkFieldRefresh](docs/sdks/destinations/README.md#checkfieldrefresh) - Check fields refresh
 * [checkObjectRefresh](docs/sdks/destinations/README.md#checkobjectrefresh) - Check object refresh
@@ -83,7 +82,7 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 * [startObjectRefresh](docs/sdks/destinations/README.md#startobjectrefresh) - Start object refresh
 * [update](docs/sdks/destinations/README.md#update) - Update destination
 
-### [.sources](docs/sdks/sources/README.md)
+### [sources](docs/sdks/sources/README.md)
 
 * [check](docs/sdks/sources/README.md#check) - Check table refresh
 * [create](docs/sdks/sources/README.md#create) - Create a new source
@@ -93,7 +92,7 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 * [start](docs/sdks/sources/README.md#start) - Start table refresh
 * [update](docs/sdks/sources/README.md#update) - Update source
 
-### [.segments](docs/sdks/segments/README.md)
+### [segments](docs/sdks/segments/README.md)
 
 * [create](docs/sdks/segments/README.md#create) - Create a new segment
 * [delete](docs/sdks/segments/README.md#delete) - Delete Segment
@@ -101,7 +100,7 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 * [list](docs/sdks/segments/README.md#list) - List segments
 * [update](docs/sdks/segments/README.md#update) - Update segment
 
-### [.models](docs/sdks/models/README.md)
+### [models](docs/sdks/models/README.md)
 
 * [checkColumnRefresh](docs/sdks/models/README.md#checkcolumnrefresh) - Check column refresh
 * [create](docs/sdks/models/README.md#create) - Create a new model
@@ -111,23 +110,23 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 * [startColumnRefresh](docs/sdks/models/README.md#startcolumnrefresh) - Start column refresh
 * [update](docs/sdks/models/README.md#update) - Update model
 
-### [.objects](docs/sdks/objects/README.md)
+### [objects](docs/sdks/objects/README.md)
 
 * [listSource](docs/sdks/objects/README.md#listsource) - List source objects
 
-### [.tables](docs/sdks/tables/README.md)
+### [tables](docs/sdks/tables/README.md)
 
 * [checkColumnRefresh](docs/sdks/tables/README.md#checkcolumnrefresh) - Check column refresh
 * [fetch](docs/sdks/tables/README.md#fetch) - Fetch table
 * [startColumnRefresh](docs/sdks/tables/README.md#startcolumnrefresh) - Start column refresh
 
-### [.syncRuns](docs/sdks/syncruns/README.md)
+### [syncRuns](docs/sdks/syncruns/README.md)
 
 * [cancel](docs/sdks/syncruns/README.md#cancel) - Cancel a running sync
 * [fetch](docs/sdks/syncruns/README.md#fetch) - Fetch sync run
 * [list](docs/sdks/syncruns/README.md#list) - List sync runs
 
-### [.syncs](docs/sdks/syncs/README.md)
+### [syncs](docs/sdks/syncs/README.md)
 
 * [create](docs/sdks/syncs/README.md#create) - Create a new sync
 * [delete](docs/sdks/syncs/README.md#delete) - Delete a sync
@@ -144,14 +143,18 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 <!-- Start Error Handling -->
 # Error Handling
 
-Handling errors in your SDK should largely match your expectations.  All operations return a response object or throw an error.  If Error objects are specified in your OpenAPI Spec, the SDK will throw the appropriate Error type.
+Handling errors in this SDK should largely match your expectations.  All operations return a response object or throw an error.  If Error objects are specified in your OpenAPI Spec, the SDK will throw the appropriate Error type.
+
+| Error Object                                   | Status Code                                    | Content Type                                   |
+| ---------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- |
+| models.FetchDestinationConnectLinkResponseBody | 404                                            | application/json                               |
+| models.SDKError                                | 400-600                                        | */*                                            |
 
 
 ## Example
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchDestinationConnectLinkRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchDestinationConnectLinkRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -164,11 +167,10 @@ const connectLinkId: number = 874373;
   try {
     res = await sdk.destinationsConnectLinks.fetch(connectLinkId);
   } catch (e) { 
-    if (e instanceof 404_application/json_object) {
+    if (e instanceof models.FetchDestinationConnectLinkResponseBody) {
       console.error(e) // handle exception 
     
   }
-
 
   if (res.statusCode == 200) {
     // handle response
@@ -191,8 +193,7 @@ You can override the default server globally by passing a server index to the `s
 For example:
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchConnectorRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async () => {
     const sdk = new WorkspaceManagementAPI({
@@ -216,8 +217,7 @@ import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/oper
 The default server can also be overridden globally by passing a URL to the `serverURL: str` optional parameter when initializing the SDK client instance. For example:
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchConnectorRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async () => {
     const sdk = new WorkspaceManagementAPI({
@@ -260,12 +260,11 @@ const sdk = new WorkspaceManagementAPI({defaultClient: httpClient});
 
 
 <!-- Start Authentication -->
-
 # Authentication
 
 ## Per-Client Security Schemes
 
-Your SDK supports the following security scheme globally:
+This SDK supports the following security scheme globally:
 
 | Name         | Type         | Scheme       |
 | ------------ | ------------ | ------------ |
@@ -274,8 +273,7 @@ Your SDK supports the following security scheme globally:
 To authenticate with the API the `bearerAuth` parameter must be set when initializing the SDK client instance. For example:
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchConnectorRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchConnectorRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async () => {
     const sdk = new WorkspaceManagementAPI({

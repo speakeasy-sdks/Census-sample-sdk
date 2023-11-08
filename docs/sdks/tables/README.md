@@ -1,5 +1,5 @@
 # Tables
-(*.tables*)
+(*tables*)
 
 ## Overview
 
@@ -18,8 +18,7 @@ This endpoint checks whether the job refreshing columns for a table has complete
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { CheckTablesColumnRefreshRequest } from "Workspace-Management-API/dist/models/operations";
+import { CheckTablesColumnRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -30,7 +29,6 @@ const sourceId: number = 162362;
 const tableId: number = 613668;
 
   const res = await sdk.tables.checkColumnRefresh(refreshKey, sourceId, tableId);
-
 
   if (res.statusCode == 200) {
     // handle response
@@ -50,8 +48,12 @@ const tableId: number = 613668;
 
 ### Response
 
-**Promise<[operations.CheckTablesColumnRefreshResponse](../../models/operations/checktablescolumnrefreshresponse.md)>**
+**Promise<[models.CheckTablesColumnRefreshResponse](../../models/checktablescolumnrefreshresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## fetch
 
@@ -60,8 +62,7 @@ This endpoint lists information for a given table, including information on what
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { FetchTableRequest } from "Workspace-Management-API/dist/models/operations";
+import { FetchTableRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -72,7 +73,6 @@ const tableId: number = 347223;
 
   const res = await sdk.tables.fetch(sourceId, tableId);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -90,8 +90,12 @@ const tableId: number = 347223;
 
 ### Response
 
-**Promise<[operations.FetchTableResponse](../../models/operations/fetchtableresponse.md)>**
+**Promise<[models.FetchTableResponse](../../models/fetchtableresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
 
 ## startColumnRefresh
 
@@ -100,8 +104,7 @@ This endpoint queues a job to refresh the list of columns for a table.
 ### Example Usage
 
 ```typescript
-import { WorkspaceManagementAPI } from "Workspace-Management-API";
-import { StartTablesColumnRefreshRequest } from "Workspace-Management-API/dist/models/operations";
+import { StartTablesColumnRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
 (async() => {
   const sdk = new WorkspaceManagementAPI({
@@ -112,7 +115,6 @@ const tableId: number = 644632;
 
   const res = await sdk.tables.startColumnRefresh(sourceId, tableId);
 
-
   if (res.statusCode == 200) {
     // handle response
   }
@@ -130,5 +132,9 @@ const tableId: number = 644632;
 
 ### Response
 
-**Promise<[operations.StartTablesColumnRefreshResponse](../../models/operations/starttablescolumnrefreshresponse.md)>**
+**Promise<[models.StartTablesColumnRefreshResponse](../../models/starttablescolumnrefreshresponse.md)>**
+### Errors
 
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 400-600         | */*             |
