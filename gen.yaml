@@ -2,22 +2,24 @@ configVersion: 1.0.0
 management:
   docChecksum: 806deb7a84cf079eb1c40872614650d1
   docVersion: 1.0.0
-  speakeasyVersion: 1.116.0
-  generationVersion: 2.185.0
+  speakeasyVersion: 1.118.3
+  generationVersion: 2.187.7
 generation:
   comments: {}
   sdkClassName: Workspace-Management-API
   repoURL: https://github.com/speakeasy-sdks/Census-sample-sdk.git
+  usageSnippets:
+    optionalPropertyRendering: withExample
 features:
   typescript:
-    core: 3.1.2
+    core: 3.1.3
     flattening: 2.81.1
     globalSecurity: 2.82.0
     globalServerURLs: 2.82.0
     groups: 2.81.2
     nameOverrides: 2.81.1
 typescript:
-  version: 0.3.0
+  version: 0.3.1
   author: Census
   clientServerStatusCodesAsErrors: true
   flattenGlobalSecurity: true

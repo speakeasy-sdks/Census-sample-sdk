@@ -286,11 +286,11 @@ const sourceId: number = 857478;
 const configurableSourceAttributes: ConfigurableSourceAttributes = {
   connection: {
     credentials: {
-      "hostname": "string",
       "port": "string",
       "user": "string",
       "password": "string",
       "database": "string",
+      "hostname": "string",
     },
     label: "Acme Inc. Snowflake",
   },

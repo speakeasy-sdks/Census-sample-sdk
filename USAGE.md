@@ -1,6 +1,4 @@
 <!-- Start SDK Example Usage -->
-
-
 ```typescript
 import { FetchConnectorRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
