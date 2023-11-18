@@ -1,4 +1,4 @@
-# DestinationsConnectLinksResponseStatus
+# FetchDestinationConnectLinkStatus
 
 HTTP status code.
 

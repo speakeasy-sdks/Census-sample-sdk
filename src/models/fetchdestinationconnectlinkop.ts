@@ -18,7 +18,7 @@ export class FetchDestinationConnectLinkRequest extends SpeakeasyBase {
 /**
  * HTTP status code.
  */
-export enum DestinationsConnectLinksResponseStatus {
+export enum FetchDestinationConnectLinkStatus {
     FourHundredAndFour = 404,
 }
 
@@ -38,7 +38,7 @@ export class FetchDestinationConnectLinkResponseBody extends Error {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "status" })
-    status?: DestinationsConnectLinksResponseStatus;
+    status?: FetchDestinationConnectLinkStatus;
 
     constructor(err?: FetchDestinationConnectLinkResponseBody) {
         super();

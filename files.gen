@@ -179,7 +179,7 @@ docs/models/destinationsconnectcreate.md
 docs/models/destinationconnectlink.md
 docs/models/initialdestinationconnectlinkattributes.md
 docs/models/fetchdestinationconnectlinkrequest.md
-docs/models/destinationsconnectlinksresponsestatus.md
+docs/models/fetchdestinationconnectlinkstatus.md
 docs/models/fetchdestinationconnectlinkresponsebody.md
 docs/models/fetchdestinationconnectlinkresponse.md
 docs/models/destinationsconnectfetchstatus.md
