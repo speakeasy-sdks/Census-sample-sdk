@@ -30,9 +30,9 @@ import {
   WorkspaceManagementAPI,
 } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.syncs.create({
@@ -101,7 +101,9 @@ import {
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -130,9 +132,9 @@ Deletes the sync with the specified ID.
 ```typescript
 import { DeleteSyncRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const syncId: number = 545907;
 
@@ -141,7 +143,9 @@ const syncId: number = 545907;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -171,9 +175,9 @@ Retrieve the details of a specific sync
 ```typescript
 import { FetchSyncRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const syncId: number = 874373;
 
@@ -182,7 +186,9 @@ const syncId: number = 874373;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -212,9 +218,9 @@ List Syncs
 ```typescript
 import { ListSyncsRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const order: Order = Order.Desc;
 const page: number = 998.95;
@@ -225,14 +231,16 @@ const perPage: number = 5472.72;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
 
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `order`                                                                                              | [models.Order](../models/order.md)                                                                   | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../../models/order.md)                                                                | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -256,9 +264,9 @@ Triggers the sync with the specified ID to start a new sync run.
 ```typescript
 import { TriggerSyncRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const syncId: number = 705908;
 const forceFullSync: boolean = false;
@@ -268,7 +276,9 @@ const forceFullSync: boolean = false;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -316,9 +326,9 @@ import {
   WorkspaceManagementAPI,
 } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const syncId: number = 857478;
 const syncAttributes: SyncAttributes = {
@@ -389,7 +399,9 @@ const syncAttributes: SyncAttributes = {
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -397,7 +409,7 @@ const syncAttributes: SyncAttributes = {
 | Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | `syncId`                                                     | *number*                                                     | :heavy_check_mark:                                           | ID of the sync                                               |
-| `syncAttributes`                                             | [models.SyncAttributes](../models/syncattributes.md)         | :heavy_minus_sign:                                           | N/A                                                          |
+| `syncAttributes`                                             | [models.SyncAttributes](../../models/syncattributes.md)      | :heavy_minus_sign:                                           | N/A                                                          |
 | `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
 
 

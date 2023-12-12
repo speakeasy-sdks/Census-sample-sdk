@@ -24,9 +24,9 @@ This endpoint checks whether the job refreshing columns for a model has complete
 ```typescript
 import { CheckModelsColumnRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const modelId: number = 769319;
 const refreshKey: number = 162362;
@@ -37,7 +37,9 @@ const sourceId: number = 613668;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -68,9 +70,9 @@ Create a new model
 ```typescript
 import { CreateModelRequest, InitialModelAttributes, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const initialModelAttributes: InitialModelAttributes = {
   description: "Users that have signed up for our product in the last week.",
@@ -84,16 +86,18 @@ const sourceId: number = 486589;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
 
-| Parameter                                                            | Type                                                                 | Required                                                             | Description                                                          |
-| -------------------------------------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| `initialModelAttributes`                                             | [models.InitialModelAttributes](../models/initialmodelattributes.md) | :heavy_check_mark:                                                   | N/A                                                                  |
-| `sourceId`                                                           | *number*                                                             | :heavy_check_mark:                                                   | ID of the source                                                     |
-| `config`                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)         | :heavy_minus_sign:                                                   | Available config options for making requests.                        |
+| Parameter                                                               | Type                                                                    | Required                                                                | Description                                                             |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `initialModelAttributes`                                                | [models.InitialModelAttributes](../../models/initialmodelattributes.md) | :heavy_check_mark:                                                      | N/A                                                                     |
+| `sourceId`                                                              | *number*                                                                | :heavy_check_mark:                                                      | ID of the source                                                        |
+| `config`                                                                | [AxiosRequestConfig](https://axios-http.com/docs/req_config)            | :heavy_minus_sign:                                                      | Available config options for making requests.                           |
 
 
 ### Response
@@ -114,9 +118,9 @@ Deletes the model specified
 ```typescript
 import { DeleteModelRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const modelId: number = 545907;
 const sourceId: number = 841399;
@@ -126,7 +130,9 @@ const sourceId: number = 841399;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -156,9 +162,9 @@ This endpoint lists information for a given model, including information on what
 ```typescript
 import { FetchModelRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const modelId: number = 874373;
 const sourceId: number = 347223;
@@ -168,7 +174,9 @@ const sourceId: number = 347223;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -198,9 +206,9 @@ List models
 ```typescript
 import { ListModelsRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sourceId: number = 768578;
 const order: Order = Order.Asc;
@@ -212,7 +220,9 @@ const perPage: number = 2576.49;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -220,7 +230,7 @@ const perPage: number = 2576.49;
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `sourceId`                                                                                           | *number*                                                                                             | :heavy_check_mark:                                                                                   | ID of the source                                                                                     |
-| `order`                                                                                              | [models.Order](../models/order.md)                                                                   | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../../models/order.md)                                                                | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -244,9 +254,9 @@ This endpoint queues a job to refresh the list of columns for a model.
 ```typescript
 import { StartModelsColumnRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const modelId: number = 934723;
 const sourceId: number = 644632;
@@ -256,7 +266,9 @@ const sourceId: number = 644632;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -286,9 +298,9 @@ Update certain values of a specified model
 ```typescript
 import { ConfigurableModelAttributes, UpdateModelRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const modelId: number = 857478;
 const sourceId: number = 24555;
@@ -303,17 +315,19 @@ const configurableModelAttributes: ConfigurableModelAttributes = {
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
 
-| Parameter                                                                      | Type                                                                           | Required                                                                       | Description                                                                    |
-| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| `modelId`                                                                      | *number*                                                                       | :heavy_check_mark:                                                             | ID of the model                                                                |
-| `sourceId`                                                                     | *number*                                                                       | :heavy_check_mark:                                                             | ID of the source                                                               |
-| `configurableModelAttributes`                                                  | [models.ConfigurableModelAttributes](../models/configurablemodelattributes.md) | :heavy_minus_sign:                                                             | N/A                                                                            |
-| `config`                                                                       | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                   | :heavy_minus_sign:                                                             | Available config options for making requests.                                  |
+| Parameter                                                                         | Type                                                                              | Required                                                                          | Description                                                                       |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `modelId`                                                                         | *number*                                                                          | :heavy_check_mark:                                                                | ID of the model                                                                   |
+| `sourceId`                                                                        | *number*                                                                          | :heavy_check_mark:                                                                | ID of the source                                                                  |
+| `configurableModelAttributes`                                                     | [models.ConfigurableModelAttributes](../../models/configurablemodelattributes.md) | :heavy_minus_sign:                                                                | N/A                                                                               |
+| `config`                                                                          | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                      | :heavy_minus_sign:                                                                | Available config options for making requests.                                     |
 
 
 ### Response

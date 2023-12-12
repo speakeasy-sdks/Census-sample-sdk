@@ -28,9 +28,9 @@ This endpoint checks whether the job refreshing fields for a destination object 
 ```typescript
 import { CheckFieldRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const destinationId: number = 325518;
 const objectFullName: number = 26858;
@@ -41,7 +41,9 @@ const refreshKey: number = 173894;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -72,9 +74,9 @@ This endpoint checks whether the job refreshing objects for a destination has co
 ```typescript
 import { CheckObjectRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const destinationId: number = 275167;
 const refreshKey: number = 881363;
@@ -84,7 +86,9 @@ const refreshKey: number = 881363;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -114,9 +118,9 @@ Create a new destination
 ```typescript
 import { WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.destinations.create({
@@ -129,7 +133,9 @@ import { WorkspaceManagementAPI } from "Workspace-Management-API";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -158,9 +164,9 @@ Deletes the destination specified
 ```typescript
 import { DeleteDestinationRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const destinationId: number = 545907;
 
@@ -169,7 +175,9 @@ const destinationId: number = 545907;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -198,9 +206,9 @@ Fetch destination
 ```typescript
 import { FetchDestinationRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const destinationId: number = 874373;
 
@@ -209,7 +217,9 @@ const destinationId: number = 874373;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -238,9 +248,9 @@ This endpoint lists information for a given object, including information on wha
 ```typescript
 import { FetchDestinationObjectsRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const destinationId: number = 808221;
 const objectFullName: number = 271899;
@@ -250,7 +260,9 @@ const objectFullName: number = 271899;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -280,9 +292,9 @@ List destinations
 ```typescript
 import { ListDestinationsRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const order: Order = Order.Desc;
 const page: number = 998.95;
@@ -293,14 +305,16 @@ const perPage: number = 5472.72;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
 
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `order`                                                                                              | [models.Order](../models/order.md)                                                                   | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../../models/order.md)                                                                | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -324,9 +338,9 @@ List destination objects
 ```typescript
 import { ListDestinationObjectsRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const destinationId: number = 62502;
 const order: Order = Order.Desc;
@@ -338,7 +352,9 @@ const perPage: number = 1994.22;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -346,7 +362,7 @@ const perPage: number = 1994.22;
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `destinationId`                                                                                      | *number*                                                                                             | :heavy_check_mark:                                                                                   | ID of the destination                                                                                |
-| `order`                                                                                              | [models.Order](../models/order.md)                                                                   | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../../models/order.md)                                                                | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -370,9 +386,9 @@ This endpoint queues a job to refresh the list of fields for a given destination
 ```typescript
 import { StartFieldRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const destinationId: number = 987417;
 const objectFullName: number = 472220;
@@ -382,7 +398,9 @@ const objectFullName: number = 472220;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -412,9 +430,9 @@ This endpoint queues a job to refresh the list of objects for a destination.
 ```typescript
 import { StartObjectRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const destinationId: number = 225371;
 
@@ -423,7 +441,9 @@ const destinationId: number = 225371;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -458,9 +478,9 @@ import {
   WorkspaceManagementAPI,
 } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const destinationId: number = 857478;
 const configurableDestinationAttributes: ConfigurableDestinationAttributes = {
@@ -475,16 +495,18 @@ const configurableDestinationAttributes: ConfigurableDestinationAttributes = {
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
 
-| Parameter                                                                                  | Type                                                                                       | Required                                                                                   | Description                                                                                |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-| `destinationId`                                                                            | *number*                                                                                   | :heavy_check_mark:                                                                         | ID of the destination to update                                                            |
-| `configurableDestinationAttributes`                                                        | [models.ConfigurableDestinationAttributes](../models/configurabledestinationattributes.md) | :heavy_minus_sign:                                                                         | N/A                                                                                        |
-| `config`                                                                                   | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                               | :heavy_minus_sign:                                                                         | Available config options for making requests.                                              |
+| Parameter                                                                                     | Type                                                                                          | Required                                                                                      | Description                                                                                   |
+| --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `destinationId`                                                                               | *number*                                                                                      | :heavy_check_mark:                                                                            | ID of the destination to update                                                               |
+| `configurableDestinationAttributes`                                                           | [models.ConfigurableDestinationAttributes](../../models/configurabledestinationattributes.md) | :heavy_minus_sign:                                                                            | N/A                                                                                           |
+| `config`                                                                                      | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                  | :heavy_minus_sign:                                                                            | Available config options for making requests.                                                 |
 
 
 ### Response

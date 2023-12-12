@@ -154,7 +154,6 @@ src/models/syncupdate.ts
 src/models/invitation.ts
 src/models/security.ts
 src/models/index.ts
-USAGE.md
 docs/models/fetchconnectorrequest.md
 docs/models/fetchconnectorresponse.md
 docs/models/status.md
@@ -443,4 +442,5 @@ docs/sdks/objects/README.md
 docs/sdks/tables/README.md
 docs/sdks/syncruns/README.md
 docs/sdks/syncs/README.md
+USAGE.md
 .gitattributes

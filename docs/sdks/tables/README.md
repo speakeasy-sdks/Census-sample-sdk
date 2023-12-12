@@ -20,9 +20,9 @@ This endpoint checks whether the job refreshing columns for a table has complete
 ```typescript
 import { CheckTablesColumnRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const refreshKey: number = 769319;
 const sourceId: number = 162362;
@@ -33,7 +33,9 @@ const tableId: number = 613668;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -64,9 +66,9 @@ This endpoint lists information for a given table, including information on what
 ```typescript
 import { FetchTableRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sourceId: number = 874373;
 const tableId: number = 347223;
@@ -76,7 +78,9 @@ const tableId: number = 347223;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -106,9 +110,9 @@ This endpoint queues a job to refresh the list of columns for a table.
 ```typescript
 import { StartTablesColumnRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sourceId: number = 934723;
 const tableId: number = 644632;
@@ -118,7 +122,9 @@ const tableId: number = 644632;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters

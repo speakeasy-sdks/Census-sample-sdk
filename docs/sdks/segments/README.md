@@ -22,9 +22,9 @@ Create a new segment
 ```typescript
 import { CreateSegmentRequest, InitialSegmentAttributes, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const initialSegmentAttributes: InitialSegmentAttributes = {
   businessObjectId: 486589,
@@ -40,16 +40,18 @@ const sourceId: number = 489382;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
 
-| Parameter                                                                | Type                                                                     | Required                                                                 | Description                                                              |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
-| `initialSegmentAttributes`                                               | [models.InitialSegmentAttributes](../models/initialsegmentattributes.md) | :heavy_check_mark:                                                       | N/A                                                                      |
-| `sourceId`                                                               | *number*                                                                 | :heavy_check_mark:                                                       | ID of the source                                                         |
-| `config`                                                                 | [AxiosRequestConfig](https://axios-http.com/docs/req_config)             | :heavy_minus_sign:                                                       | Available config options for making requests.                            |
+| Parameter                                                                   | Type                                                                        | Required                                                                    | Description                                                                 |
+| --------------------------------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `initialSegmentAttributes`                                                  | [models.InitialSegmentAttributes](../../models/initialsegmentattributes.md) | :heavy_check_mark:                                                          | N/A                                                                         |
+| `sourceId`                                                                  | *number*                                                                    | :heavy_check_mark:                                                          | ID of the source                                                            |
+| `config`                                                                    | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                | :heavy_minus_sign:                                                          | Available config options for making requests.                               |
 
 
 ### Response
@@ -70,9 +72,9 @@ Deletes the segment specified
 ```typescript
 import { DeleteSegmentRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const segmentId: number = 545907;
 const sourceId: number = 841399;
@@ -82,7 +84,9 @@ const sourceId: number = 841399;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -112,9 +116,9 @@ This endpoint lists information for a given segment, including information on it
 ```typescript
 import { FetchSegmentRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const segmentId: number = 874373;
 const sourceId: number = 347223;
@@ -124,7 +128,9 @@ const sourceId: number = 347223;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -154,9 +160,9 @@ List segments
 ```typescript
 import { ListSegmentsRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sourceId: number = 768578;
 const order: Order = Order.Asc;
@@ -168,7 +174,9 @@ const perPage: number = 2576.49;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -176,7 +184,7 @@ const perPage: number = 2576.49;
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `sourceId`                                                                                           | *number*                                                                                             | :heavy_check_mark:                                                                                   | ID of the source                                                                                     |
-| `order`                                                                                              | [models.Order](../models/order.md)                                                                   | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../../models/order.md)                                                                | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -200,9 +208,9 @@ Update certain values of a specified segment
 ```typescript
 import { ConfigurableSegmentAttributes, UpdateSegmentRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const segmentId: number = 857478;
 const sourceId: number = 24555;
@@ -218,17 +226,19 @@ const configurableSegmentAttributes: ConfigurableSegmentAttributes = {
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
 
-| Parameter                                                                          | Type                                                                               | Required                                                                           | Description                                                                        |
-| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `segmentId`                                                                        | *number*                                                                           | :heavy_check_mark:                                                                 | ID of the segment                                                                  |
-| `sourceId`                                                                         | *number*                                                                           | :heavy_check_mark:                                                                 | ID of the source                                                                   |
-| `configurableSegmentAttributes`                                                    | [models.ConfigurableSegmentAttributes](../models/configurablesegmentattributes.md) | :heavy_minus_sign:                                                                 | N/A                                                                                |
-| `config`                                                                           | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                       | :heavy_minus_sign:                                                                 | Available config options for making requests.                                      |
+| Parameter                                                                             | Type                                                                                  | Required                                                                              | Description                                                                           |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `segmentId`                                                                           | *number*                                                                              | :heavy_check_mark:                                                                    | ID of the segment                                                                     |
+| `sourceId`                                                                            | *number*                                                                              | :heavy_check_mark:                                                                    | ID of the source                                                                      |
+| `configurableSegmentAttributes`                                                       | [models.ConfigurableSegmentAttributes](../../models/configurablesegmentattributes.md) | :heavy_minus_sign:                                                                    | N/A                                                                                   |
+| `config`                                                                              | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                          | :heavy_minus_sign:                                                                    | Available config options for making requests.                                         |
 
 
 ### Response

@@ -24,9 +24,9 @@ This endpoint checks whether the job refreshing tables for a source has complete
 ```typescript
 import { CheckTableRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const refreshKey: number = 935464;
 const sourceId: number = 38270;
@@ -36,7 +36,9 @@ const sourceId: number = 38270;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -66,9 +68,9 @@ Create a new source
 ```typescript
 import { WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.sources.create({
@@ -80,7 +82,9 @@ import { WorkspaceManagementAPI } from "Workspace-Management-API";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -109,9 +113,9 @@ Deletes the source specified
 ```typescript
 import { DeleteSourceRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sourceId: number = 545907;
 
@@ -120,7 +124,9 @@ const sourceId: number = 545907;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -149,9 +155,9 @@ Fetch source
 ```typescript
 import { FetchSourceRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sourceId: number = 874373;
 
@@ -160,7 +166,9 @@ const sourceId: number = 874373;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -189,9 +197,9 @@ List sources
 ```typescript
 import { ListSourcesRequest, Order, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const order: Order = Order.Desc;
 const page: number = 998.95;
@@ -202,14 +210,16 @@ const perPage: number = 5472.72;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
 
 | Parameter                                                                                            | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `order`                                                                                              | [models.Order](../models/order.md)                                                                   | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
+| `order`                                                                                              | [models.Order](../../models/order.md)                                                                | :heavy_minus_sign:                                                                                   | Organizes the results based on their creation time, either ascending or descending.                  |
 | `page`                                                                                               | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Designates which page of results to return. Always starts at 1. If 0 is specified, it defaults to 1. |
 | `perPage`                                                                                            | *number*                                                                                             | :heavy_minus_sign:                                                                                   | Determines the number of results on each page. It can't exceed 100.                                  |
 | `config`                                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                         | :heavy_minus_sign:                                                                                   | Available config options for making requests.                                                        |
@@ -233,9 +243,9 @@ This endpoint queues a job to refresh the list of tables for a source.
 ```typescript
 import { StartTableRefreshRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sourceId: number = 50099;
 
@@ -244,7 +254,9 @@ const sourceId: number = 50099;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -278,19 +290,19 @@ import {
   WorkspaceManagementAPI,
 } from "Workspace-Management-API";
 
-(async() => {
+async function run() {
   const sdk = new WorkspaceManagementAPI({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sourceId: number = 857478;
 const configurableSourceAttributes: ConfigurableSourceAttributes = {
   connection: {
     credentials: {
-      "password": "string",
-      "database": "string",
       "hostname": "string",
       "port": "string",
       "user": "string",
+      "password": "string",
+      "database": "string",
     },
     label: "Acme Inc. Snowflake",
   },
@@ -301,16 +313,18 @@ const configurableSourceAttributes: ConfigurableSourceAttributes = {
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
 
-| Parameter                                                                        | Type                                                                             | Required                                                                         | Description                                                                      |
-| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `sourceId`                                                                       | *number*                                                                         | :heavy_check_mark:                                                               | ID of the source to update                                                       |
-| `configurableSourceAttributes`                                                   | [models.ConfigurableSourceAttributes](../models/configurablesourceattributes.md) | :heavy_minus_sign:                                                               | N/A                                                                              |
-| `config`                                                                         | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                     | :heavy_minus_sign:                                                               | Available config options for making requests.                                    |
+| Parameter                                                                           | Type                                                                                | Required                                                                            | Description                                                                         |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `sourceId`                                                                          | *number*                                                                            | :heavy_check_mark:                                                                  | ID of the source to update                                                          |
+| `configurableSourceAttributes`                                                      | [models.ConfigurableSourceAttributes](../../models/configurablesourceattributes.md) | :heavy_minus_sign:                                                                  | N/A                                                                                 |
+| `config`                                                                            | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                        | :heavy_minus_sign:                                                                  | Available config options for making requests.                                       |
 
 
 ### Response

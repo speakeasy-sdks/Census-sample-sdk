@@ -1,10 +1,10 @@
-<!-- Start SDK Example Usage -->
+<!-- Start SDK Example Usage [usage] -->
 ```typescript
 import { FetchConnectorRequest, WorkspaceManagementAPI } from "Workspace-Management-API";
 
-(async () => {
+async function run() {
     const sdk = new WorkspaceManagementAPI({
-        bearerAuth: "",
+        bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
     const serviceName: string = "string";
 
@@ -13,7 +13,9 @@ import { FetchConnectorRequest, WorkspaceManagementAPI } from "Workspace-Managem
     if (res.statusCode == 200) {
         // handle response
     }
-})();
+}
+
+run();
 
 ```
-<!-- End SDK Example Usage -->
+<!-- End SDK Example Usage [usage] -->
