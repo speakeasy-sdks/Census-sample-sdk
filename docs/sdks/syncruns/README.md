@@ -48,7 +48,7 @@ run();
 | Error Object                     | Status Code                      | Content Type                     |
 | -------------------------------- | -------------------------------- | -------------------------------- |
 | models.CancelSyncRunResponseBody | 404                              | application/json                 |
-| models.SDKError                  | 400-600                          | */*                              |
+| models.SDKError                  | 4xx-5xx                          | */*                              |
 
 ## fetch
 
@@ -91,7 +91,7 @@ run();
 | Error Object                    | Status Code                     | Content Type                    |
 | ------------------------------- | ------------------------------- | ------------------------------- |
 | models.FetchSyncRunResponseBody | 404                             | application/json                |
-| models.SDKError                 | 400-600                         | */*                             |
+| models.SDKError                 | 4xx-5xx                         | */*                             |
 
 ## list
 
@@ -139,4 +139,4 @@ run();
 
 | Error Object    | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| models.SDKError | 400-600         | */*             |
+| models.SDKError | 4xx-5xx         | */*             |
