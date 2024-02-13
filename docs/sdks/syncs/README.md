@@ -51,18 +51,20 @@ async function run() {
     mappings: [
       {
         from: "string",
-        isPrimaryIdentifier: false,
-        to: "string",
+        isPrimaryIdentifier: true,
+        to: "user_identifier.hashed_email_PREHASHED",
       },
       {
         from: "string",
         isPrimaryIdentifier: false,
-        to: "string",
+        lookupField: "name",
+        lookupObject: "user_list",
+        to: "list_id",
       },
       {
         from: "string",
         isPrimaryIdentifier: false,
-        to: "string",
+        to: "cohort",
       },
     ],
     operation: SyncAttributesOperation.Mirror,
@@ -347,18 +349,20 @@ const syncAttributes: SyncAttributes = {
   mappings: [
     {
       from: "string",
-      isPrimaryIdentifier: false,
-      to: "string",
+      isPrimaryIdentifier: true,
+      to: "user_identifier.hashed_email_PREHASHED",
     },
     {
       from: "string",
       isPrimaryIdentifier: false,
-      to: "string",
+      lookupField: "name",
+      lookupObject: "user_list",
+      to: "list_id",
     },
     {
       from: "string",
       isPrimaryIdentifier: false,
-      to: "string",
+      to: "cohort",
     },
   ],
   operation: SyncAttributesOperation.Mirror,

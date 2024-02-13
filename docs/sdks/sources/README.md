@@ -298,11 +298,11 @@ const sourceId: number = 857478;
 const configurableSourceAttributes: ConfigurableSourceAttributes = {
   connection: {
     credentials: {
-      "hostname": "string",
-      "port": "string",
-      "user": "string",
-      "password": "string",
-      "database": "string",
+      "hostname": "<instance>.<region>.redshift.amazonaws.com,",
+      "port": "5439,",
+      "user": "redshift_user,",
+      "password": "redshift_password,",
+      "database": "demo",
     },
     label: "Acme Inc. Snowflake",
   },

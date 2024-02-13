@@ -1,6 +1,6 @@
 {
   "name": "Workspace-Management-API",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "Census",
   "scripts": {
     "prepare": "tsc --build",
