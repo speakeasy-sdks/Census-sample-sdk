@@ -42,7 +42,7 @@ async function run() {
     const sdk = new WorkspaceManagementAPI({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const serviceName: string = "string";
+    const serviceName: string = "<value>";
 
     const res = await sdk.connectors.fetch(serviceName);
 
@@ -208,7 +208,7 @@ async function run() {
         serverIdx: 0,
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const serviceName: string = "string";
+    const serviceName: string = "<value>";
 
     const res = await sdk.connectors.fetch(serviceName);
 
@@ -233,7 +233,7 @@ async function run() {
         serverURL: "https://app.getcensus.com/api/v1",
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const serviceName: string = "string";
+    const serviceName: string = "<value>";
 
     const res = await sdk.connectors.fetch(serviceName);
 
@@ -287,7 +287,7 @@ async function run() {
     const sdk = new WorkspaceManagementAPI({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const serviceName: string = "string";
+    const serviceName: string = "<value>";
 
     const res = await sdk.connectors.fetch(serviceName);
 

@@ -23,7 +23,7 @@ async function run() {
   const sdk = new WorkspaceManagementAPI({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const serviceName: string = "string";
+const serviceName: string = "<value>";
 
   const res = await sdk.connectors.fetch(serviceName);
 

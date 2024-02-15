@@ -50,19 +50,19 @@ async function run() {
     label: "New Signups to Leads",
     mappings: [
       {
-        from: "string",
+        from: "<value>",
         isPrimaryIdentifier: true,
         to: "user_identifier.hashed_email_PREHASHED",
       },
       {
-        from: "string",
+        from: "<value>",
         isPrimaryIdentifier: false,
         lookupField: "name",
         lookupObject: "user_list",
         to: "list_id",
       },
       {
-        from: "string",
+        from: "<value>",
         isPrimaryIdentifier: false,
         to: "cohort",
       },
@@ -348,19 +348,19 @@ const syncAttributes: SyncAttributes = {
   label: "New Signups to Leads",
   mappings: [
     {
-      from: "string",
+      from: "<value>",
       isPrimaryIdentifier: true,
       to: "user_identifier.hashed_email_PREHASHED",
     },
     {
-      from: "string",
+      from: "<value>",
       isPrimaryIdentifier: false,
       lookupField: "name",
       lookupObject: "user_list",
       to: "list_id",
     },
     {
-      from: "string",
+      from: "<value>",
       isPrimaryIdentifier: false,
       to: "cohort",
     },

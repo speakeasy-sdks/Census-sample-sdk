@@ -29,7 +29,7 @@ async function run() {
 const initialSegmentAttributes: InitialSegmentAttributes = {
   businessObjectId: 486589,
   molecules: [
-    "string",
+    "<value>",
   ],
   name: "priority accounts",
 };
@@ -216,7 +216,7 @@ const segmentId: number = 857478;
 const sourceId: number = 24555;
 const configurableSegmentAttributes: ConfigurableSegmentAttributes = {
   molecules: [
-    "string",
+    "<value>",
   ],
   name: "priority accounts",
 };
