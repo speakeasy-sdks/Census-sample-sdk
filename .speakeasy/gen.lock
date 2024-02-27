@@ -4,9 +4,9 @@ management:
   docChecksum: 806deb7a84cf079eb1c40872614650d1
   docVersion: 1.0.0
   speakeasyVersion: internal
-  generationVersion: 2.272.4
-  releaseVersion: 0.4.4
-  configChecksum: 3b4894c2b87050e9f2c9c3ea815280a5
+  generationVersion: 2.272.7
+  releaseVersion: 0.4.5
+  configChecksum: 30f645086a237df9f0e4b7cd73b9c3be
   repoURL: https://github.com/speakeasy-sdks/Census-sample-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/speakeasy-sdks/Census-sample-sdk
@@ -14,7 +14,7 @@ features:
   typescript:
     core: 3.4.8
     flattening: 2.81.1
-    globalSecurity: 2.82.3
+    globalSecurity: 2.82.4
     globalServerURLs: 2.82.1
     groups: 2.81.2
     nameOverrides: 2.81.1
