@@ -3,10 +3,10 @@ id: 5ddbfd0c-61bc-491a-bd4c-193806d0630f
 management:
   docChecksum: 806deb7a84cf079eb1c40872614650d1
   docVersion: 1.0.0
-  speakeasyVersion: internal
-  generationVersion: 2.272.7
-  releaseVersion: 0.4.5
-  configChecksum: 30f645086a237df9f0e4b7cd73b9c3be
+  speakeasyVersion: 1.207.1
+  generationVersion: 2.280.6
+  releaseVersion: 0.4.6
+  configChecksum: e554f56d123994e4591b284de5975330
   repoURL: https://github.com/speakeasy-sdks/Census-sample-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/speakeasy-sdks/Census-sample-sdk
@@ -15,7 +15,7 @@ features:
     core: 3.4.8
     flattening: 2.81.1
     globalSecurity: 2.82.4
-    globalServerURLs: 2.82.1
+    globalServerURLs: 2.82.2
     groups: 2.81.2
     nameOverrides: 2.81.1
 generatedFiles:
